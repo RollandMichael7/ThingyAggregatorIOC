@@ -1,0 +1,3 @@
+function(register_pv)
+function(register_sensor)
+registrar("thingyRegister")
