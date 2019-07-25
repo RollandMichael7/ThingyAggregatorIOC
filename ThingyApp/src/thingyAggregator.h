@@ -64,13 +64,14 @@ int led_on[MAX_NODES];
 #define RESP_ID 2
 
 // Opcodes for responses
-#define OPCODE_HUMIDITY_READING 0x05
 #define OPCODE_BUTTON_REPORT 0x03
+#define OPCODE_HUMIDITY 0x05
+#define OPCODE_RSSI 0x06
+
+// Indices for each response type
+#define RESP_REPORT_BUTTON_STATE 4
 
 #define RESP_HUMIDITY_VAL 3
 
-#define RESP_REPORT_BUTTON_STATE 4
-
-// Indices for RSSI response
-#define RSSI_DATA 3
+#define RESP_RSSI_VAL 3
 

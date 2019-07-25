@@ -198,12 +198,7 @@ static void notif_callback(const uuid_t *uuidObject, const uint8_t *resp, size_t
 		dead[nodeID] = 0;
 	}
 
-	uint8_t op = resp[RESP_OPCODE];
-	if (op == OPCODE_BUTTON_REPORT)
-		parse_button_report(resp, len);
-	else if (op == OPCODE_HUMIDITY_READING) {
-		parse_humidity(resp, len);
-	}
+	parse_resp(resp, len);
 }
 
 // PV startup function for sensors

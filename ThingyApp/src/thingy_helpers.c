@@ -26,6 +26,8 @@
 #include "thingyAggregator.h"
 #include "thingy_helpers.h"
 
+static void print_resp(uint8_t*, size_t);
+
 // taken from gattlib; convert string to 128 bit uint
 static uint128_t str_to_128t(const char *string) {
 	uint32_t data0, data4;
@@ -65,7 +67,15 @@ uuid_t aggregatorUUID(const char *str) {
 	return uuid;
 }
 
-void parse_humidity(uint8_t *resp, size_t len) {
+static void parse_button_report(uint8_t *resp, size_t len) {
+	int nodeID = resp[RESP_ID];
+	aSubRecord *buttonPV = get_pv(nodeID, BUTTON_ID);
+
+	if (buttonPV != 0)
+		set_pv(buttonPV, resp[RESP_REPORT_BUTTON_STATE]);
+}
+
+static void parse_humidity(uint8_t *resp, size_t len) {
 	int nodeID = resp[RESP_ID];
 	aSubRecord *humidPV = get_pv(nodeID, HUMIDITY_ID);
 
@@ -73,12 +83,24 @@ void parse_humidity(uint8_t *resp, size_t len) {
 		set_pv(humidPV, resp[RESP_HUMIDITY_VAL]);
 }
 
-void parse_button_report(uint8_t *resp, size_t len) {
+static void parse_rssi(uint8_t *resp, size_t len) {
 	int nodeID = resp[RESP_ID];
-	aSubRecord *buttonPV = get_pv(nodeID, BUTTON_ID);
+	aSubRecord *rssiPV = get_pv(nodeID, RSSI_ID);
+	int8_t rssi = resp[RESP_RSSI_VAL];
 
-	if (buttonPV != 0)
-		set_pv(buttonPV, resp[RESP_REPORT_BUTTON_STATE]);
+	if (rssiPV != 0)
+		set_pv(rssiPV, rssi);
+}
+
+// Parse response
+void parse_resp(uint8_t *resp, size_t len) {
+	uint8_t op = resp[RESP_OPCODE];
+	if (op == OPCODE_BUTTON_REPORT)
+		parse_button_report(resp, len);
+	else if (op == OPCODE_HUMIDITY)
+		parse_humidity(resp, len);
+	else if (op == OPCODE_RSSI)
+		parse_rssi(resp, len);
 }
 
 // set PV value and scan it
