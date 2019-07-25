@@ -60,14 +60,14 @@ int led_on[MAX_NODES];
 #define DISCONNECTED 0
 
 // Indices for every response payload
-#define RESP_ID 1
 #define RESP_OPCODE 0
+#define RESP_ID 2
 
 // Opcodes for responses
 #define OPCODE_HUMIDITY_READING 0x05
 #define OPCODE_BUTTON_REPORT 0x03
 
-#define RESP_HUMIDITY_VAL 2
+#define RESP_HUMIDITY_VAL 3
 
 #define RESP_REPORT_BUTTON_STATE 4
 
