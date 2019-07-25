@@ -96,6 +96,10 @@ static gatt_connection_t* get_connection() {
 		printf("Starting notification listener thread...\n");
 		pthread_t listener;
 		pthread_create(&listener, NULL, &notification_listener, NULL);
+		// start watchdog thread
+		printf("Starting watchdog thread...\n");
+		pthread_t watchdog_pid;
+		pthread_create(&watchdog_pid, NULL, &watchdog, NULL);
 		// start reconnect thread
 		printf("Starting reconnection thread...\n");
 		pthread_t necromancer;
