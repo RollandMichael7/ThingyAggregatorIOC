@@ -67,12 +67,20 @@ uuid_t aggregatorUUID(const char *str) {
 	return uuid;
 }
 
-static void parse_button_report(uint8_t *resp, size_t len) {
+static void parse_battery(uint8_t *resp, size_t len) {
+	int nodeID = resp[RESP_ID];
+	aSubRecord *batteryPV = get_pv(nodeID, BATTERY_ID);
+
+	if (batteryPV != 0)
+		set_pv(batteryPV, resp[RESP_BATTERY_LEVEL]);
+}
+
+static void parse_button(uint8_t *resp, size_t len) {
 	int nodeID = resp[RESP_ID];
 	aSubRecord *buttonPV = get_pv(nodeID, BUTTON_ID);
 
 	if (buttonPV != 0)
-		set_pv(buttonPV, resp[RESP_REPORT_BUTTON_STATE]);
+		set_pv(buttonPV, resp[RESP_BUTTON_STATE]);
 }
 
 static void parse_humidity(uint8_t *resp, size_t len) {
@@ -94,9 +102,12 @@ static void parse_rssi(uint8_t *resp, size_t len) {
 
 // Parse response
 void parse_resp(uint8_t *resp, size_t len) {
+	//print_resp(resp, len);
 	uint8_t op = resp[RESP_OPCODE];
-	if (op == OPCODE_BUTTON_REPORT)
-		parse_button_report(resp, len);
+	if (op == OPCODE_BATTERY)
+		parse_battery(resp, len);
+	else if (op == OPCODE_BUTTON)
+		parse_button(resp, len);
 	else if (op == OPCODE_HUMIDITY)
 		parse_humidity(resp, len);
 	else if (op == OPCODE_RSSI)

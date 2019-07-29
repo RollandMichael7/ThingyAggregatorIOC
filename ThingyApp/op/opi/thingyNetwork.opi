@@ -15,7 +15,7 @@
     <color red="192" green="192" blue="192" />
   </foreground_color>
   <grid_space>6</grid_space>
-  <height>630</height>
+  <height>750</height>
   <macros>
     <include_parent_macros>true</include_parent_macros>
     <Sys>XF:10IDB</Sys>
@@ -30,7 +30,7 @@
   <show_ruler>true</show_ruler>
   <snap_to_geometry>true</snap_to_geometry>
   <widget_type>Display</widget_type>
-  <width>1110</width>
+  <width>1675</width>
   <wuid>-7a90358c:169917bf4bc:-7e2f</wuid>
   <x>-1</x>
   <y>-1</y>
@@ -52,7 +52,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>305</height>
+    <height>360</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>0</N>
@@ -95,7 +95,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>305</height>
+    <height>360</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>1</N>
@@ -138,7 +138,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>305</height>
+    <height>360</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>2</N>
@@ -160,8 +160,8 @@
     <widget_type>Linking Container</widget_type>
     <width>550</width>
     <wuid>7fd9ae27:16b0ef1f976:-7867</wuid>
-    <x>0</x>
-    <y>318</y>
+    <x>1122</x>
+    <y>5</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -181,7 +181,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>305</height>
+    <height>360</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>3</N>
@@ -203,7 +203,93 @@
     <widget_type>Linking Container</widget_type>
     <width>550</width>
     <wuid>7fd9ae27:16b0ef1f976:-7849</wuid>
-    <x>558</x>
-    <y>318</y>
+    <x>0</x>
+    <y>378</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>3</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Sans" height="9" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="192" green="192" blue="192" />
+    </foreground_color>
+    <group_name></group_name>
+    <height>360</height>
+    <macros>
+      <include_parent_macros>true</include_parent_macros>
+      <N>4</N>
+      <Sys>XF:10IDB</Sys>
+      <Dev>{THINGY:005}</Dev>
+    </macros>
+    <name>Linking Container_4</name>
+    <opi_file>thingyNode.opi</opi_file>
+    <resize_behaviour>0</resize_behaviour>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <tooltip></tooltip>
+    <visible>true</visible>
+    <widget_type>Linking Container</widget_type>
+    <width>550</width>
+    <wuid>-a0023f0:16c2a5539c6:-7cc8</wuid>
+    <x>557</x>
+    <y>377</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>3</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Sans" height="9" style="0" pixels="false">Default</opifont.name>
+    </font>
+    <foreground_color>
+      <color red="192" green="192" blue="192" />
+    </foreground_color>
+    <group_name></group_name>
+    <height>360</height>
+    <macros>
+      <include_parent_macros>true</include_parent_macros>
+      <N>5</N>
+      <Sys>XF:10IDB</Sys>
+      <Dev>{THINGY:006}</Dev>
+    </macros>
+    <name>Linking Container_5</name>
+    <opi_file>thingyNode.opi</opi_file>
+    <resize_behaviour>0</resize_behaviour>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <tooltip></tooltip>
+    <visible>true</visible>
+    <widget_type>Linking Container</widget_type>
+    <width>550</width>
+    <wuid>-a0023f0:16c2a5539c6:-7ca7</wuid>
+    <x>1122</x>
+    <y>377</y>
   </widget>
 </display>
