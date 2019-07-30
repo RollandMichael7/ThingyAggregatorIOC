@@ -51,9 +51,7 @@ int led_on[MAX_NODES];
 #define TEMPERATURE_ID 5
 #define HUMIDITY_ID 6
 #define PRESSURE_ID 7
-#define ACCELX_ID 8
-#define ACCELY_ID 9
-#define ACCELZ_ID 10
+#define GAS_ID 8
 
 // Connection status
 #define CONNECTED 1
@@ -87,3 +85,5 @@ int led_on[MAX_NODES];
 
 #define RESP_HUMIDITY_VAL 3
 
+#define RESP_GAS_CO2 3 // 2 byte uint
+#define RESP_GAS_TVOC 5 // 2 byte uint

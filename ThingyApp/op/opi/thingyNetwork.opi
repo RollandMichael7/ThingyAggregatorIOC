@@ -15,7 +15,7 @@
     <color red="192" green="192" blue="192" />
   </foreground_color>
   <grid_space>6</grid_space>
-  <height>750</height>
+  <height>820</height>
   <macros>
     <include_parent_macros>true</include_parent_macros>
     <Sys>XF:10IDB</Sys>
@@ -52,7 +52,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>360</height>
+    <height>400</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>0</N>
@@ -95,7 +95,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>360</height>
+    <height>400</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>1</N>
@@ -138,7 +138,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>360</height>
+    <height>400</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>2</N>
@@ -181,7 +181,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>360</height>
+    <height>400</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>3</N>
@@ -204,7 +204,7 @@
     <width>550</width>
     <wuid>7fd9ae27:16b0ef1f976:-7849</wuid>
     <x>0</x>
-    <y>378</y>
+    <y>415</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -224,7 +224,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>360</height>
+    <height>400</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>4</N>
@@ -247,7 +247,7 @@
     <width>550</width>
     <wuid>-a0023f0:16c2a5539c6:-7cc8</wuid>
     <x>557</x>
-    <y>377</y>
+    <y>414</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -267,7 +267,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>360</height>
+    <height>400</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>5</N>
@@ -290,6 +290,6 @@
     <width>550</width>
     <wuid>-a0023f0:16c2a5539c6:-7ca7</wuid>
     <x>1122</x>
-    <y>377</y>
+    <y>414</y>
   </widget>
 </display>

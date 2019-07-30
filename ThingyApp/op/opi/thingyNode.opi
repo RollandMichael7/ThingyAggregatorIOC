@@ -50,7 +50,7 @@
     <foreground_color>
       <color red="192" green="192" blue="192" />
     </foreground_color>
-    <height>360</height>
+    <height>400</height>
     <lock_children>false</lock_children>
     <macros>
       <include_parent_macros>true</include_parent_macros>
@@ -159,7 +159,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Text Update</widget_type>
-      <width>115</width>
+      <width>157</width>
       <wrap_words>false</wrap_words>
       <wuid>7fd9ae27:16b0ef1f976:-78ee</wuid>
       <x>138</x>
@@ -211,7 +211,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Text Update</widget_type>
-      <width>115</width>
+      <width>157</width>
       <wrap_words>false</wrap_words>
       <wuid>7fd9ae27:16b0ef1f976:-7cf2</wuid>
       <x>138</x>
@@ -345,7 +345,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Text Update</widget_type>
-      <width>115</width>
+      <width>157</width>
       <wrap_words>false</wrap_words>
       <wuid>-7a90358c:169917bf4bc:-7b9c</wuid>
       <x>138</x>
@@ -406,8 +406,8 @@ $(pv_value)</tooltip>
       <widget_type>LED</widget_type>
       <width>221</width>
       <wuid>7fd9ae27:16b0ef1f976:-2d3a</wuid>
-      <x>300</x>
-      <y>13</y>
+      <x>312</x>
+      <y>38</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.LED" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -464,8 +464,8 @@ $(pv_value)</tooltip>
       <widget_type>LED</widget_type>
       <width>70</width>
       <wuid>7fd9ae27:16b0ef1f976:-5457</wuid>
-      <x>161</x>
-      <y>214</y>
+      <x>182</x>
+      <y>258</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -506,7 +506,7 @@ $(pv_value)</tooltip>
       <wrap_words>true</wrap_words>
       <wuid>7fd9ae27:16b0ef1f976:-2d30</wuid>
       <x>13</x>
-      <y>227</y>
+      <y>271</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -554,11 +554,11 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Text Update</widget_type>
-      <width>115</width>
+      <width>157</width>
       <wrap_words>false</wrap_words>
       <wuid>1240ac6a:16c0bd3ef5d:-77ad</wuid>
       <x>138</x>
-      <y>166</y>
+      <y>210</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -599,7 +599,7 @@ $(pv_value)</tooltip>
       <wrap_words>true</wrap_words>
       <wuid>-a0023f0:16c2a5539c6:-7f2c</wuid>
       <x>13</x>
-      <y>166</y>
+      <y>210</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -639,8 +639,8 @@ $(pv_value)</tooltip>
       <width>145</width>
       <wrap_words>true</wrap_words>
       <wuid>-a0023f0:16c2a5539c6:-7e1b</wuid>
-      <x>338</x>
-      <y>233</y>
+      <x>350</x>
+      <y>264</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -681,7 +681,7 @@ $(pv_value)</tooltip>
       <wrap_words>true</wrap_words>
       <wuid>-a0023f0:16c2a5539c6:-7bad</wuid>
       <x>13</x>
-      <y>288</y>
+      <y>332</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.progressbar" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -766,10 +766,103 @@ $(pv_value)</tooltip>
       <value_label_format></value_label_format>
       <visible>true</visible>
       <widget_type>Progress Bar</widget_type>
-      <width>115</width>
+      <width>157</width>
       <wuid>-a0023f0:16c2a5539c6:-7b83</wuid>
       <x>138</x>
-      <y>288</y>
+      <y>332</y>
+    </widget>
+    <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+      <actions hook="false" hook_all="false" />
+      <auto_size>false</auto_size>
+      <background_color>
+        <color red="255" green="255" blue="255" />
+      </background_color>
+      <border_color>
+        <color red="0" green="128" blue="255" />
+      </border_color>
+      <border_style>0</border_style>
+      <border_width>1</border_width>
+      <enabled>true</enabled>
+      <font>
+        <fontdata fontName="Sans" height="14" style="0" pixels="false" />
+      </font>
+      <foreground_color>
+        <color red="0" green="0" blue="0" />
+      </foreground_color>
+      <height>43</height>
+      <horizontal_alignment>1</horizontal_alignment>
+      <name>Label_5</name>
+      <rules />
+      <scale_options>
+        <width_scalable>true</width_scalable>
+        <height_scalable>true</height_scalable>
+        <keep_wh_ratio>false</keep_wh_ratio>
+      </scale_options>
+      <scripts />
+      <show_scrollbar>false</show_scrollbar>
+      <text>Air Quality</text>
+      <tooltip></tooltip>
+      <transparent>true</transparent>
+      <vertical_alignment>1</vertical_alignment>
+      <visible>true</visible>
+      <widget_type>Label</widget_type>
+      <width>123</width>
+      <wrap_words>true</wrap_words>
+      <wuid>-a0023f0:16c2a5539c6:-7882</wuid>
+      <x>13</x>
+      <y>150</y>
+    </widget>
+    <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
+      <actions hook="false" hook_all="false" />
+      <alarm_pulsing>false</alarm_pulsing>
+      <auto_size>false</auto_size>
+      <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+      <background_color>
+        <color red="255" green="255" blue="255" />
+      </background_color>
+      <border_alarm_sensitive>true</border_alarm_sensitive>
+      <border_color>
+        <color red="0" green="128" blue="255" />
+      </border_color>
+      <border_style>4</border_style>
+      <border_width>1</border_width>
+      <enabled>true</enabled>
+      <font>
+        <fontdata fontName="Sans" height="12" style="0" pixels="false" />
+      </font>
+      <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+      <foreground_color>
+        <color red="0" green="0" blue="0" />
+      </foreground_color>
+      <format_type>0</format_type>
+      <height>43</height>
+      <horizontal_alignment>1</horizontal_alignment>
+      <name>Text Update_48</name>
+      <precision>0</precision>
+      <precision_from_pv>true</precision_from_pv>
+      <pv_name>${Sys}${Dev}AirQuality</pv_name>
+      <pv_value />
+      <rotation_angle>0.0</rotation_angle>
+      <rules />
+      <scale_options>
+        <width_scalable>true</width_scalable>
+        <height_scalable>true</height_scalable>
+        <keep_wh_ratio>false</keep_wh_ratio>
+      </scale_options>
+      <scripts />
+      <show_units>true</show_units>
+      <text>######</text>
+      <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+      <transparent>true</transparent>
+      <vertical_alignment>1</vertical_alignment>
+      <visible>true</visible>
+      <widget_type>Text Update</widget_type>
+      <width>157</width>
+      <wrap_words>false</wrap_words>
+      <wuid>-a0023f0:16c2a5539c6:-7881</wuid>
+      <x>138</x>
+      <y>150</y>
     </widget>
   </widget>
 </display>

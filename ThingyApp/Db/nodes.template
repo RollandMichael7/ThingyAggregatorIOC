@@ -163,3 +163,20 @@ record(ai, "$(Sys)$(Dev)Pressure") {
 	field(PREC,	"2")
 	field(VAL,	"-1")
 }
+
+record(aSub, "$(Sys)$(Dev)AirQualityNotifier") {
+	field(DESC,	"Air quality listener for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_sensor")
+	field(INPA,	$(NodeID))
+	field(INPB,	"8")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)AirQuality.VAL")
+	field(FTVA,	"STRING")
+	field(FLNK,	"$(Sys)$(Dev)AirQuality")
+}
+
+record(stringin, "$(Sys)$(Dev)AirQuality") {
+	field(DESC,	"Air quality reading for thingy:52 node")
+}

@@ -67,6 +67,14 @@ uuid_t aggregatorUUID(const char *str) {
 	return uuid;
 }
 
+static void parse_button(uint8_t *resp, size_t len) {
+	int nodeID = resp[RESP_ID];
+	aSubRecord *buttonPV = get_pv(nodeID, BUTTON_ID);
+
+	if (buttonPV != 0)
+		set_pv(buttonPV, resp[RESP_BUTTON_STATE]);
+}
+
 static void parse_battery(uint8_t *resp, size_t len) {
 	int nodeID = resp[RESP_ID];
 	aSubRecord *batteryPV = get_pv(nodeID, BATTERY_ID);
@@ -75,12 +83,13 @@ static void parse_battery(uint8_t *resp, size_t len) {
 		set_pv(batteryPV, resp[RESP_BATTERY_LEVEL]);
 }
 
-static void parse_button(uint8_t *resp, size_t len) {
+static void parse_rssi(uint8_t *resp, size_t len) {
 	int nodeID = resp[RESP_ID];
-	aSubRecord *buttonPV = get_pv(nodeID, BUTTON_ID);
+	aSubRecord *rssiPV = get_pv(nodeID, RSSI_ID);
+	int8_t rssi = resp[RESP_RSSI_VAL];
 
-	if (buttonPV != 0)
-		set_pv(buttonPV, resp[RESP_BUTTON_STATE]);
+	if (rssiPV != 0)
+		set_pv(rssiPV, rssi);
 }
 
 static void parse_temperature(uint8_t *resp, size_t len) {
@@ -116,18 +125,26 @@ static void parse_humidity(uint8_t *resp, size_t len) {
 		set_pv(humidPV, resp[RESP_HUMIDITY_VAL]);
 }
 
-static void parse_rssi(uint8_t *resp, size_t len) {
+static void parse_gas(uint8_t *resp, size_t len) {
 	int nodeID = resp[RESP_ID];
-	aSubRecord *rssiPV = get_pv(nodeID, RSSI_ID);
-	int8_t rssi = resp[RESP_RSSI_VAL];
+	aSubRecord *gasPV = get_pv(nodeID, GAS_ID);
 
-	if (rssiPV != 0)
-		set_pv(rssiPV, rssi);
+	if (gasPV != 0 && ioc_started) {
+		int i = RESP_GAS_CO2;
+		uint16_t co2 = (resp[i]) | (resp[i+1] << 8);
+		i = RESP_GAS_TVOC;
+		uint16_t tvoc = (resp[i]) | (resp[i+1] << 8);
+		char buf[40];
+		memset(buf, 0, sizeof(buf));
+		snprintf(buf, sizeof(buf), "%u eCO2 ppm\n%u TVOC ppb", (unsigned int)co2, (unsigned int)tvoc);
+		strncpy(gasPV->vala, buf, sizeof(buf));
+		scanOnce(gasPV);
+	}
 }
 
 // Parse response
 void parse_resp(uint8_t *resp, size_t len) {
-	print_resp(resp, len);
+	//print_resp(resp, len);
 	uint8_t op = resp[RESP_OPCODE];
 	if (op == OPCODE_BUTTON)
 		parse_button(resp, len);
@@ -141,8 +158,10 @@ void parse_resp(uint8_t *resp, size_t len) {
 		parse_pressure(resp, len);
 	else if (op == OPCODE_HUMIDITY)
 		parse_humidity(resp, len);
-	else
-		printf("opcode: %d\n", op);
+	else if (op == OPCODE_GAS)
+		parse_gas(resp, len);
+	//else
+	//	printf("unknown opcode: %d\n", op);
 }
 
 // set PV value and scan it
