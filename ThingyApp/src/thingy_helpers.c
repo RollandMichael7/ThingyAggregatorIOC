@@ -83,6 +83,31 @@ static void parse_button(uint8_t *resp, size_t len) {
 		set_pv(buttonPV, resp[RESP_BUTTON_STATE]);
 }
 
+static void parse_temperature(uint8_t *resp, size_t len) {
+	int nodeID = resp[RESP_ID];
+	aSubRecord *tempPV = get_pv(nodeID, TEMPERATURE_ID);
+
+	if (tempPV != 0) {
+		int8_t integer = resp[RESP_TEMPERATURE_INT];
+		uint8_t decimal = resp[RESP_TEMPERATURE_DEC];
+		float temperature = integer + (float)(decimal / 100.0);
+		set_pv(tempPV, temperature);
+	}
+}
+
+static void parse_pressure(uint8_t *resp, size_t len) {
+	int nodeID = resp[RESP_ID];
+	aSubRecord *pressurePV = get_pv(nodeID, PRESSURE_ID);
+
+	if (pressurePV != 0) {
+		int i = RESP_PRESSURE_INT;
+		int32_t integer = (resp[i]) | (resp[i+1] << 8) | (resp[i+2] << 16) | (resp[i+3] << 24);
+		uint8_t decimal = resp[RESP_PRESSURE_DEC];
+		float pressure = integer + (float)(decimal / 100.0);
+		set_pv(pressurePV, pressure);
+	}
+}
+
 static void parse_humidity(uint8_t *resp, size_t len) {
 	int nodeID = resp[RESP_ID];
 	aSubRecord *humidPV = get_pv(nodeID, HUMIDITY_ID);
@@ -102,16 +127,22 @@ static void parse_rssi(uint8_t *resp, size_t len) {
 
 // Parse response
 void parse_resp(uint8_t *resp, size_t len) {
-	//print_resp(resp, len);
+	print_resp(resp, len);
 	uint8_t op = resp[RESP_OPCODE];
-	if (op == OPCODE_BATTERY)
-		parse_battery(resp, len);
-	else if (op == OPCODE_BUTTON)
+	if (op == OPCODE_BUTTON)
 		parse_button(resp, len);
-	else if (op == OPCODE_HUMIDITY)
-		parse_humidity(resp, len);
+	else if (op == OPCODE_BATTERY)
+		parse_battery(resp, len);
 	else if (op == OPCODE_RSSI)
 		parse_rssi(resp, len);
+	else if (op == OPCODE_TEMPERATURE)
+		parse_temperature(resp, len);
+	else if (op == OPCODE_PRESSURE)
+		parse_pressure(resp, len);
+	else if (op == OPCODE_HUMIDITY)
+		parse_humidity(resp, len);
+	else
+		printf("opcode: %d\n", op);
 }
 
 // set PV value and scan it
