@@ -180,3 +180,43 @@ record(aSub, "$(Sys)$(Dev)AirQualityNotifier") {
 record(stringin, "$(Sys)$(Dev)AirQuality") {
 	field(DESC,	"Air quality reading for thingy:52 node")
 }
+
+record(aSub, "$(Sys)$(Dev)eCO2Notifier") {
+	field(DESC,	"eCO2 listener for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_sensor")
+	field(INPA,	$(NodeID))
+	field(INPB,	"9")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)eCO2.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)eCO2")
+}
+
+record(ai, "$(Sys)$(Dev)eCO2") {
+	field(DESC,	"eCO2 value for thingy:52 node")
+	field(EGU,	"ppm")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}
+
+record(aSub, "$(Sys)$(Dev)TVOCNotifier") {
+	field(DESC,	"TVOC listener for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_sensor")
+	field(INPA,	$(NodeID))
+	field(INPB,	"10")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)TVOC.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)TVOC")
+}
+
+record(ai, "$(Sys)$(Dev)TVOC") {
+	field(DESC,	"TVOC value for thingy:52 node")
+	field(EGU,	"ppb")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}

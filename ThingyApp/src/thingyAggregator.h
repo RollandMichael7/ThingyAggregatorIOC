@@ -52,6 +52,8 @@ int led_on[MAX_NODES];
 #define HUMIDITY_ID 6
 #define PRESSURE_ID 7
 #define GAS_ID 8
+#define CO2_ID 9
+#define TVOC_ID 10
 
 // Connection status
 #define CONNECTED 1

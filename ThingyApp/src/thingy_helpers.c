@@ -128,12 +128,18 @@ static void parse_humidity(uint8_t *resp, size_t len) {
 static void parse_gas(uint8_t *resp, size_t len) {
 	int nodeID = resp[RESP_ID];
 	aSubRecord *gasPV = get_pv(nodeID, GAS_ID);
+	aSubRecord *coPV = get_pv(nodeID, CO2_ID);
+	aSubRecord *tvocPV = get_pv(nodeID, TVOC_ID);
 
 	if (gasPV != 0 && ioc_started) {
 		int i = RESP_GAS_CO2;
 		uint16_t co2 = (resp[i]) | (resp[i+1] << 8);
+		if (coPV != 0)
+			set_pv(coPV, co2);
 		i = RESP_GAS_TVOC;
 		uint16_t tvoc = (resp[i]) | (resp[i+1] << 8);
+		if (tvocPV != 0)
+			set_pv(tvocPV, tvoc);
 		char buf[40];
 		memset(buf, 0, sizeof(buf));
 		snprintf(buf, sizeof(buf), "%u eCO2 ppm\n%u TVOC ppb", (unsigned int)co2, (unsigned int)tvoc);
