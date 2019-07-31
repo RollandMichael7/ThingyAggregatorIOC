@@ -33,14 +33,12 @@ gatt_connection_t *connection;
 // flag for broken connection
 int broken_conn;
 
-// bitmap for toggling LED
-int led_on[MAX_NODES];
-
 
 // ----------------------- CONSTANTS -----------------------
 
 // Bluetooth UUIDs for interacting with aggregator
 #define RECV_UUID "3e520003-1368-b682-4440-d7dd234c45bc"
+#define SEND_UUID "3e520002-1368-b682-4440-d7dd234c45bc"
 
 // IDs for PVs
 #define CONNECTION_ID 0

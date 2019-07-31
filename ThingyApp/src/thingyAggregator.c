@@ -37,6 +37,8 @@ pthread_mutex_t connlock = PTHREAD_MUTEX_INITIALIZER;
 int stop;
 // flag for determining whether monitoring threads have started
 int monitoring = 0;
+// LED toggle
+int led_on;
 // bitmap for active nodes
 int active[MAX_NODES];
 // bitmap for nodes currently active and transmitting data
@@ -85,6 +87,7 @@ static gatt_connection_t* get_connection() {
 		printf("Connected.\n");
 	}
 	recv_uuid = aggregatorUUID(RECV_UUID);
+	send_uuid = aggregatorUUID(SEND_UUID);
 	// register cleanup method
 	signal(SIGINT, disconnect);
 
@@ -261,6 +264,24 @@ static long register_pv(aSubRecord *pv) {
 	return 0;
 }
 
+// LED toggle triggered by writing to LED PV
+static long toggle_led(aSubRecord *pv) {
+	int val, id;
+	memcpy(&val, pv->b, sizeof(int));
+	if (val != 0) {
+		uint8_t command[5];
+		led_on ^= 1;
+		command[0] = 2;
+		command[1] = led_on;
+		command[2] = 0xFF;
+		command[3] = 0xFF;
+		command[4] = 0xFF;
+		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		set_pv(pv, 0);
+	}
+	return 0;
+}
+
 
 // ---------------------------- Helper functions ----------------------------
 
@@ -299,3 +320,4 @@ void nullify_node(int id) {
 /* Register these symbols for use by IOC code: */
 epicsRegisterFunction(register_pv);
 epicsRegisterFunction(register_sensor);
+epicsRegisterFunction(toggle_led);

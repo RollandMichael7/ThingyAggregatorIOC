@@ -15,11 +15,11 @@
     <color red="192" green="192" blue="192" />
   </foreground_color>
   <grid_space>6</grid_space>
-  <height>820</height>
+  <height>875</height>
   <macros>
     <include_parent_macros>true</include_parent_macros>
     <Sys>XF:10IDB</Sys>
-    <Dev>{THINGY:BRIDGE}</Dev>
+    <Dev>{THINGY:AGGREGATOR}</Dev>
   </macros>
   <name></name>
   <rules />
@@ -75,7 +75,7 @@
     <width>550</width>
     <wuid>7fd9ae27:16b0ef1f976:-7b31</wuid>
     <x>0</x>
-    <y>6</y>
+    <y>72</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -118,7 +118,7 @@
     <width>550</width>
     <wuid>7fd9ae27:16b0ef1f976:-7885</wuid>
     <x>558</x>
-    <y>6</y>
+    <y>72</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -161,7 +161,7 @@
     <width>550</width>
     <wuid>7fd9ae27:16b0ef1f976:-7867</wuid>
     <x>1122</x>
-    <y>5</y>
+    <y>71</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -204,7 +204,7 @@
     <width>550</width>
     <wuid>7fd9ae27:16b0ef1f976:-7849</wuid>
     <x>0</x>
-    <y>415</y>
+    <y>481</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -247,7 +247,7 @@
     <width>550</width>
     <wuid>-a0023f0:16c2a5539c6:-7cc8</wuid>
     <x>557</x>
-    <y>414</y>
+    <y>480</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -290,6 +290,60 @@
     <width>550</width>
     <wuid>-a0023f0:16c2a5539c6:-7ca7</wuid>
     <x>1122</x>
-    <y>414</y>
+    <y>480</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
+    <actions hook="false" hook_all="false">
+      <action type="WRITE_PV">
+        <pv_name>$(Sys)$(Dev)LED</pv_name>
+        <value>1</value>
+        <timeout>10</timeout>
+        <confirm_message></confirm_message>
+        <description></description>
+      </action>
+    </actions>
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <fontdata fontName="Sans" height="15" style="1" pixels="false" />
+    </font>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>40</height>
+    <image></image>
+    <name>Action Button</name>
+    <push_action_index>0</push_action_index>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <style>0</style>
+    <text>Toggle LEDs</text>
+    <toggle_button>false</toggle_button>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <visible>true</visible>
+    <widget_type>Action Button</widget_type>
+    <width>324</width>
+    <wuid>-a0023f0:16c2a5539c6:-72d3</wuid>
+    <x>671</x>
+    <y>18</y>
   </widget>
 </display>
