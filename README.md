@@ -3,7 +3,11 @@ An EPICS IOC for a Bluetooth star network of Nordic thingy:52s and a central NRF
 
 Supported sensors:
 - Battery
+- Button
+- Temperature
+- Pressure
 - Humidity
+- Gas / Air Quality
 
 ## Requirements ##
 - Bluetooth Low Energy connectivity

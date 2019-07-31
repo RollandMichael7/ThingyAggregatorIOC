@@ -2,11 +2,23 @@ EPICS IOC for Bluetooth star network of Nordic thingy:52 nodes and NRF52DK aggre
 
 Currently supported sensors:
 
+- Battery
 - Button
+- Temperature
+- Pressure
 - Humidity
+- Gas / Air Quality
 
 R1-0
 =================
+
+R1-0-1 7/31/19
+----
+- Add watchdog thread to detect disconnected nodes
+- Add support for battery, temperature, pressure, air quality (eCO2, TVOC) sensors
+- Add RSSI PV
+- Add LED toggle
+- Add OPI screens
 
 R1-0-0 7/24/19
 ----
