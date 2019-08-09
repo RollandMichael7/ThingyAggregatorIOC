@@ -67,6 +67,10 @@ uuid_t aggregatorUUID(const char *str) {
 	return uuid;
 }
 
+/*
+ *	 helper functions to parse response from node according to sensor ID and save to corresponding PVs
+ */
+
 static void parse_button(uint8_t *resp, size_t len) {
 	int nodeID = resp[RESP_ID];
 	aSubRecord *buttonPV = get_pv(nodeID, BUTTON_ID);
@@ -148,6 +152,73 @@ static void parse_gas(uint8_t *resp, size_t len) {
 	}
 }
 
+static void parse_quaternions(uint8_t *resp, size_t len) {
+	int nodeID = resp[RESP_ID];
+	aSubRecord *pvs[4];
+	pvs[0] = get_pv(nodeID, QUATERNION_W_ID);
+	pvs[1] = get_pv(nodeID, QUATERNION_X_ID);
+	pvs[2] = get_pv(nodeID, QUATERNION_Y_ID);
+	pvs[3] = get_pv(nodeID, QUATERNION_Z_ID);
+
+	for (int i=0; i<4; i++) {
+		if (pvs[i] != 0) {
+			int j = RESP_QUATERNIONS_W + (i * 4);
+			int32_t raw = (resp[j]) | (resp[j+1] << 8) | (resp[j+2] << 16) | (resp[j+3] << 24);
+			float x = ((float)(raw) / (float)(1 << 30)); // 2Q30 fixed point
+			set_pv(pvs[i], x);
+		}
+	}
+}
+
+static void parse_raw_motion(uint8_t *resp, size_t len) {
+	int nodeID = resp[RESP_ID];
+	aSubRecord *pvs[9];
+	pvs[0] = get_pv(nodeID, ACCEL_X_ID); pvs[1] = get_pv(nodeID, ACCEL_Y_ID); pvs[2] = get_pv(nodeID, ACCEL_Z_ID);
+	pvs[3] = get_pv(nodeID, GYRO_X_ID); pvs[4] = get_pv(nodeID, GYRO_Y_ID); pvs[5] = get_pv(nodeID, GYRO_Z_ID);
+	pvs[6] = get_pv(nodeID, COMPASS_X_ID); pvs[7] = get_pv(nodeID, COMPASS_Y_ID); pvs[8] = get_pv(nodeID, COMPASS_Z_ID);
+	for (int i=0; i<9; i++) {
+		if (pvs[i] != 0) {
+			int j = RESP_RAW_ACCEL_X + (i * 2);
+			int16_t raw = (resp[j]) | (resp[j+1] << 8);
+			float x;
+			if (i <= 2) // acceleration
+				x = ((float)(raw) / (float)(1 << 10)); // 6Q10 fixed point
+			else if (i <= 5) // gyroscope
+				x = ((float)(raw) / (float)(1 << 5)); // 11Q5 fixed point
+			else // compass
+				x = ((float)(raw) / (float)(1 << 4)); // 12Q4 fixed point
+			set_pv(pvs[i], x);
+		}
+	}
+}
+
+static void parse_euler(uint8_t *resp, size_t len) {
+	int nodeID = resp[RESP_ID];
+	aSubRecord *pvs[3];
+	pvs[0] = get_pv(nodeID, ROLL_ID);
+	pvs[1] = get_pv(nodeID, PITCH_ID);
+	pvs[2] = get_pv(nodeID, YAW_ID);
+	for (int i=0; i<3; i++) {
+		if (pvs[i] != 0) {
+			int j = RESP_EULER_ROLL + (i * 4);
+			int32_t raw = (resp[j]) | (resp[j+1] << 8) | (resp[j+2] << 16) | (resp[j+3] << 24);
+			float x = ((float)(raw) / (float)(1 << 16)); // 16Q16 fixed point
+			set_pv(pvs[i], x);
+		}
+	}
+}
+
+static void parse_heading(uint8_t *resp, size_t len) {
+	int nodeID = resp[RESP_ID];
+	aSubRecord *headingPV = get_pv(nodeID, HEADING_ID);
+	if (headingPV != 0) {
+		int i = RESP_HEADING_VAL;
+		int32_t raw = (resp[i]) | (resp[i+2] << 8) | (resp[i+3] << 16) | (resp[i+4] << 24);
+		float x = ((float)(raw) / (float)(1 << 16)); // 16Q16 fixed point
+		set_pv(headingPV, x);
+	}
+}
+
 // Parse response
 void parse_resp(uint8_t *resp, size_t len) {
 	//print_resp(resp, len);
@@ -166,6 +237,14 @@ void parse_resp(uint8_t *resp, size_t len) {
 		parse_humidity(resp, len);
 	else if (op == OPCODE_GAS)
 		parse_gas(resp, len);
+	else if (op == OPCODE_QUATERNIONS)
+		parse_quaternions(resp, len);
+	else if (op == OPCODE_RAW_MOTION)
+		parse_raw_motion(resp, len);
+	else if (op == OPCODE_EULER)
+		parse_euler(resp, len);
+	else if (op == OPCODE_HEADING)
+		parse_heading(resp, len);
 	//else
 	//	printf("unknown opcode: %d\n", op);
 }
