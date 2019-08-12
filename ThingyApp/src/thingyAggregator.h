@@ -11,11 +11,11 @@ aSubRecord* get_pv(int, int);
 // max attempts for reliable communication
 #define MAX_ATTEMPTS 5
 
-// delay (in seconds) in between attempts to reconnect nodes
+// delay (in seconds) in between attempts to reconnect to aggregator
 #define RECONNECT_DELAY 3
 
 // delay (in milliseconds) in between checks for connectivity
-#define HEARTBEAT_DELAY 250
+#define HEARTBEAT_DELAY 90000
 
 
 // ----------------------- SHARED GLOBALS -----------------------
