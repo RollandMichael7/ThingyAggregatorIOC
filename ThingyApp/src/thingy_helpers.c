@@ -67,9 +67,83 @@ uuid_t aggregatorUUID(const char *str) {
 	return uuid;
 }
 
+// get value from environment config PVs 
+// these PVs store value in INPC field
+static int get_config_pv_value(int nodeID, int pvID) {
+	aSubRecord *pv = get_pv(nodeID, pvID);
+	if (pv != 0) {
+		int a, b, c;
+		memcpy(&a, pv->a, sizeof(int));
+		memcpy(&b, pv->b, sizeof(int));
+		memcpy(&c, pv->c, sizeof(int));
+		printf("a: %d b: %d c: %d\n", a, b, c);
+		int val;
+		memcpy(&val, pv->c, sizeof(int));
+		return val;
+	}
+	else
+		return 0;
+}
+
+// write environment config values to node
+void write_env_config_helper(int nodeID) {
+	uint16_t tempInterval = get_config_pv_value(nodeID, TEMP_INTERVAL_ID);
+	uint16_t pressureInterval = get_config_pv_value(nodeID, PRESSURE_INTERVAL_ID);
+	uint16_t humidInterval = get_config_pv_value(nodeID, HUMID_INTERVAL_ID);
+	uint16_t colorInterval = 60000;
+	uint8_t gasMode = get_config_pv_value(nodeID, GAS_MODE_ID);
+	printf("write: %d %d %d %d\n", tempInterval, pressureInterval, humidInterval, gasMode);
+	uint8_t command[13];
+	command[0] = COMMAND_ENV_CONFIG_WRITE;
+	command[1] = tempInterval & 0xFF;
+	command[2] = tempInterval >> 8;
+	command[3] = pressureInterval & 0xFF;
+	command[4] = pressureInterval >> 8;
+	command[5] = humidInterval & 0xFF;
+	command[6] = humidInterval >> 8;
+	command[7] = colorInterval & 0xFF;
+	command[8] = colorInterval >> 8;
+	command[9] = gasMode;
+	// light sensor LED RGB color; currently unused
+	command[10] = 0;
+	command[11] = 0;
+	command[12] = 0;
+	//gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+}
+
+
 /*
- *	 helper functions to parse response from node according to sensor ID and save to corresponding PVs
+ *	 helper functions to parse response from node according to opcode and save to corresponding PVs
  */
+
+static void parse_env_config(uint8_t *resp, size_t len) {
+	print_resp(resp, len);
+	int nodeID = resp[RESP_ID];
+	aSubRecord *tempIntervalPV = get_pv(nodeID, TEMP_INTERVAL_ID);
+	aSubRecord *pressureIntervalPV = get_pv(nodeID, PRESSURE_INTERVAL_ID);
+	aSubRecord *humidIntervalPV = get_pv(nodeID, HUMID_INTERVAL_ID);
+	aSubRecord *gasModePV = get_pv(nodeID, GAS_MODE_ID);
+	uint16_t interval;
+	if (tempIntervalPV != 0) {
+		interval = (resp[3]) | (resp[4] << 8);
+		set_pv(tempIntervalPV, interval);
+		set_pv(tempIntervalPV, interval);
+	}
+	if (pressureIntervalPV != 0) {
+		interval = (resp[5]) | (resp[6] << 8);
+		set_pv(pressureIntervalPV, interval);
+		set_pv(pressureIntervalPV, interval);
+	}
+	if (humidIntervalPV != 0) {
+		interval = (resp[7]) | (resp[8] << 8);
+		set_pv(humidIntervalPV, interval);
+		set_pv(humidIntervalPV, interval);
+	}
+	if (gasModePV != 0) {
+		set_pv(gasModePV, resp[11]);
+		set_pv(gasModePV, resp[11]);
+	}
+}
 
 static void parse_button(uint8_t *resp, size_t len) {
 	int nodeID = resp[RESP_ID];
@@ -237,6 +311,8 @@ void parse_resp(uint8_t *resp, size_t len) {
 		parse_humidity(resp, len);
 	else if (op == OPCODE_GAS)
 		parse_gas(resp, len);
+	else if (op == OPCODE_ENV_CONFIG)
+		parse_env_config(resp, len);
 	else if (op == OPCODE_QUATERNIONS)
 		parse_quaternions(resp, len);
 	else if (op == OPCODE_RAW_MOTION)

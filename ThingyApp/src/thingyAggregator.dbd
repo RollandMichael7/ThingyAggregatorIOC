@@ -1,4 +1,5 @@
 function(register_pv)
-function(register_sensor)
 function(toggle_led)
+function(read_env_config)
+function(write_env_config)
 registrar("thingyRegister")

@@ -58,27 +58,37 @@ int broken_conn;
 #define GAS_ID 8
 #define CO2_ID 9
 #define TVOC_ID 10
-#define QUATERNION_W_ID 11
-#define QUATERNION_X_ID 12
-#define QUATERNION_Y_ID 13
-#define QUATERNION_Z_ID 14
-#define ACCEL_X_ID 15
-#define ACCEL_Y_ID 16
-#define ACCEL_Z_ID 17
-#define GYRO_X_ID 18
-#define GYRO_Y_ID 19
-#define GYRO_Z_ID 20
-#define COMPASS_X_ID 21
-#define COMPASS_Y_ID 22
-#define COMPASS_Z_ID 23
-#define ROLL_ID 24
-#define PITCH_ID 25
-#define YAW_ID 26
-#define HEADING_ID 27
+#define TEMP_INTERVAL_ID 11
+#define PRESSURE_INTERVAL_ID 12
+#define HUMID_INTERVAL_ID 13
+#define GAS_MODE_ID 14
+#define QUATERNION_W_ID 15
+#define QUATERNION_X_ID 16
+#define QUATERNION_Y_ID 17
+#define QUATERNION_Z_ID 18
+#define ACCEL_X_ID 19
+#define ACCEL_Y_ID 20
+#define ACCEL_Z_ID 21
+#define GYRO_X_ID 22
+#define GYRO_Y_ID 23
+#define GYRO_Z_ID 24
+#define COMPASS_X_ID 25
+#define COMPASS_Y_ID 26
+#define COMPASS_Z_ID 27
+#define ROLL_ID 28
+#define PITCH_ID 29
+#define YAW_ID 30
+#define HEADING_ID 31
+
 
 // Connection status
 #define CONNECTED 1
 #define DISCONNECTED 0
+
+// Opcodes for commands
+#define COMMAND_LED_TOGGLE 2
+#define COMMAND_ENV_CONFIG_READ 6
+#define COMMAND_ENV_CONFIG_WRITE 7
 
 // Indices for every response payload
 #define RESP_OPCODE 0
@@ -92,10 +102,11 @@ int broken_conn;
 #define OPCODE_PRESSURE 8
 #define OPCODE_HUMIDITY 9
 #define OPCODE_GAS 10
-#define OPCODE_QUATERNIONS 11
-#define OPCODE_RAW_MOTION 12
-#define OPCODE_EULER 13
-#define OPCODE_HEADING 14
+#define OPCODE_ENV_CONFIG 11
+#define OPCODE_QUATERNIONS 12
+#define OPCODE_RAW_MOTION 13
+#define OPCODE_EULER 14
+#define OPCODE_HEADING 15
 
 // Indices for each response type
 #define RESP_BUTTON_STATE 4

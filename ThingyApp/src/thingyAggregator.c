@@ -58,7 +58,7 @@ static void	reconnect();
 typedef struct {
 	aSubRecord *pv;
 	int nodeID;
-	int sensorID;
+	int pvID;
 	struct PVnode *next;
 } PVnode;
 
@@ -163,7 +163,7 @@ static void watchdog() {
 	}
 }
 
-// thread function to attempt to reconnect to disconnected nodes
+// thread function to attempt to reconnect to aggregator
 static void reconnect() {
 	while(ioc_started == 0)
 		sleep(1);
@@ -208,39 +208,24 @@ static void notif_callback(const uuid_t *uuidObject, const uint8_t *resp, size_t
 	parse_resp(resp, len);
 }
 
-// PV startup function for sensors
-static long register_sensor(aSubRecord *pv) {	
+// PV startup function 
+// adds PV to global linked list
+long register_pv(aSubRecord *pv) {
 	// initialize globals
 	get_connection();
-	int nodeID, sensorID;
-	memcpy(&nodeID, pv->a, sizeof(int));
-	memcpy(&sensorID, pv->b, sizeof(int));
-	if (nodeID > (MAX_NODES-1) && nodeID != AGGREGATOR_ID) {
-		printf("MAX_NODES exceeded. Ignoring node %d\n", nodeID);
-		return;
-	}
-
-	// add PV to linked list
-	register_pv(pv);
-	return 0;
-}
-
-// PV startup function for status & connection
-// adds PV to global linked list
-static long register_pv(aSubRecord *pv) {
-	int nodeID, sensorID;
+	int nodeID, pvID;
 	memcpy(&nodeID, pv->a, sizeof(int));
 	if (nodeID > (MAX_NODES-1) && nodeID != AGGREGATOR_ID) {
 		printf("MAX_NODES exceeded. Ignoring node %d\n", nodeID);
 		return;
 	}
-	memcpy(&sensorID, pv->b, sizeof(int));
+	memcpy(&pvID, pv->b, sizeof(int));
 
 	// add PV to list
 	pthread_mutex_lock(&pv_lock);
 	PVnode *pvnode = malloc(sizeof(PVnode));
 	pvnode->nodeID = nodeID;
-	pvnode->sensorID = sensorID;
+	pvnode->pvID = pvID;
 	pvnode->pv = pv;
 	pvnode->next = 0;
 	if (firstPV == 0) {
@@ -256,22 +241,22 @@ static long register_pv(aSubRecord *pv) {
 	pthread_mutex_unlock(&pv_lock);
 
 	printf("Registered %s\n", pv->name);
-	if (sensorID == STATUS_ID)
+	if (pvID == STATUS_ID)
 		set_status(nodeID, "CONNECTED");
-	else if (sensorID == CONNECTION_ID) 
+	else if (pvID == CONNECTION_ID) 
 		set_connection(nodeID, CONNECTED);
 	active[nodeID] = 1;
 	return 0;
 }
 
 // LED toggle triggered by writing to LED PV
-static long toggle_led(aSubRecord *pv) {
-	int val, id;
+long toggle_led(aSubRecord *pv) {
+	int val;
 	memcpy(&val, pv->b, sizeof(int));
 	if (val != 0) {
 		uint8_t command[5];
 		led_on ^= 1;
-		command[0] = 2;
+		command[0] = COMMAND_LED_TOGGLE;
 		command[1] = led_on;
 		command[2] = 0xFF;
 		command[3] = 0xFF;
@@ -282,33 +267,61 @@ static long toggle_led(aSubRecord *pv) {
 	return 0;
 }
 
+// Start environment sensor config read; triggered by writing to ConfigRead PV
+long read_env_config(aSubRecord *pv) {
+	int val;
+	memcpy(&val, pv->b, sizeof(int));
+	if (val != 0) {
+		int nodeID;
+		memcpy(&nodeID, pv->a, sizeof(int));
+		uint8_t command[2];
+		command[0] = COMMAND_ENV_CONFIG_READ;
+		command[1] = nodeID;
+		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		set_pv(pv, 0);
+	}
+	return 0;
+}
+
+// Environment sensor write triggered by writing to ConfigWrite PV
+long write_env_config(aSubRecord *pv) {
+	int val;
+	memcpy(&val, pv->b, sizeof(int));
+	if (val != 0) {
+		int nodeID;
+		memcpy(&nodeID, pv->a, sizeof(int));
+		write_env_config_helper(nodeID);
+		set_pv(pv, 0);
+	}
+}
+
 
 // ---------------------------- Helper functions ----------------------------
 
 
-// fetch PV from linked list given node/sensor IDs
-aSubRecord* get_pv(int nodeID, int sensorID) {
+// fetch PV from linked list given node/PV IDs
+aSubRecord* get_pv(int nodeID, int pvID) {
 	PVnode *node = firstPV;
 	while (node != 0) {
-		if (node->nodeID == nodeID && node->sensorID == sensorID) {
+		if (node->nodeID == nodeID && node->pvID == pvID) {
 			return node->pv;
 		}
 		node = node->next;
 	}
-	printf("WARNING: No PV for node %d sensor %d\n", nodeID, sensorID);
+	printf("WARNING: No PV for node %d sensor %d\n", nodeID, pvID);
 	return 0;
 }
 
 // mark dead nodes through PV values
 void nullify_node(int id) {
 	float null = -1;
-	int sensorID;
+	int pvID;
 	PVnode *node = firstPV;
 	aSubRecord *pv;
 	while (node != 0) {
-		sensorID = node->sensorID;
-		if (node->nodeID == id && sensorID != CONNECTION_ID && sensorID != STATUS_ID) {
-			if (sensorID == BUTTON_ID)
+		pvID = node->pvID;
+		if (node->nodeID == id && pvID != CONNECTION_ID && pvID != STATUS_ID) {
+			if (pvID == BUTTON_ID)
 				set_pv(node->pv, 0);
 			else
 				set_pv(node->pv, null);
@@ -319,5 +332,6 @@ void nullify_node(int id) {
 
 /* Register these symbols for use by IOC code: */
 epicsRegisterFunction(register_pv);
-epicsRegisterFunction(register_sensor);
 epicsRegisterFunction(toggle_led);
+epicsRegisterFunction(read_env_config);
+epicsRegisterFunction(write_env_config);

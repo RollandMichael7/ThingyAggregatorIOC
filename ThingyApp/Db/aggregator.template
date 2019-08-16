@@ -33,7 +33,7 @@ record(stringin, "$(Sys)$(Dev)Status") {
 record(aSub, "$(Sys)$(Dev)BatteryNotifier") {
 	field(DESC,	"Battery listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	20)
 	field(INPB,	3)
 	field(FTA,	"SHORT")

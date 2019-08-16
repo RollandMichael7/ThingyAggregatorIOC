@@ -1,7 +1,35 @@
 # Database for Nordic thingy:52 star network nodes
-# INPB = sensor ID as defined in thingyAggregator.h
+# INPB = ID as defined in thingyAggregator.h
 
-record(ai, "$(Sys)$(Dev)LED") {
+record(aSub, "$(Sys)$(Dev)ConfigReader") {
+	field(DESC,	"Read config for thingy node")
+	field(SCAN,	".2 second")
+	field(SNAM,	"read_env_config")
+	field(INPA,	$(NodeID))
+	field(INPB, "$(Sys)$(Dev)ConfigRead.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)ConfigRead.VAL")
+	field(FTVA,	"SHORT")
+}
+
+record(ai, "$(Sys)$(Dev)ConfigRead") {
+	field(VAL,	"1")
+}
+
+record(aSub, "$(Sys)$(Dev)ConfigWriter") {
+	field(DESC,	"Write config for thingy node")
+	field(SCAN,	".2 second")
+	field(SNAM,	"write_env_config")
+	field(INPA,	$(NodeID))
+	field(INPB, "$(Sys)$(Dev)ConfigWrite.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)ConfigWrite.VAL")
+	field(FTVA,	"SHORT")
+}
+
+record(ai, "$(Sys)$(Dev)ConfigWrite") {
 	field(VAL,	"0")
 }
 
@@ -43,7 +71,7 @@ record(stringin, "$(Sys)$(Dev)Status") {
 record(aSub, "$(Sys)$(Dev)RSSINotifier") {
 	field(DESC,	"RSSI listener for thingy:52 node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"2")
 	field(FTA,	"SHORT")
@@ -63,7 +91,7 @@ record(ai, "$(Sys)$(Dev)RSSI") {
 record(aSub, "$(Sys)$(Dev)BatteryNotifier") {
 	field(DESC,	"Battery listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"3")
 	field(FTA,	"SHORT")
@@ -87,7 +115,7 @@ record(ai, "$(Sys)$(Dev)Battery") {
 record(aSub, "$(Sys)$(Dev)ButtonNotifier") {
 	field(DESC,	"Button listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"4")
 	field(FTA,	"SHORT")
@@ -104,7 +132,7 @@ record(ai, "$(Sys)$(Dev)Button") {
 record(aSub, "$(Sys)$(Dev)TemperatureNotifier") {
 	field(DESC,	"Temperature listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"5")
 	field(FTA,	"SHORT")
@@ -128,7 +156,7 @@ record(ai, "$(Sys)$(Dev)Temperature") {
 record(aSub, "$(Sys)$(Dev)HumidityNotifier") {
 	field(DESC,	"Humidity listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"6")
 	field(FTA,	"SHORT")
@@ -148,7 +176,7 @@ record(ai, "$(Sys)$(Dev)Humidity") {
 record(aSub, "$(Sys)$(Dev)PressureNotifier") {
 	field(DESC,	"Pressure listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"7")
 	field(FTA,	"SHORT")
@@ -168,7 +196,7 @@ record(ai, "$(Sys)$(Dev)Pressure") {
 record(aSub, "$(Sys)$(Dev)AirQualityNotifier") {
 	field(DESC,	"Air quality listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"8")
 	field(FTA,	"SHORT")
@@ -185,7 +213,7 @@ record(stringin, "$(Sys)$(Dev)AirQuality") {
 record(aSub, "$(Sys)$(Dev)eCO2Notifier") {
 	field(DESC,	"eCO2 listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"9")
 	field(FTA,	"SHORT")
@@ -205,7 +233,7 @@ record(ai, "$(Sys)$(Dev)eCO2") {
 record(aSub, "$(Sys)$(Dev)TVOCNotifier") {
 	field(DESC,	"TVOC listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"10")
 	field(FTA,	"SHORT")
@@ -222,12 +250,99 @@ record(ai, "$(Sys)$(Dev)TVOC") {
 	field(VAL,	"-1")
 }
 
+record(aSub, "$(Sys)$(Dev)TempIntervalWriter") {
+	field(DESC,	"Temperature interval writer")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"11")
+	field(INPC,	"$(Sys)$(Dev)TemperatureInterval.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(FTC,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)TemperatureInterval.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)TemperatureInterval")
+}
+
+record(ai, "$(Sys)$(Dev)TemperatureInterval") {
+	field(DESC,	"Temperature interval for thingy:52 node")
+	field(EGU,	"ms")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}
+
+record(aSub, "$(Sys)$(Dev)PressureIntervalWriter") {
+	field(DESC,	"Pressure interval writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"12")
+	field(INPC,	"$(Sys)$(Dev)PressureInterval.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(FTC,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)PressureInterval.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)PressureInterval")
+}
+
+record(ai, "$(Sys)$(Dev)PressureInterval") {
+	field(DESC,	"Pressure interval for thingy:52 node")
+	field(EGU,	"ms")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}
+
+record(aSub, "$(Sys)$(Dev)HumidIntervalWriter") {
+	field(DESC,	"Humidity interval writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"13")
+	field(INPC,	"$(Sys)$(Dev)HumidityInterval.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(FTC,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)HumidityInterval.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)HumidityInterval")
+}
+
+record(ai, "$(Sys)$(Dev)HumidityInterval") {
+	field(DESC,	"Humidity interval for thingy:52 node")
+	field(EGU,	"ms")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}
+
+record(aSub, "$(Sys)$(Dev)GasModeWriter") {
+	field(DESC,	"Gas mode writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"14")
+	field(INPC,	"$(Sys)$(Dev)GasMode.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(FTC,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)GasMode.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)GasMode")
+}
+
+record(ai, "$(Sys)$(Dev)GasMode") {
+	field(DESC,	"Gas mode for thingy:52 node")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}
+
 record(aSub, "$(Sys)$(Dev)QuaternionWNotifier") {
 	field(DESC,	"QuaternionW listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"11")
+	field(INPB,	"15")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)QuaternionW.VAL")
@@ -244,9 +359,9 @@ record(ai, "$(Sys)$(Dev)QuaternionW") {
 record(aSub, "$(Sys)$(Dev)QuaternionXNotifier") {
 	field(DESC,	"QuaternionX listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"12")
+	field(INPB,	"16")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)QuaternionX.VAL")
@@ -263,9 +378,9 @@ record(ai, "$(Sys)$(Dev)QuaternionX") {
 record(aSub, "$(Sys)$(Dev)QuaternionYNotifier") {
 	field(DESC,	"QuaternionY listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"13")
+	field(INPB,	"17")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)QuaternionY.VAL")
@@ -282,9 +397,9 @@ record(ai, "$(Sys)$(Dev)QuaternionY") {
 record(aSub, "$(Sys)$(Dev)QuaternionZNotifier") {
 	field(DESC,	"QuaternionZ listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"14")
+	field(INPB,	"18")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)QuaternionZ.VAL")
@@ -301,9 +416,9 @@ record(ai, "$(Sys)$(Dev)QuaternionZ") {
 record(aSub, "$(Sys)$(Dev)AcecelerationXNotifier") {
 	field(DESC,	"AcecelerationX listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"15")
+	field(INPB,	"19")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)AcecelerationX.VAL")
@@ -321,9 +436,9 @@ record(ai, "$(Sys)$(Dev)AcecelerationX") {
 record(aSub, "$(Sys)$(Dev)AcecelerationYNotifier") {
 	field(DESC,	"AcecelerationY listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"16")
+	field(INPB,	"20")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)AcecelerationY.VAL")
@@ -341,9 +456,9 @@ record(ai, "$(Sys)$(Dev)AcecelerationY") {
 record(aSub, "$(Sys)$(Dev)AcecelerationZNotifier") {
 	field(DESC,	"AcecelerationZ listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"17")
+	field(INPB,	"21")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)AcecelerationZ.VAL")
@@ -361,9 +476,9 @@ record(ai, "$(Sys)$(Dev)AcecelerationZ") {
 record(aSub, "$(Sys)$(Dev)GyroscopeXNotifier") {
 	field(DESC,	"GyroscopeX listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"18")
+	field(INPB,	"22")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)GyroscopeX.VAL")
@@ -381,9 +496,9 @@ record(ai, "$(Sys)$(Dev)GyroscopeX") {
 record(aSub, "$(Sys)$(Dev)GyroscopeYNotifier") {
 	field(DESC,	"GyroscopeY listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"19")
+	field(INPB,	"23")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)GyroscopeY.VAL")
@@ -401,9 +516,9 @@ record(ai, "$(Sys)$(Dev)GyroscopeY") {
 record(aSub, "$(Sys)$(Dev)GyroscopeZNotifier") {
 	field(DESC,	"GyroscopeZ listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"20")
+	field(INPB,	"24")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)GyroscopeZ.VAL")
@@ -421,9 +536,9 @@ record(ai, "$(Sys)$(Dev)GyroscopeZ") {
 record(aSub, "$(Sys)$(Dev)CompassXNotifier") {
 	field(DESC,	"CompassX listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"21")
+	field(INPB,	"25")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)CompassX.VAL")
@@ -441,9 +556,9 @@ record(ai, "$(Sys)$(Dev)CompassX") {
 record(aSub, "$(Sys)$(Dev)CompassYNotifier") {
 	field(DESC,	"CompassY listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"22")
+	field(INPB,	"26")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)CompassY.VAL")
@@ -461,9 +576,9 @@ record(ai, "$(Sys)$(Dev)CompassY") {
 record(aSub, "$(Sys)$(Dev)CompassZNotifier") {
 	field(DESC,	"CompassZ listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"23")
+	field(INPB,	"27")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)CompassZ.VAL")
@@ -481,9 +596,9 @@ record(ai, "$(Sys)$(Dev)CompassZ") {
 record(aSub, "$(Sys)$(Dev)RollNotifier") {
 	field(DESC,	"Roll listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"24")
+	field(INPB,	"28")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)Roll.VAL")
@@ -501,9 +616,9 @@ record(ai, "$(Sys)$(Dev)Roll") {
 record(aSub, "$(Sys)$(Dev)PitchNotifier") {
 	field(DESC,	"Pitch listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"25")
+	field(INPB,	"29")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)Pitch.VAL")
@@ -521,9 +636,9 @@ record(ai, "$(Sys)$(Dev)Pitch") {
 record(aSub, "$(Sys)$(Dev)YawNotifier") {
 	field(DESC,	"Yaw listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"26")
+	field(INPB,	"30")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)Yaw.VAL")
@@ -541,9 +656,9 @@ record(ai, "$(Sys)$(Dev)Yaw") {
 record(aSub, "$(Sys)$(Dev)HeadingNotifier") {
 	field(DESC,	"Heading listener for thingy node")
 	field(SCAN,	"Passive")
-	field(INAM,	"register_sensor")
+	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"27")
+	field(INPB,	"31")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
 	field(OUTA,	"$(Sys)$(Dev)Heading.VAL")
