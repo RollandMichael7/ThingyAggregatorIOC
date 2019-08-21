@@ -116,8 +116,36 @@ void write_env_config_helper(int nodeID) {
  *	 helper functions to parse response from node according to opcode and save to corresponding PVs
  */
 
+static void parse_conn_param(uint8_t *resp, size_t len) {
+	//printf("conn param\n");
+	//print_resp(resp, len);
+
+	int nodeID = resp[RESP_ID];
+	aSubRecord *minIntervalPV = get_pv(nodeID, CONN_MIN_INTERVAL_ID);
+	aSubRecord *maxIntervalPV = get_pv(nodeID, CONN_MAX_INTERVAL_ID);
+	aSubRecord *latencyPV = get_pv(nodeID, CONN_LATENCY_ID);
+	aSubRecord *timeoutPV = get_pv(nodeID, CONN_TIMEOUT_ID);
+	uint16_t x;
+	if (minIntervalPV != 0) {
+		x = (resp[3]) | (resp[4] << 8);
+		set_pv(minIntervalPV, x);
+	}
+	if (maxIntervalPV != 0) {
+		x = (resp[5]) | (resp[6] << 8);
+		set_pv(maxIntervalPV, x);
+	}
+	if (latencyPV != 0) {
+		x = (resp[7]) | (resp[8] << 8);
+		set_pv(latencyPV, x);
+	}
+	if (timeoutPV != 0) {
+		x = (resp[9]) | (resp[10]);
+		set_pv(timeoutPV, x);
+	}
+}
+
 static void parse_env_config(uint8_t *resp, size_t len) {
-	print_resp(resp, len);
+	//print_resp(resp, len);
 	int nodeID = resp[RESP_ID];
 	aSubRecord *tempIntervalPV = get_pv(nodeID, TEMP_INTERVAL_ID);
 	aSubRecord *pressureIntervalPV = get_pv(nodeID, PRESSURE_INTERVAL_ID);
@@ -321,8 +349,10 @@ void parse_resp(uint8_t *resp, size_t len) {
 		parse_euler(resp, len);
 	else if (op == OPCODE_HEADING)
 		parse_heading(resp, len);
-	//else
-	//	printf("unknown opcode: %d\n", op);
+	else if (op == OPCODE_CONN_PARAM)
+		parse_conn_param(resp, len);
+	else
+		printf("unknown opcode: %d\n", op);
 }
 
 // set PV value and scan it

@@ -79,6 +79,10 @@ int broken_conn;
 #define PITCH_ID 29
 #define YAW_ID 30
 #define HEADING_ID 31
+#define CONN_MIN_INTERVAL_ID 32
+#define CONN_MAX_INTERVAL_ID 33
+#define CONN_LATENCY_ID 34
+#define CONN_TIMEOUT_ID 35
 
 
 // Connection status
@@ -89,6 +93,11 @@ int broken_conn;
 #define COMMAND_LED_TOGGLE 2
 #define COMMAND_ENV_CONFIG_READ 6
 #define COMMAND_ENV_CONFIG_WRITE 7
+#define COMMAND_MOTION_CONFIG_READ 8
+// not implemented
+// #define COMMAND_MOTION_CONFIG_WRITE 9 
+#define COMMAND_ENV_SET_SENSOR 10
+#define COMMAND_CONN_PARAM_READ 11
 
 // Indices for every response payload
 #define RESP_OPCODE 0
@@ -107,6 +116,8 @@ int broken_conn;
 #define OPCODE_RAW_MOTION 13
 #define OPCODE_EULER 14
 #define OPCODE_HEADING 15
+#define OPCODE_MOTION_CONFIG 16
+#define OPCODE_CONN_PARAM 17
 
 // Indices for each response type
 #define RESP_BUTTON_STATE 4

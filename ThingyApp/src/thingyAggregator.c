@@ -267,7 +267,33 @@ long toggle_led(aSubRecord *pv) {
 	return 0;
 }
 
-// Start environment sensor config read; triggered by writing to ConfigRead PV
+// Sensor toggle triggered by writing to SensorWrite PV
+static long toggle_sensor(aSubRecord *pv) {
+	int val, nodeID, sensorID;
+	memcpy(&val, pv->b, sizeof(int));
+	if (val != 0) {
+		memcpy(&nodeID, pv->a, sizeof(int));
+		memcpy(&sensorID, pv->b, sizeof(int));
+		aSubRecord *sensorPV = get_pv(nodeID, sensorID);
+		if (sensorPV == 0)
+			return 0;
+		float x;
+		memcpy(&x, sensorPV->vala, sizeof(float));
+
+		uint8_t command[4];
+		command[0] = COMMAND_ENV_SET_SENSOR;
+		command[1] = nodeID;
+		command[2] = sensorID;
+		command[3] = x ? 0 : 1;
+		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		if (x != 0)
+			set_pv(sensorPV, 0);
+		set_pv(pv, 0);
+	}
+	return 0;
+}
+
+// Start environment sensor config read; triggered by writing to EnvConfigRead PV
 long read_env_config(aSubRecord *pv) {
 	int val;
 	memcpy(&val, pv->b, sizeof(int));
@@ -283,7 +309,7 @@ long read_env_config(aSubRecord *pv) {
 	return 0;
 }
 
-// Environment sensor write triggered by writing to ConfigWrite PV
+// Environment sensor write triggered by writing to EnvConfigWrite PV
 long write_env_config(aSubRecord *pv) {
 	int val;
 	memcpy(&val, pv->b, sizeof(int));
@@ -295,6 +321,22 @@ long write_env_config(aSubRecord *pv) {
 	}
 }
 
+// Start connection param read; triggered by writing to ConnParamRead PV
+long read_conn_param(aSubRecord *pv) {
+	int val;
+	memcpy(&val, pv->b, sizeof(int));
+	if (val != 0) {
+		printf("READING CONN PARAMS\n");
+		int nodeID;
+		memcpy(&nodeID, pv->a, sizeof(int));
+		uint8_t command[2];
+		command[0] = COMMAND_CONN_PARAM_READ;
+		command[1] = nodeID;
+		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		set_pv(pv, 0);
+	}
+	return 0;
+}
 
 // ---------------------------- Helper functions ----------------------------
 
@@ -333,5 +375,7 @@ void nullify_node(int id) {
 /* Register these symbols for use by IOC code: */
 epicsRegisterFunction(register_pv);
 epicsRegisterFunction(toggle_led);
+epicsRegisterFunction(toggle_sensor);
 epicsRegisterFunction(read_env_config);
 epicsRegisterFunction(write_env_config);
+epicsRegisterFunction(read_conn_param);
