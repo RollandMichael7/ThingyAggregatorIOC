@@ -69,17 +69,14 @@ uuid_t aggregatorUUID(const char *str) {
 
 // get value from environment config PVs 
 // these PVs store value in INPC field
-static int get_config_pv_value(int nodeID, int pvID) {
+static uint16_t get_config_pv_value(int nodeID, int pvID) {
 	aSubRecord *pv = get_pv(nodeID, pvID);
 	if (pv != 0) {
-		int a, b, c;
-		memcpy(&a, pv->a, sizeof(int));
-		memcpy(&b, pv->b, sizeof(int));
-		memcpy(&c, pv->c, sizeof(int));
-		printf("a: %d b: %d c: %d\n", a, b, c);
-		int val;
-		memcpy(&val, pv->c, sizeof(int));
-		return val;
+		scanOnce(pv);
+		float c;
+		memcpy(&c, pv->c, sizeof(float));
+		printf("%.2f\n", c);
+		return (uint16_t) c;
 	}
 	else
 		return 0;
@@ -113,12 +110,12 @@ void write_env_config_helper(int nodeID) {
 
 
 /*
- *	 helper functions to parse response from node according to opcode and save to corresponding PVs
+ *	helper functions to parse response from node according to opcode and save to corresponding PVs
  */
 
 static void parse_conn_param(uint8_t *resp, size_t len) {
 	//printf("conn param\n");
-	//print_resp(resp, len);
+	print_resp(resp, len);
 
 	int nodeID = resp[RESP_ID];
 	aSubRecord *minIntervalPV = get_pv(nodeID, CONN_MIN_INTERVAL_ID);
@@ -128,10 +125,12 @@ static void parse_conn_param(uint8_t *resp, size_t len) {
 	uint16_t x;
 	if (minIntervalPV != 0) {
 		x = (resp[3]) | (resp[4] << 8);
+		x *= 1.25;
 		set_pv(minIntervalPV, x);
 	}
 	if (maxIntervalPV != 0) {
 		x = (resp[5]) | (resp[6] << 8);
+		x *= 1.25;
 		set_pv(maxIntervalPV, x);
 	}
 	if (latencyPV != 0) {
@@ -139,13 +138,14 @@ static void parse_conn_param(uint8_t *resp, size_t len) {
 		set_pv(latencyPV, x);
 	}
 	if (timeoutPV != 0) {
-		x = (resp[9]) | (resp[10]);
+		x = (resp[9]) | (resp[10] << 8);
+		x *= 10;
 		set_pv(timeoutPV, x);
 	}
 }
 
 static void parse_env_config(uint8_t *resp, size_t len) {
-	//print_resp(resp, len);
+	print_resp(resp, len);
 	int nodeID = resp[RESP_ID];
 	aSubRecord *tempIntervalPV = get_pv(nodeID, TEMP_INTERVAL_ID);
 	aSubRecord *pressureIntervalPV = get_pv(nodeID, PRESSURE_INTERVAL_ID);
@@ -351,8 +351,8 @@ void parse_resp(uint8_t *resp, size_t len) {
 		parse_heading(resp, len);
 	else if (op == OPCODE_CONN_PARAM)
 		parse_conn_param(resp, len);
-	else
-		printf("unknown opcode: %d\n", op);
+	//else
+	//	printf("unknown opcode: %d\n", op);
 }
 
 // set PV value and scan it
