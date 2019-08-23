@@ -346,7 +346,7 @@ $(pv_value)</tooltip>
     <x>491</x>
     <y>18</y>
   </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
+  <widget typeId="org.csstudio.opibuilder.widgets.MenuButton" version="1.0.0">
     <actions hook="false" hook_all="false">
       <action type="OPEN_DISPLAY">
         <path>thingyNetworkConfig.opi</path>
@@ -354,9 +354,26 @@ $(pv_value)</tooltip>
           <include_parent_macros>true</include_parent_macros>
         </macros>
         <mode>1</mode>
-        <description></description>
+        <description>Scanning periods</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>thingyNetworkSensors.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+        </macros>
+        <mode>1</mode>
+        <description>Sensors</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>thingyNetworkConnParams.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+        </macros>
+        <mode>1</mode>
+        <description>Connection params</description>
       </action>
     </actions>
+    <actions_from_pv>false</actions_from_pv>
     <alarm_pulsing>false</alarm_pulsing>
     <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
     <background_color>
@@ -366,7 +383,7 @@ $(pv_value)</tooltip>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
-    <border_style>0</border_style>
+    <border_style>6</border_style>
     <border_width>1</border_width>
     <enabled>true</enabled>
     <font>
@@ -377,9 +394,8 @@ $(pv_value)</tooltip>
       <color red="0" green="0" blue="0" />
     </foreground_color>
     <height>40</height>
-    <image></image>
+    <label>Configure</label>
     <name>Action Button_1</name>
-    <push_action_index>0</push_action_index>
     <pv_name></pv_name>
     <pv_value />
     <rules />
@@ -389,13 +405,12 @@ $(pv_value)</tooltip>
       <keep_wh_ratio>false</keep_wh_ratio>
     </scale_options>
     <scripts />
-    <style>0</style>
-    <text>Configure</text>
-    <toggle_button>false</toggle_button>
+    <show_down_arrow>false</show_down_arrow>
     <tooltip>$(pv_name)
 $(pv_value)</tooltip>
+    <transparent>false</transparent>
     <visible>true</visible>
-    <widget_type>Action Button</widget_type>
+    <widget_type>Menu Button</widget_type>
     <width>324</width>
     <wuid>-a0023f0:16c2a5539c6:-6972</wuid>
     <x>840</x>
