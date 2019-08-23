@@ -882,6 +882,14 @@ $(pv_value)</tooltip>
           <mode>1</mode>
           <description>Sensors</description>
         </action>
+        <action type="OPEN_DISPLAY">
+          <path>thingyNodeConnParams.opi</path>
+          <macros>
+            <include_parent_macros>true</include_parent_macros>
+          </macros>
+          <mode>1</mode>
+          <description>Connection params</description>
+        </action>
       </actions>
       <actions_from_pv>false</actions_from_pv>
       <alarm_pulsing>false</alarm_pulsing>
