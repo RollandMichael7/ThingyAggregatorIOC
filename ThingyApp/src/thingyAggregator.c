@@ -286,8 +286,15 @@ static long toggle_sensor(aSubRecord *pv) {
 		command[2] = sensorID;
 		command[3] = x ? 0 : 1;
 		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
-		if (x != 0)
+		if (x != 0) {
 			set_pv(sensorPV, 0);
+			if (sensorID == GAS_ID) {
+				sensorPV = get_pv(nodeID, CO2_ID);
+				set_pv(sensorPV, 0);
+				sensorPV = get_pv(nodeID, TVOC_ID);
+				set_pv(sensorPV, 0);
+			}
+		}
 		set_pv(pv, 0);
 	}
 	return 0;
@@ -326,7 +333,6 @@ long read_conn_param(aSubRecord *pv) {
 	int val;
 	memcpy(&val, pv->b, sizeof(int));
 	if (val != 0) {
-		printf("READING CONN PARAMS\n");
 		int nodeID;
 		memcpy(&nodeID, pv->a, sizeof(int));
 		uint8_t command[2];
@@ -339,7 +345,6 @@ long read_conn_param(aSubRecord *pv) {
 }
 
 // ---------------------------- Helper functions ----------------------------
-
 
 // fetch PV from linked list given node/PV IDs
 aSubRecord* get_pv(int nodeID, int pvID) {
