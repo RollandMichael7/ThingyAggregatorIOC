@@ -28,7 +28,7 @@
   <show_ruler>true</show_ruler>
   <snap_to_geometry>true</snap_to_geometry>
   <widget_type>Display</widget_type>
-  <width>1300</width>
+  <width>1400</width>
   <wuid>-a0023f0:16c2a5539c6:-696b</wuid>
   <x>-1</x>
   <y>-1</y>
@@ -70,10 +70,10 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>460</width>
     <wuid>-a0023f0:16c2a5539c6:-6964</wuid>
     <x>0</x>
-    <y>0</y>
+    <y>102</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -113,10 +113,10 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>460</width>
     <wuid>-a0023f0:16c2a5539c6:-6874</wuid>
-    <x>432</x>
-    <y>0</y>
+    <x>468</x>
+    <y>102</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -156,10 +156,10 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>460</width>
     <wuid>-a0023f0:16c2a5539c6:-684a</wuid>
     <x>0</x>
-    <y>240</y>
+    <y>342</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -199,10 +199,10 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>460</width>
     <wuid>-a0023f0:16c2a5539c6:-6820</wuid>
-    <x>432</x>
-    <y>240</y>
+    <x>468</x>
+    <y>342</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -242,10 +242,10 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>460</width>
     <wuid>-a0023f0:16c2a5539c6:-4e2a</wuid>
-    <x>864</x>
-    <y>0</y>
+    <x>936</x>
+    <y>102</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -285,9 +285,49 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>460</width>
     <wuid>-a0023f0:16c2a5539c6:-4e11</wuid>
-    <x>864</x>
-    <y>240</y>
+    <x>936</x>
+    <y>342</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <auto_size>false</auto_size>
+    <background_color>
+      <color red="122" green="122" blue="122" />
+    </background_color>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>1</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <font>
+      <fontdata fontName="Sans" height="13" style="0" pixels="false" />
+    </font>
+    <foreground_color>
+      <color red="0" green="0" blue="0" />
+    </foreground_color>
+    <height>71</height>
+    <horizontal_alignment>1</horizontal_alignment>
+    <name>Label_11</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <text>(Timeout * 4) MUST be greater than ((1 + latency) * max_conn_interval) according to Bluetooth spec.</text>
+    <tooltip></tooltip>
+    <transparent>true</transparent>
+    <vertical_alignment>1</vertical_alignment>
+    <visible>true</visible>
+    <widget_type>Label</widget_type>
+    <width>895</width>
+    <wrap_words>false</wrap_words>
+    <wuid>-a0023f0:16c2a5539c6:-38e3</wuid>
+    <x>250</x>
+    <y>12</y>
   </widget>
 </display>

@@ -349,7 +349,7 @@ $(pv_value)</tooltip>
   <widget typeId="org.csstudio.opibuilder.widgets.MenuButton" version="1.0.0">
     <actions hook="false" hook_all="false">
       <action type="OPEN_DISPLAY">
-        <path>thingyNetworkConfig.opi</path>
+        <path>thingyNetworkIntervals.opi</path>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>

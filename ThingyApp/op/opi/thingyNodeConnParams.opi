@@ -15,11 +15,11 @@
     <color red="192" green="192" blue="192" />
   </foreground_color>
   <grid_space>6</grid_space>
-  <height>600</height>
+  <height>230</height>
   <macros>
     <include_parent_macros>true</include_parent_macros>
   </macros>
-  <name></name>
+  <name>Thingy${N} ConnParams</name>
   <rules />
   <scripts />
   <show_close_button>true</show_close_button>
@@ -28,7 +28,7 @@
   <show_ruler>true</show_ruler>
   <snap_to_geometry>true</snap_to_geometry>
   <widget_type>Display</widget_type>
-  <width>800</width>
+  <width>460</width>
   <wuid>-a0023f0:16c2a5539c6:-597e</wuid>
   <x>-1</x>
   <y>-1</y>
@@ -724,7 +724,7 @@ $(pv_value)</tooltip>
     <transparent>false</transparent>
     <visible>true</visible>
     <widget_type>Grouping Container</widget_type>
-    <width>420</width>
+    <width>460</width>
     <wuid>-a0023f0:16c2a5539c6:-58d7</wuid>
     <x>0</x>
     <y>0</y>
@@ -762,7 +762,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>271</width>
+      <width>229</width>
       <wrap_words>false</wrap_words>
       <wuid>-a0023f0:16c2a5539c6:-58d6</wuid>
       <x>6</x>
@@ -802,7 +802,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>271</width>
+      <width>229</width>
       <wrap_words>false</wrap_words>
       <wuid>-a0023f0:16c2a5539c6:-58d5</wuid>
       <x>6</x>
@@ -842,7 +842,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>271</width>
+      <width>229</width>
       <wrap_words>false</wrap_words>
       <wuid>-a0023f0:16c2a5539c6:-58d3</wuid>
       <x>6</x>
@@ -882,7 +882,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>271</width>
+      <width>229</width>
       <wrap_words>false</wrap_words>
       <wuid>-a0023f0:16c2a5539c6:-58d0</wuid>
       <x>6</x>
@@ -989,7 +989,7 @@ $(pv_value)</tooltip>
       <toggle_button>false</toggle_button>
       <tooltip>$(pv_name)
 $(pv_value)</tooltip>
-      <visible>false</visible>
+      <visible>true</visible>
       <widget_type>Action Button</widget_type>
       <width>80</width>
       <wuid>-a0023f0:16c2a5539c6:-58cd</wuid>
@@ -1048,7 +1048,7 @@ $(pv_value)</tooltip>
       <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-a0023f0:16c2a5539c6:-58cc</wuid>
-      <x>288</x>
+      <x>234</x>
       <y>6</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextInput" version="2.0.0">
@@ -1105,7 +1105,7 @@ $(pv_value)</tooltip>
       <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-a0023f0:16c2a5539c6:-58cb</wuid>
-      <x>288</x>
+      <x>234</x>
       <y>42</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextInput" version="2.0.0">
@@ -1162,7 +1162,7 @@ $(pv_value)</tooltip>
       <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-a0023f0:16c2a5539c6:-58ca</wuid>
-      <x>288</x>
+      <x>234</x>
       <y>78</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextInput" version="2.0.0">
@@ -1219,7 +1219,167 @@ $(pv_value)</tooltip>
       <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>-a0023f0:16c2a5539c6:-58c9</wuid>
-      <x>288</x>
+      <x>234</x>
+      <y>114</y>
+    </widget>
+    <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+      <actions hook="false" hook_all="false" />
+      <auto_size>false</auto_size>
+      <background_color>
+        <color red="255" green="255" blue="255" />
+      </background_color>
+      <border_color>
+        <color red="0" green="128" blue="255" />
+      </border_color>
+      <border_style>0</border_style>
+      <border_width>1</border_width>
+      <enabled>true</enabled>
+      <font>
+        <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      </font>
+      <foreground_color>
+        <color red="0" green="0" blue="0" />
+      </foreground_color>
+      <height>37</height>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_11</name>
+      <rules />
+      <scale_options>
+        <width_scalable>true</width_scalable>
+        <height_scalable>true</height_scalable>
+        <keep_wh_ratio>false</keep_wh_ratio>
+      </scale_options>
+      <scripts />
+      <text>7.5 - 4000</text>
+      <tooltip></tooltip>
+      <transparent>true</transparent>
+      <vertical_alignment>1</vertical_alignment>
+      <visible>true</visible>
+      <widget_type>Label</widget_type>
+      <width>109</width>
+      <wrap_words>false</wrap_words>
+      <wuid>-a0023f0:16c2a5539c6:-3a8a</wuid>
+      <x>348</x>
+      <y>6</y>
+    </widget>
+    <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+      <actions hook="false" hook_all="false" />
+      <auto_size>false</auto_size>
+      <background_color>
+        <color red="255" green="255" blue="255" />
+      </background_color>
+      <border_color>
+        <color red="0" green="128" blue="255" />
+      </border_color>
+      <border_style>0</border_style>
+      <border_width>1</border_width>
+      <enabled>true</enabled>
+      <font>
+        <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      </font>
+      <foreground_color>
+        <color red="0" green="0" blue="0" />
+      </foreground_color>
+      <height>37</height>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_11</name>
+      <rules />
+      <scale_options>
+        <width_scalable>true</width_scalable>
+        <height_scalable>true</height_scalable>
+        <keep_wh_ratio>false</keep_wh_ratio>
+      </scale_options>
+      <scripts />
+      <text>7.5 - 4000</text>
+      <tooltip></tooltip>
+      <transparent>true</transparent>
+      <vertical_alignment>1</vertical_alignment>
+      <visible>true</visible>
+      <widget_type>Label</widget_type>
+      <width>109</width>
+      <wrap_words>false</wrap_words>
+      <wuid>-a0023f0:16c2a5539c6:-3a80</wuid>
+      <x>348</x>
+      <y>42</y>
+    </widget>
+    <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+      <actions hook="false" hook_all="false" />
+      <auto_size>false</auto_size>
+      <background_color>
+        <color red="255" green="255" blue="255" />
+      </background_color>
+      <border_color>
+        <color red="0" green="128" blue="255" />
+      </border_color>
+      <border_style>0</border_style>
+      <border_width>1</border_width>
+      <enabled>true</enabled>
+      <font>
+        <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      </font>
+      <foreground_color>
+        <color red="0" green="0" blue="0" />
+      </foreground_color>
+      <height>37</height>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_11</name>
+      <rules />
+      <scale_options>
+        <width_scalable>true</width_scalable>
+        <height_scalable>true</height_scalable>
+        <keep_wh_ratio>false</keep_wh_ratio>
+      </scale_options>
+      <scripts />
+      <text>0 - 499</text>
+      <tooltip></tooltip>
+      <transparent>true</transparent>
+      <vertical_alignment>1</vertical_alignment>
+      <visible>true</visible>
+      <widget_type>Label</widget_type>
+      <width>109</width>
+      <wrap_words>false</wrap_words>
+      <wuid>-a0023f0:16c2a5539c6:-3a79</wuid>
+      <x>348</x>
+      <y>78</y>
+    </widget>
+    <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
+      <actions hook="false" hook_all="false" />
+      <auto_size>false</auto_size>
+      <background_color>
+        <color red="255" green="255" blue="255" />
+      </background_color>
+      <border_color>
+        <color red="0" green="128" blue="255" />
+      </border_color>
+      <border_style>0</border_style>
+      <border_width>1</border_width>
+      <enabled>true</enabled>
+      <font>
+        <fontdata fontName="Sans" height="11" style="0" pixels="false" />
+      </font>
+      <foreground_color>
+        <color red="0" green="0" blue="0" />
+      </foreground_color>
+      <height>37</height>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_11</name>
+      <rules />
+      <scale_options>
+        <width_scalable>true</width_scalable>
+        <height_scalable>true</height_scalable>
+        <keep_wh_ratio>false</keep_wh_ratio>
+      </scale_options>
+      <scripts />
+      <text>100 - 32,000</text>
+      <tooltip></tooltip>
+      <transparent>true</transparent>
+      <vertical_alignment>1</vertical_alignment>
+      <visible>true</visible>
+      <widget_type>Label</widget_type>
+      <width>109</width>
+      <wrap_words>false</wrap_words>
+      <wuid>-a0023f0:16c2a5539c6:-3a72</wuid>
+      <x>348</x>
       <y>114</y>
     </widget>
   </widget>
