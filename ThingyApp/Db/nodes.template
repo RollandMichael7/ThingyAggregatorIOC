@@ -63,6 +63,22 @@ record(aSub, "$(Sys)$(Dev)ConnParamReader") {
 }
 
 record(ai, "$(Sys)$(Dev)ConnParamRead") {
+	field(VAL,	"1")
+}
+
+record(aSub, "$(Sys)$(Dev)ConnParamWriter") {
+	field(DESC,	"Write conn params for thingy node")
+	field(SCAN,	".2 second")
+	field(SNAM,	"write_conn_param")
+	field(INPA,	$(NodeID))
+	field(INPB, "$(Sys)$(Dev)ConnParamWrite.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)ConnParamWrite.VAL")
+	field(FTVA,	"SHORT")
+}
+
+record(ai, "$(Sys)$(Dev)ConnParamWrite") {
 	field(VAL,	"0")
 }
 
@@ -292,7 +308,7 @@ record(aSub, "$(Sys)$(Dev)TempIntervalWriter") {
 	field(INPC,	"$(Sys)$(Dev)TemperatureInterval.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(FTC,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)TemperatureInterval.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)TemperatureInterval")
@@ -314,7 +330,7 @@ record(aSub, "$(Sys)$(Dev)PressureIntervalWriter") {
 	field(INPC,	"$(Sys)$(Dev)PressureInterval.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(FTC,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)PressureInterval.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)PressureInterval")
@@ -336,7 +352,7 @@ record(aSub, "$(Sys)$(Dev)HumidIntervalWriter") {
 	field(INPC,	"$(Sys)$(Dev)HumidityInterval.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(FTC,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)HumidityInterval.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)HumidityInterval")
@@ -358,7 +374,7 @@ record(aSub, "$(Sys)$(Dev)GasModeWriter") {
 	field(INPC,	"$(Sys)$(Dev)GasMode.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(FTC,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)GasMode.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)GasMode")
@@ -715,7 +731,7 @@ record(aSub, "$(Sys)$(Dev)MinIntervalWriter") {
 	field(INPC,	"$(Sys)$(Dev)MinInterval.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(FTC,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)MinInterval.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)MinInterval")
@@ -724,7 +740,7 @@ record(aSub, "$(Sys)$(Dev)MinIntervalWriter") {
 record(ai, "$(Sys)$(Dev)MinInterval") {
 	field(DESC,	"Min conn interval for thingy node")
 	field(EGU,	"ms")
-	field(PREC,	"0")
+	field(PREC,	"1")
 	field(VAL,	"-1")
 }
 
@@ -737,7 +753,7 @@ record(aSub, "$(Sys)$(Dev)MaxIntervalWriter") {
 	field(INPC,	"$(Sys)$(Dev)MaxInterval.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(FTC,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)MaxInterval.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)MaxInterval")
@@ -746,7 +762,7 @@ record(aSub, "$(Sys)$(Dev)MaxIntervalWriter") {
 record(ai, "$(Sys)$(Dev)MaxInterval") {
 	field(DESC,	"Max conn interval for thingy node")
 	field(EGU,	"ms")
-	field(PREC,	"0")
+	field(PREC,	"1")
 	field(VAL,	"-1")
 }
 
@@ -759,7 +775,7 @@ record(aSub, "$(Sys)$(Dev)LatencyWriter") {
 	field(INPC,	"$(Sys)$(Dev)Latency.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(FTC,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)Latency.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)Latency")
@@ -781,7 +797,7 @@ record(aSub, "$(Sys)$(Dev)TimeoutWriter") {
 	field(INPC,	"$(Sys)$(Dev)Timeout.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(FTC,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)Timeout.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)Timeout")

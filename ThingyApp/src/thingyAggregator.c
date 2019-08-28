@@ -326,6 +326,7 @@ long write_env_config(aSubRecord *pv) {
 		write_env_config_helper(nodeID);
 		set_pv(pv, 0);
 	}
+	return 0;
 }
 
 // Start connection param read; triggered by writing to ConnParamRead PV
@@ -339,6 +340,19 @@ long read_conn_param(aSubRecord *pv) {
 		command[0] = COMMAND_CONN_PARAM_READ;
 		command[1] = nodeID;
 		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		set_pv(pv, 0);
+	}
+	return 0;
+}
+
+// Connection param write triggered by writing to ConnParamWrite PV
+long write_conn_param(aSubRecord *pv) {
+	int val;
+	memcpy(&val, pv->b, sizeof(int));
+	if (val != 0) {
+		int nodeID;
+		memcpy(&nodeID, pv->a, sizeof(int));
+		write_conn_param_helper(nodeID);
 		set_pv(pv, 0);
 	}
 	return 0;
@@ -384,3 +398,4 @@ epicsRegisterFunction(toggle_sensor);
 epicsRegisterFunction(read_env_config);
 epicsRegisterFunction(write_env_config);
 epicsRegisterFunction(read_conn_param);
+epicsRegisterFunction(write_conn_param);

@@ -67,16 +67,18 @@ uuid_t aggregatorUUID(const char *str) {
 	return uuid;
 }
 
-// get value from environment config PVs 
+// get value from read/write PVs 
 // these PVs store value in INPC field
-static uint16_t get_config_pv_value(int nodeID, int pvID) {
+static float get_writer_pv_value(int nodeID, int pvID) {
 	aSubRecord *pv = get_pv(nodeID, pvID);
 	if (pv != 0) {
 		scanOnce(pv);
+		// wait for scan to complete
+		usleep(500);
 		float c;
 		memcpy(&c, pv->c, sizeof(float));
-		printf("%.2f\n", c);
-		return (uint16_t) c;
+		//printf("%.2f\n", c);
+		return c;
 	}
 	else
 		return 0;
@@ -84,45 +86,71 @@ static uint16_t get_config_pv_value(int nodeID, int pvID) {
 
 // write environment config values to node
 void write_env_config_helper(int nodeID) {
-	uint16_t tempInterval = get_config_pv_value(nodeID, TEMP_INTERVAL_ID);
-	uint16_t pressureInterval = get_config_pv_value(nodeID, PRESSURE_INTERVAL_ID);
-	uint16_t humidInterval = get_config_pv_value(nodeID, HUMID_INTERVAL_ID);
+	uint16_t tempInterval = get_writer_pv_value(nodeID, TEMP_INTERVAL_ID);
+	uint16_t pressureInterval = get_writer_pv_value(nodeID, PRESSURE_INTERVAL_ID);
+	uint16_t humidInterval = get_writer_pv_value(nodeID, HUMID_INTERVAL_ID);
 	uint16_t colorInterval = 60000;
-	uint8_t gasMode = get_config_pv_value(nodeID, GAS_MODE_ID);
-	printf("write: %d %d %d %d\n", tempInterval, pressureInterval, humidInterval, gasMode);
-	uint8_t command[13];
+	uint8_t gasMode = get_writer_pv_value(nodeID, GAS_MODE_ID);
+	//printf("write env config: %d %d %d %d\n", tempInterval, pressureInterval, humidInterval, gasMode);
+	uint8_t command[14];
 	command[0] = COMMAND_ENV_CONFIG_WRITE;
-	command[1] = tempInterval & 0xFF;
-	command[2] = tempInterval >> 8;
-	command[3] = pressureInterval & 0xFF;
-	command[4] = pressureInterval >> 8;
-	command[5] = humidInterval & 0xFF;
-	command[6] = humidInterval >> 8;
-	command[7] = colorInterval & 0xFF;
-	command[8] = colorInterval >> 8;
-	command[9] = gasMode;
+	command[1] = nodeID;
+	command[2] = tempInterval & 0xFF;
+	command[3] = tempInterval >> 8;
+	command[4] = pressureInterval & 0xFF;
+	command[5] = pressureInterval >> 8;
+	command[6] = humidInterval & 0xFF;
+	command[7] = humidInterval >> 8;
+	command[8] = colorInterval & 0xFF;
+	command[9] = colorInterval >> 8;
+	command[10] = gasMode;
 	// light sensor LED RGB color; currently unused
-	command[10] = 0;
 	command[11] = 0;
 	command[12] = 0;
-	//gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+	command[13] = 0;
+	gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+	// wait for write to complete
+	usleep(500);
+	// read values again to confirm write
+	command[0] = COMMAND_ENV_CONFIG_READ;
+	gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
 }
 
+// write conn param values to node
+void write_conn_param_helper(int nodeID) {
+	uint16_t min = (uint16_t) (get_writer_pv_value(nodeID, CONN_MIN_INTERVAL_ID) / 1.25);
+	uint16_t max = (uint16_t) (get_writer_pv_value(nodeID, CONN_MAX_INTERVAL_ID) / 1.25);
+	uint16_t latency = get_writer_pv_value(nodeID, CONN_LATENCY_ID);
+	uint16_t timeout = (uint16_t) (get_writer_pv_value(nodeID, CONN_TIMEOUT_ID) / 10);
+	uint8_t command[10];
+	command[0] = COMMAND_CONN_PARAM_WRITE;
+	command[1] = nodeID;
+	command[2] = min & 0xFF;
+	command[3] = min >> 8;
+	command[4] = max & 0xFF;
+	command[5] = max >> 8;
+	command[6] = latency & 0xFF;
+	command[7] = latency >> 8;
+	command[8] = timeout & 0xFF;
+	command[9] = timeout >> 8;
+	gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+	usleep(500);
+	command[0] = COMMAND_CONN_PARAM_READ;
+	gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+}	
 
 /*
  *	helper functions to parse response from node according to opcode and save to corresponding PVs
  */
 
 static void parse_conn_param(uint8_t *resp, size_t len) {
-	//printf("conn param\n");
-	print_resp(resp, len);
-
+	//print_resp(resp, len);
 	int nodeID = resp[RESP_ID];
 	aSubRecord *minIntervalPV = get_pv(nodeID, CONN_MIN_INTERVAL_ID);
 	aSubRecord *maxIntervalPV = get_pv(nodeID, CONN_MAX_INTERVAL_ID);
 	aSubRecord *latencyPV = get_pv(nodeID, CONN_LATENCY_ID);
 	aSubRecord *timeoutPV = get_pv(nodeID, CONN_TIMEOUT_ID);
-	uint16_t x;
+	float x;
 	if (minIntervalPV != 0) {
 		x = (resp[3]) | (resp[4] << 8);
 		x *= 1.25;
@@ -145,7 +173,7 @@ static void parse_conn_param(uint8_t *resp, size_t len) {
 }
 
 static void parse_env_config(uint8_t *resp, size_t len) {
-	print_resp(resp, len);
+	//print_resp(resp, len);
 	int nodeID = resp[RESP_ID];
 	aSubRecord *tempIntervalPV = get_pv(nodeID, TEMP_INTERVAL_ID);
 	aSubRecord *pressureIntervalPV = get_pv(nodeID, PRESSURE_INTERVAL_ID);

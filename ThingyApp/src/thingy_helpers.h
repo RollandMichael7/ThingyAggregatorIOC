@@ -9,3 +9,4 @@ int set_status(int, char*);
 int set_connection(int, float);
 
 void write_env_config_helper(int);
+void write_conn_param_helper(int);
