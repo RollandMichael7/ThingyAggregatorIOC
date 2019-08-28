@@ -28,7 +28,7 @@
   <show_ruler>true</show_ruler>
   <snap_to_geometry>true</snap_to_geometry>
   <widget_type>Display</widget_type>
-  <width>1300</width>
+  <width>1200</width>
   <wuid>-a0023f0:16c2a5539c6:-696b</wuid>
   <x>-1</x>
   <y>-1</y>
@@ -58,7 +58,7 @@
       <Dev>{THINGY:001}</Dev>
     </macros>
     <name>Linking Container</name>
-    <opi_file>thingyNodeConfig.opi</opi_file>
+    <opi_file>thingyNodeIntervals.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -70,7 +70,7 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>385</width>
     <wuid>-a0023f0:16c2a5539c6:-6964</wuid>
     <x>0</x>
     <y>0</y>
@@ -101,7 +101,7 @@
       <Dev>{THINGY:002}</Dev>
     </macros>
     <name>Linking Container_1</name>
-    <opi_file>thingyNodeConfig.opi</opi_file>
+    <opi_file>thingyNodeIntervals.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -113,9 +113,9 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>385</width>
     <wuid>-a0023f0:16c2a5539c6:-6874</wuid>
-    <x>432</x>
+    <x>396</x>
     <y>0</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
@@ -144,7 +144,7 @@
       <Dev>{THINGY:003}</Dev>
     </macros>
     <name>Linking Container_2</name>
-    <opi_file>thingyNodeConfig.opi</opi_file>
+    <opi_file>thingyNodeIntervals.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -156,9 +156,9 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>385</width>
     <wuid>-a0023f0:16c2a5539c6:-684a</wuid>
-    <x>864</x>
+    <x>792</x>
     <y>0</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
@@ -187,7 +187,7 @@
       <Dev>{THINGY:004}</Dev>
     </macros>
     <name>Linking Container_3</name>
-    <opi_file>thingyNodeConfig.opi</opi_file>
+    <opi_file>thingyNodeIntervals.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -199,7 +199,7 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>385</width>
     <wuid>-a0023f0:16c2a5539c6:-6820</wuid>
     <x>0</x>
     <y>240</y>
@@ -230,7 +230,7 @@
       <Dev>{THINGY:005}</Dev>
     </macros>
     <name>Linking Container_4</name>
-    <opi_file>thingyNodeConfig.opi</opi_file>
+    <opi_file>thingyNodeIntervals.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -242,9 +242,9 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>385</width>
     <wuid>-a0023f0:16c2a5539c6:-4ba2</wuid>
-    <x>432</x>
+    <x>396</x>
     <y>240</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
@@ -273,7 +273,7 @@
       <Dev>{THINGY:006}</Dev>
     </macros>
     <name>Linking Container_5</name>
-    <opi_file>thingyNodeConfig.opi</opi_file>
+    <opi_file>thingyNodeIntervals.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -285,9 +285,9 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>420</width>
+    <width>385</width>
     <wuid>-a0023f0:16c2a5539c6:-4b7a</wuid>
-    <x>863</x>
+    <x>791</x>
     <y>240</y>
   </widget>
 </display>
