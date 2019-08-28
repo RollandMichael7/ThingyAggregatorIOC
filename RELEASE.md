@@ -8,9 +8,25 @@ Currently supported sensors:
 - Pressure
 - Humidity
 - Gas / Air Quality
+- Quaternions
+- Accelerometer
+- Gyroscope
+- Compass
+- Roll, pitch, yaw
+- Heading
+
 
 R1-0
 =================
+
+R1-0-2 8/28
+----
+- Add support for motion sensors
+	- Quaternions, accelerometer, gyroscope, compass, roll/pitch/yaw, heading
+- Add support for toggling active environment sensors
+- Add support for reading & writing environment sensor intervals
+- Add support for reading & writing connection parameters
+
 
 R1-0-1 7/31/19
 ----

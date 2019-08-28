@@ -8,6 +8,12 @@ Supported sensors:
 - Pressure
 - Humidity
 - Gas / Air Quality
+- Quaternions
+- Accelerometer
+- Gyroscope
+- Compass
+- Roll, pitch, yaw
+- Heading
 
 ## Requirements ##
 - Bluetooth Low Energy connectivity
