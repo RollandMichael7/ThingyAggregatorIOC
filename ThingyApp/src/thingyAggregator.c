@@ -47,6 +47,7 @@ int alive[MAX_NODES];
 int dead[MAX_NODES];
 
 static long register_pv(aSubRecord*);
+static void send_read_command(int, int);
 
 // thread functions
 static void	notification_listener();
@@ -307,10 +308,7 @@ long read_env_config(aSubRecord *pv) {
 	if (val != 0) {
 		int nodeID;
 		memcpy(&nodeID, pv->a, sizeof(int));
-		uint8_t command[2];
-		command[0] = COMMAND_ENV_CONFIG_READ;
-		command[1] = nodeID;
-		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		send_read_command(COMMAND_ENV_CONFIG_READ, nodeID);
 		set_pv(pv, 0);
 	}
 	return 0;
@@ -336,10 +334,7 @@ long read_conn_param(aSubRecord *pv) {
 	if (val != 0) {
 		int nodeID;
 		memcpy(&nodeID, pv->a, sizeof(int));
-		uint8_t command[2];
-		command[0] = COMMAND_CONN_PARAM_READ;
-		command[1] = nodeID;
-		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		send_read_command(COMMAND_CONN_PARAM_READ, nodeID);
 		set_pv(pv, 0);
 	}
 	return 0;
@@ -359,6 +354,15 @@ long write_conn_param(aSubRecord *pv) {
 }
 
 // ---------------------------- Helper functions ----------------------------
+
+
+// send a read command (which has only 1 argument) to aggregator
+static void send_read_command(int opcode, int nodeID) {
+	uint8_t command[2];
+	command[0] = opcode;
+	command[1] = nodeID;
+	gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+}
 
 // fetch PV from linked list given node/PV IDs
 aSubRecord* get_pv(int nodeID, int pvID) {
