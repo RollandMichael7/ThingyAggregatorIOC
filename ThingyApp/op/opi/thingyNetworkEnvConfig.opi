@@ -58,7 +58,7 @@
       <Dev>{THINGY:001}</Dev>
     </macros>
     <name>Linking Container</name>
-    <opi_file>thingyNodeIntervals.opi</opi_file>
+    <opi_file>thingyNodeEnvConfig.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -101,7 +101,7 @@
       <Dev>{THINGY:002}</Dev>
     </macros>
     <name>Linking Container_1</name>
-    <opi_file>thingyNodeIntervals.opi</opi_file>
+    <opi_file>thingyNodeEnvConfig.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -144,7 +144,7 @@
       <Dev>{THINGY:003}</Dev>
     </macros>
     <name>Linking Container_2</name>
-    <opi_file>thingyNodeIntervals.opi</opi_file>
+    <opi_file>thingyNodeEnvConfig.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -187,7 +187,7 @@
       <Dev>{THINGY:004}</Dev>
     </macros>
     <name>Linking Container_3</name>
-    <opi_file>thingyNodeIntervals.opi</opi_file>
+    <opi_file>thingyNodeEnvConfig.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -230,7 +230,7 @@
       <Dev>{THINGY:005}</Dev>
     </macros>
     <name>Linking Container_4</name>
-    <opi_file>thingyNodeIntervals.opi</opi_file>
+    <opi_file>thingyNodeEnvConfig.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -273,7 +273,7 @@
       <Dev>{THINGY:006}</Dev>
     </macros>
     <name>Linking Container_5</name>
-    <opi_file>thingyNodeIntervals.opi</opi_file>
+    <opi_file>thingyNodeEnvConfig.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>

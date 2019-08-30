@@ -19,7 +19,7 @@
   <macros>
     <include_parent_macros>true</include_parent_macros>
   </macros>
-  <name>Thingy${N} Intervals</name>
+  <name>Thingy${N} Env Config</name>
   <rules />
   <scripts />
   <show_close_button>true</show_close_button>
