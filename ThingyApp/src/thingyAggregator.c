@@ -47,7 +47,7 @@ int alive[MAX_NODES];
 int dead[MAX_NODES];
 
 static long register_pv(aSubRecord*);
-static void send_read_command(int, int);
+static long poll_command_pv(aSubRecord*, int);
 
 // thread functions
 static void	notification_listener();
@@ -301,20 +301,17 @@ static long toggle_sensor(aSubRecord *pv) {
 	return 0;
 }
 
-// Start environment sensor config read; triggered by writing to EnvConfigRead PV
+// Environment sensor config read triggered by writing to EnvConfigRead PV
 long read_env_config(aSubRecord *pv) {
-	int val;
-	memcpy(&val, pv->b, sizeof(int));
-	if (val != 0) {
-		int nodeID;
-		memcpy(&nodeID, pv->a, sizeof(int));
-		send_read_command(COMMAND_ENV_CONFIG_READ, nodeID);
-		set_pv(pv, 0);
-	}
-	return 0;
+	return poll_command_pv(pv, COMMAND_ENV_CONFIG_READ);
 }
 
-// Environment sensor write triggered by writing to EnvConfigWrite PV
+// Connection param read triggered by writing to ConnParamRead PV
+long read_conn_param(aSubRecord *pv) {
+	return poll_command_pv(pv, COMMAND_CONN_PARAM_READ);
+}
+
+// Environment sensor config write triggered by writing to EnvConfigWrite PV
 long write_env_config(aSubRecord *pv) {
 	int val;
 	memcpy(&val, pv->b, sizeof(int));
@@ -322,19 +319,6 @@ long write_env_config(aSubRecord *pv) {
 		int nodeID;
 		memcpy(&nodeID, pv->a, sizeof(int));
 		write_env_config_helper(nodeID);
-		set_pv(pv, 0);
-	}
-	return 0;
-}
-
-// Start connection param read; triggered by writing to ConnParamRead PV
-long read_conn_param(aSubRecord *pv) {
-	int val;
-	memcpy(&val, pv->b, sizeof(int));
-	if (val != 0) {
-		int nodeID;
-		memcpy(&nodeID, pv->a, sizeof(int));
-		send_read_command(COMMAND_CONN_PARAM_READ, nodeID);
 		set_pv(pv, 0);
 	}
 	return 0;
@@ -355,6 +339,21 @@ long write_conn_param(aSubRecord *pv) {
 
 // ---------------------------- Helper functions ----------------------------
 
+// Check if a read command PV was triggered, and send command if so
+static long poll_command_pv(aSubRecord *pv, int opcode) {
+	int val;
+	memcpy(&val, pv->b, sizeof(int));
+	if (val != 0) {
+		int nodeID;
+		memcpy(&nodeID, pv->a, sizeof(int));
+		uint8_t command[2];
+		command[0] = opcode;
+		command[1] = nodeID;
+		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		set_pv(pv, 0);
+	}
+	return 0;
+}
 
 // send a read command (which has only 1 argument) to aggregator
 static void send_read_command(int opcode, int nodeID) {
