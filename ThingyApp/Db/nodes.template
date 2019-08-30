@@ -50,6 +50,22 @@ record(ai, "$(Sys)$(Dev)EnvConfigWrite") {
 	field(VAL,	"0")
 }
 
+record(aSub, "$(Sys)$(Dev)MotionConfigReader") {
+	field(DESC,	"Read env config for thingy node")
+	field(SCAN,	".2 second")
+	field(SNAM,	"read_motion_config")
+	field(INPA,	$(NodeID))
+	field(INPB, "$(Sys)$(Dev)MotionConfigRead.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)MotionConfigRead.VAL")
+	field(FTVA,	"SHORT")
+}
+
+record(ai, "$(Sys)$(Dev)MotionConfigRead") {
+	field(VAL,	"1")
+}
+
 record(aSub, "$(Sys)$(Dev)ConnParamReader") {
 	field(DESC,	"Read conn params for thingy node")
 	field(SCAN,	".2 second")
@@ -722,12 +738,112 @@ record(ai, "$(Sys)$(Dev)Heading") {
 	field(VAL,	"-1")
 }
 
+record(aSub, "$(Sys)$(Dev)StepIntervalWriter") {
+	field(DESC,	"Step interval writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"32")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)StepInterval.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)StepInterval")
+}
+
+record(ai, "$(Sys)$(Dev)StepInterval") {
+	field(DESC,	"Step interval for thingy node")
+	field(EGU,	"ms")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}
+
+record(aSub, "$(Sys)$(Dev)TempCompIntervalWriter") {
+	#field(DESC,	"Temp comp interval writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"33")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)TempCompInterval.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)TempCompInterval")
+}
+
+record(ai, "$(Sys)$(Dev)TempCompInterval") {
+	field(DESC,	"Temp comp interval for thingy node")
+	field(EGU,	"ms")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}
+
+record(aSub, "$(Sys)$(Dev)MagCompIntervalWriter") {
+	field(DESC,	"Mag comp interval writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"34")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)MagCompInterval.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)MagCompInterval")
+}
+
+record(ai, "$(Sys)$(Dev)MagCompInterval") {
+	field(DESC,	"Mag comp interval for thingy node")
+	field(EGU,	"ms")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}
+
+record(aSub, "$(Sys)$(Dev)MotionFreqWriter") {
+	field(DESC,	"Motion freq writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"35")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)MotionFrequency.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)MotionFrequency")
+}
+
+record(ai, "$(Sys)$(Dev)MotionFrequency") {
+	field(DESC,	"Motion frequency for thingy node")
+	field(EGU,	"hz")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}
+
+record(aSub, "$(Sys)$(Dev)WakeMotionWriter") {
+	field(DESC,	"Wake on motion writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"36")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)WakeOnMotion.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)WakeOnMotion")
+}
+
+record(ai, "$(Sys)$(Dev)WakeOnMotion") {
+	field(DESC,	"Mag comp interval for thingy node")
+	field(PREC,	"0")
+	field(VAL,	"-1")
+}
+
+
 record(aSub, "$(Sys)$(Dev)MinIntervalWriter") {
 	field(DESC,	"Min interval writer for thingy node")
 	field(SCAN,	"Passive")
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"32")
+	field(INPB,	"37")
 	field(INPC,	"$(Sys)$(Dev)MinInterval.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
@@ -749,7 +865,7 @@ record(aSub, "$(Sys)$(Dev)MaxIntervalWriter") {
 	field(SCAN,	"Passive")
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"33")
+	field(INPB,	"38")
 	field(INPC,	"$(Sys)$(Dev)MaxInterval.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
@@ -771,7 +887,7 @@ record(aSub, "$(Sys)$(Dev)LatencyWriter") {
 	field(SCAN,	"Passive")
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"34")
+	field(INPB,	"39")
 	field(INPC,	"$(Sys)$(Dev)Latency.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
@@ -793,7 +909,7 @@ record(aSub, "$(Sys)$(Dev)TimeoutWriter") {
 	field(SCAN,	"Passive")
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
-	field(INPB,	"35")
+	field(INPB,	"40")
 	field(INPC,	"$(Sys)$(Dev)Timeout.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")

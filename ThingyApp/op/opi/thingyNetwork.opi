@@ -21,7 +21,7 @@
     <Sys>XF:10IDB</Sys>
     <Dev>{THINGY:AGGREGATOR}</Dev>
   </macros>
-  <name></name>
+  <name>Thingy Network</name>
   <rules />
   <scripts />
   <show_close_button>true</show_close_button>
@@ -349,12 +349,28 @@ $(pv_value)</tooltip>
   <widget typeId="org.csstudio.opibuilder.widgets.MenuButton" version="1.0.0">
     <actions hook="false" hook_all="false">
       <action type="OPEN_DISPLAY">
-        <path>thingyNetworkIntervals.opi</path>
+        <path>thingyNetworkConnParams.opi</path>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
         <mode>1</mode>
-        <description>Scanning periods</description>
+        <description>Connection params</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>thingyNetworkEnvConfig.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+        </macros>
+        <mode>1</mode>
+        <description>Environment sensors</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>thingyNetworkMotionConfig.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+        </macros>
+        <mode>1</mode>
+        <description>Motion sensors</description>
       </action>
       <action type="OPEN_DISPLAY">
         <path>thingyNetworkSensors.opi</path>
@@ -362,15 +378,7 @@ $(pv_value)</tooltip>
           <include_parent_macros>true</include_parent_macros>
         </macros>
         <mode>1</mode>
-        <description>Sensors</description>
-      </action>
-      <action type="OPEN_DISPLAY">
-        <path>thingyNetworkConnParams.opi</path>
-        <macros>
-          <include_parent_macros>true</include_parent_macros>
-        </macros>
-        <mode>1</mode>
-        <description>Connection params</description>
+        <description>Toggle sensors</description>
       </action>
     </actions>
     <actions_from_pv>false</actions_from_pv>

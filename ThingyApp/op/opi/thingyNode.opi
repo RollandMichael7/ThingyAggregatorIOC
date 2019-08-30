@@ -867,12 +867,28 @@ $(pv_value)</tooltip>
     <widget typeId="org.csstudio.opibuilder.widgets.MenuButton" version="1.0.0">
       <actions hook="false" hook_all="false">
         <action type="OPEN_DISPLAY">
-          <path>thingyNodeIntervals.opi</path>
+          <path>thingyNodeConnParams.opi</path>
           <macros>
             <include_parent_macros>true</include_parent_macros>
           </macros>
           <mode>1</mode>
-          <description>Scanning periods</description>
+          <description>Connection params</description>
+        </action>
+        <action type="OPEN_DISPLAY">
+          <path>thingyNodeEnvConfig.opi</path>
+          <macros>
+            <include_parent_macros>true</include_parent_macros>
+          </macros>
+          <mode>1</mode>
+          <description>Environment sensors</description>
+        </action>
+        <action type="OPEN_DISPLAY">
+          <path>thingyNodeMotionConfig.opi</path>
+          <macros>
+            <include_parent_macros>true</include_parent_macros>
+          </macros>
+          <mode>1</mode>
+          <description>Motion sensors</description>
         </action>
         <action type="OPEN_DISPLAY">
           <path>thingyNodeSensors.opi</path>
@@ -880,15 +896,7 @@ $(pv_value)</tooltip>
             <include_parent_macros>true</include_parent_macros>
           </macros>
           <mode>1</mode>
-          <description>Sensors</description>
-        </action>
-        <action type="OPEN_DISPLAY">
-          <path>thingyNodeConnParams.opi</path>
-          <macros>
-            <include_parent_macros>true</include_parent_macros>
-          </macros>
-          <mode>1</mode>
-          <description>Connection params</description>
+          <description>Toggle sensors</description>
         </action>
       </actions>
       <actions_from_pv>false</actions_from_pv>

@@ -306,6 +306,11 @@ long read_env_config(aSubRecord *pv) {
 	return poll_command_pv(pv, COMMAND_ENV_CONFIG_READ);
 }
 
+// Motion sensor config read triggered by writing to MotionConfigRead PV
+long read_motion_config(aSubRecord *pv) {
+	return poll_command_pv(pv, COMMAND_MOTION_CONFIG_READ);
+}
+
 // Connection param read triggered by writing to ConnParamRead PV
 long read_conn_param(aSubRecord *pv) {
 	return poll_command_pv(pv, COMMAND_CONN_PARAM_READ);
@@ -400,5 +405,6 @@ epicsRegisterFunction(toggle_led);
 epicsRegisterFunction(toggle_sensor);
 epicsRegisterFunction(read_env_config);
 epicsRegisterFunction(write_env_config);
+epicsRegisterFunction(read_motion_config);
 epicsRegisterFunction(read_conn_param);
 epicsRegisterFunction(write_conn_param);

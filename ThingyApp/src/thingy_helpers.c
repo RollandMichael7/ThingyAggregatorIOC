@@ -172,6 +172,35 @@ static void parse_conn_param(uint8_t *resp, size_t len) {
 	}
 }
 
+static void parse_motion_config(uint8_t *resp, size_t len) {
+	//print_resp(resp, len);
+	int nodeID = resp[RESP_ID];
+	aSubRecord *stepIntervalPV = get_pv(nodeID, STEP_INTERVAL_ID);
+	aSubRecord *tempCompPV = get_pv(nodeID, TEMP_COMP_INTERVAL_ID);
+	aSubRecord *magCompPV = get_pv(nodeID, MAG_COMP_INTERVAL_ID);
+	aSubRecord *frequencyPV = get_pv(nodeID, MOTION_FREQ_ID);
+	aSubRecord *wakePV = get_pv(nodeID, WAKE_ID);
+	uint16_t val;
+	if (stepIntervalPV != 0) {
+		val = (resp[3]) | (resp[4] << 8);
+		set_pv(stepIntervalPV, val);
+	}
+	if (tempCompPV != 0) {
+		val = (resp[5]) | (resp[6] << 8);
+		set_pv(tempCompPV, val);
+	}
+	if (magCompPV != 0) {
+		val = (resp[7]) | (resp[8] << 8);
+		set_pv(magCompPV, val);
+	}
+	if (frequencyPV != 0) {
+		val = (resp[9]) | (resp[10] << 8);
+		set_pv(frequencyPV, val);
+	}
+	if (wakePV != 0)
+		set_pv(wakePV, resp[11]);
+}
+
 static void parse_env_config(uint8_t *resp, size_t len) {
 	//print_resp(resp, len);
 	int nodeID = resp[RESP_ID];
@@ -377,6 +406,8 @@ void parse_resp(uint8_t *resp, size_t len) {
 		parse_euler(resp, len);
 	else if (op == OPCODE_HEADING)
 		parse_heading(resp, len);
+	else if (op == OPCODE_MOTION_CONFIG)
+		parse_motion_config(resp, len);
 	else if (op == OPCODE_CONN_PARAM)
 		parse_conn_param(resp, len);
 	//else

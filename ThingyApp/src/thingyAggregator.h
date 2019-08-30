@@ -79,10 +79,15 @@ int broken_conn;
 #define PITCH_ID 29
 #define YAW_ID 30
 #define HEADING_ID 31
-#define CONN_MIN_INTERVAL_ID 32
-#define CONN_MAX_INTERVAL_ID 33
-#define CONN_LATENCY_ID 34
-#define CONN_TIMEOUT_ID 35
+#define STEP_INTERVAL_ID 32
+#define TEMP_COMP_INTERVAL_ID 33
+#define MAG_COMP_INTERVAL_ID 34
+#define MOTION_FREQ_ID 35
+#define WAKE_ID 36
+#define CONN_MIN_INTERVAL_ID 37
+#define CONN_MAX_INTERVAL_ID 38
+#define CONN_LATENCY_ID 39
+#define CONN_TIMEOUT_ID 40
 
 
 // Connection status
