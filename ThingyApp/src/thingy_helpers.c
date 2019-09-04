@@ -410,8 +410,16 @@ void parse_resp(uint8_t *resp, size_t len) {
 		parse_motion_config(resp, len);
 	else if (op == OPCODE_CONN_PARAM)
 		parse_conn_param(resp, len);
-	//else
-	//	printf("unknown opcode: %d\n", op);
+	else
+		printf("unknown opcode: %d\n", op);
+}
+
+// print response
+static void print_resp(uint8_t* resp, size_t len) {
+	printf("resp: ");
+	for (int i=0; i<len; i++)
+		printf("%d ", resp[i]);
+	printf("\n");
 }
 
 // set PV value and scan it
@@ -448,10 +456,26 @@ int set_connection(int nodeID, float status) {
 	return 0;
 }
 
-// print response
-static void print_resp(uint8_t* resp, size_t len) {
-	printf("resp: ");
-	for (int i=0; i<len; i++)
-		printf("%d ", resp[i]);
-	printf("\n");
+// Check if a read command PV was triggered, and send command if so
+long poll_command_pv(aSubRecord *pv, int opcode) {
+	int val;
+	memcpy(&val, pv->b, sizeof(int));
+	if (val != 0) {
+		int nodeID;
+		memcpy(&nodeID, pv->a, sizeof(int));
+		uint8_t command[2];
+		command[0] = opcode;
+		command[1] = nodeID;
+		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		set_pv(pv, 0);
+	}
+	return 0;
+}
+
+// send a read command (which has only 1 argument) to aggregator
+void send_read_command(int opcode, int nodeID) {
+	uint8_t command[2];
+	command[0] = opcode;
+	command[1] = nodeID;
+	gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
 }
