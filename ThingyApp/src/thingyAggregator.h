@@ -88,6 +88,10 @@ int broken_conn;
 #define CONN_MAX_INTERVAL_ID 38
 #define CONN_LATENCY_ID 39
 #define CONN_TIMEOUT_ID 40
+#define QUATERNION_TOGGLE_ID 41
+#define RAW_MOTION_TOGGLE_ID 42
+#define EULER_TOGGLE_ID 43
+#define HEADING_TOGGLE_ID 44
 
 
 // Connection status
@@ -101,7 +105,7 @@ int broken_conn;
 #define COMMAND_MOTION_CONFIG_READ 8
 // not implemented
 // #define COMMAND_MOTION_CONFIG_WRITE 9 
-#define COMMAND_ENV_SET_SENSOR 10
+#define COMMAND_SET_SENSOR 10
 #define COMMAND_CONN_PARAM_READ 11
 #define COMMAND_CONN_PARAM_WRITE 12
 

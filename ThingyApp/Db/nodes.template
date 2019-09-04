@@ -478,61 +478,61 @@ record(ai, "$(Sys)$(Dev)QuaternionZ") {
 	field(VAL,	"-1")
 }
 
-record(aSub, "$(Sys)$(Dev)AcecelerationXNotifier") {
-	field(DESC,	"AcecelerationX listener for thingy node")
+record(aSub, "$(Sys)$(Dev)AccelerationXNotifier") {
+	field(DESC,	"AccelerationX listener for thingy node")
 	field(SCAN,	"Passive")
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"19")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(OUTA,	"$(Sys)$(Dev)AcecelerationX.VAL")
+	field(OUTA,	"$(Sys)$(Dev)AccelerationX.VAL")
 	field(FTVA,	"FLOAT")
-	field(FLNK,	"$(Sys)$(Dev)AcecelerationX")
+	field(FLNK,	"$(Sys)$(Dev)AccelerationX")
 }
 
-record(ai, "$(Sys)$(Dev)AcecelerationX") {
-	field(DESC,	"AcecelerationX value for thingy node")
+record(ai, "$(Sys)$(Dev)AccelerationX") {
+	field(DESC,	"AccelerationX value for thingy node")
 	field(EGU,	"G")
 	field(PREC,	"2")
 	field(VAL,	"-1")
 }
 
-record(aSub, "$(Sys)$(Dev)AcecelerationYNotifier") {
-	field(DESC,	"AcecelerationY listener for thingy node")
+record(aSub, "$(Sys)$(Dev)AccelerationYNotifier") {
+	field(DESC,	"AccelerationY listener for thingy node")
 	field(SCAN,	"Passive")
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"20")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(OUTA,	"$(Sys)$(Dev)AcecelerationY.VAL")
+	field(OUTA,	"$(Sys)$(Dev)AccelerationY.VAL")
 	field(FTVA,	"FLOAT")
-	field(FLNK,	"$(Sys)$(Dev)AcecelerationY")
+	field(FLNK,	"$(Sys)$(Dev)AccelerationY")
 }
 
-record(ai, "$(Sys)$(Dev)AcecelerationY") {
-	field(DESC,	"AcecelerationY value for thingy node")
+record(ai, "$(Sys)$(Dev)AccelerationY") {
+	field(DESC,	"AccelerationY value for thingy node")
 	field(EGU,	"G")
 	field(PREC,	"2")
 	field(VAL,	"-1")
 }
 
-record(aSub, "$(Sys)$(Dev)AcecelerationZNotifier") {
-	field(DESC,	"AcecelerationZ listener for thingy node")
+record(aSub, "$(Sys)$(Dev)AccelerationZNotifier") {
+	field(DESC,	"AccelerationZ listener for thingy node")
 	field(SCAN,	"Passive")
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"21")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
-	field(OUTA,	"$(Sys)$(Dev)AcecelerationZ.VAL")
+	field(OUTA,	"$(Sys)$(Dev)AccelerationZ.VAL")
 	field(FTVA,	"FLOAT")
-	field(FLNK,	"$(Sys)$(Dev)AcecelerationZ")
+	field(FLNK,	"$(Sys)$(Dev)AccelerationZ")
 }
 
-record(ai, "$(Sys)$(Dev)AcecelerationZ") {
-	field(DESC,	"AcecelerationZ value for thingy node")
+record(ai, "$(Sys)$(Dev)AccelerationZ") {
+	field(DESC,	"AccelerationZ value for thingy node")
 	field(EGU,	"G")
 	field(PREC,	"2")
 	field(VAL,	"-1")
@@ -924,4 +924,76 @@ record(ai, "$(Sys)$(Dev)Timeout") {
 	field(EGU,	"ms")
 	field(PREC,	"0")
 	field(VAL,	"-1")
+}
+
+record(aSub, "$(Sys)$(Dev)QuaternionsWriter") {
+	field(DESC,	"Quaternion toggle for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"41")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)Quaternions.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)Quaternions")
+}
+
+record(ai, "$(Sys)$(Dev)Quaternions") {
+	field(DESC,	"Quaternion toggle for thingy node")
+	field(VAL,	0)
+}
+
+record(aSub, "$(Sys)$(Dev)RawMotionWriter") {
+	field(DESC,	"Raw motion toggle for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"42")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)RawMotion.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)RawMotion")
+}
+
+record(ai, "$(Sys)$(Dev)RawMotion") {
+	field(DESC,	"Raw motion toggle for thingy node")
+	field(VAL,	0)
+}
+
+record(aSub, "$(Sys)$(Dev)EulerWriter") {
+	field(DESC,	"Euler motion toggle for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"43")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)Euler.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)Euler")
+}
+
+record(ai, "$(Sys)$(Dev)Euler") {
+	field(DESC,	"Euler toggle for thingy node")
+	field(VAL,	0)
+}
+
+record(aSub, "$(Sys)$(Dev)HeadingWriter") {
+	field(DESC,	"Heading toggle for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"44")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)HeadingToggle.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)HeadingToggle")
+}
+
+record(ai, "$(Sys)$(Dev)HeadingToggle") {
+	field(DESC,	"Heading toggle for thingy node")
+	field(VAL,	0)
 }

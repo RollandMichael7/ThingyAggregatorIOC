@@ -46,9 +46,6 @@ int alive[MAX_NODES];
 // bitmap for nodes which are active but not transmitting data
 int dead[MAX_NODES];
 
-static long register_pv(aSubRecord*);
-static long poll_command_pv(aSubRecord*, int);
-
 // thread functions
 static void	notification_listener();
 static void notif_callback(const uuid_t*, const uint8_t*, size_t, void*);
@@ -282,18 +279,43 @@ static long toggle_sensor(aSubRecord *pv) {
 		memcpy(&x, sensorPV->vala, sizeof(float));
 
 		uint8_t command[4];
-		command[0] = COMMAND_ENV_SET_SENSOR;
+		command[0] = COMMAND_SET_SENSOR;
 		command[1] = nodeID;
 		command[2] = sensorID;
 		command[3] = x ? 0 : 1;
 		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		if (sensorID == QUATERNION_TOGGLE_ID || sensorID == RAW_MOTION_TOGGLE_ID || sensorID == EULER_TOGGLE_ID || sensorID == HEADING_TOGGLE_ID)
+			set_pv(sensorPV, 1);
 		if (x != 0) {
 			set_pv(sensorPV, 0);
 			if (sensorID == GAS_ID) {
-				sensorPV = get_pv(nodeID, CO2_ID);
-				set_pv(sensorPV, 0);
-				sensorPV = get_pv(nodeID, TVOC_ID);
-				set_pv(sensorPV, 0);
+				set_pv(get_pv(nodeID, CO2_ID), 0);
+				set_pv(get_pv(nodeID, TVOC_ID), 0);
+			}
+			else if (sensorID == QUATERNION_TOGGLE_ID) {
+				set_pv(get_pv(nodeID, QUATERNION_W_ID), 0);
+				set_pv(get_pv(nodeID, QUATERNION_X_ID), 0);
+				set_pv(get_pv(nodeID, QUATERNION_Y_ID), 0);
+				set_pv(get_pv(nodeID, QUATERNION_Z_ID), 0);
+			}
+			else if (sensorID == RAW_MOTION_TOGGLE_ID) {
+				set_pv(get_pv(nodeID, ACCEL_X_ID), 0);
+				set_pv(get_pv(nodeID, ACCEL_Y_ID), 0);
+				set_pv(get_pv(nodeID, ACCEL_Z_ID), 0);
+				set_pv(get_pv(nodeID, GYRO_X_ID), 0);
+				set_pv(get_pv(nodeID, GYRO_Y_ID), 0);
+				set_pv(get_pv(nodeID, GYRO_Z_ID), 0);
+				set_pv(get_pv(nodeID, COMPASS_X_ID), 0);
+				set_pv(get_pv(nodeID, COMPASS_Y_ID), 0);
+				set_pv(get_pv(nodeID, COMPASS_Z_ID), 0);
+			}
+			else if (sensorID == EULER_TOGGLE_ID) {
+				set_pv(get_pv(nodeID, ROLL_ID), 0);
+				set_pv(get_pv(nodeID, PITCH_ID), 0);
+				set_pv(get_pv(nodeID, YAW_ID), 0);
+			}
+			else if (sensorID == HEADING_TOGGLE_ID) {
+				set_pv(get_pv(nodeID, HEADING_ID), 0);
 			}
 		}
 		set_pv(pv, 0);
@@ -344,30 +366,6 @@ long write_conn_param(aSubRecord *pv) {
 
 // ---------------------------- Helper functions ----------------------------
 
-// Check if a read command PV was triggered, and send command if so
-static long poll_command_pv(aSubRecord *pv, int opcode) {
-	int val;
-	memcpy(&val, pv->b, sizeof(int));
-	if (val != 0) {
-		int nodeID;
-		memcpy(&nodeID, pv->a, sizeof(int));
-		uint8_t command[2];
-		command[0] = opcode;
-		command[1] = nodeID;
-		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
-		set_pv(pv, 0);
-	}
-	return 0;
-}
-
-// send a read command (which has only 1 argument) to aggregator
-static void send_read_command(int opcode, int nodeID) {
-	uint8_t command[2];
-	command[0] = opcode;
-	command[1] = nodeID;
-	gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
-}
-
 // fetch PV from linked list given node/PV IDs
 aSubRecord* get_pv(int nodeID, int pvID) {
 	PVnode *node = firstPV;
@@ -383,7 +381,7 @@ aSubRecord* get_pv(int nodeID, int pvID) {
 
 // mark dead nodes through PV values
 void nullify_node(int id) {
-	float null = -1;
+	float null = 0;
 	int pvID;
 	PVnode *node = firstPV;
 	aSubRecord *pv;
