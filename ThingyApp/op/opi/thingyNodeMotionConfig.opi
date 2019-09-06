@@ -756,7 +756,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts />
-      <text>Magnetometer Compensation interval</text>
+      <text>Magnetometer Compensation Interval</text>
       <tooltip></tooltip>
       <transparent>true</transparent>
       <vertical_alignment>1</vertical_alignment>
@@ -996,7 +996,7 @@ $(pv_value)</tooltip>
         <keep_wh_ratio>false</keep_wh_ratio>
       </scale_options>
       <scripts />
-      <text>Temperature Compensation interval</text>
+      <text>Temperature Compensation Interval</text>
       <tooltip></tooltip>
       <transparent>true</transparent>
       <vertical_alignment>1</vertical_alignment>
@@ -1208,7 +1208,7 @@ $(pv_value)</tooltip>
       <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>32ef36a:16ce3920c39:-772c</wuid>
-      <x>312</x>
+      <x>302</x>
       <y>6</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextInput" version="2.0.0">
@@ -1265,7 +1265,7 @@ $(pv_value)</tooltip>
       <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>32ef36a:16ce3920c39:-772b</wuid>
-      <x>312</x>
+      <x>302</x>
       <y>42</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextInput" version="2.0.0">
@@ -1322,7 +1322,7 @@ $(pv_value)</tooltip>
       <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>32ef36a:16ce3920c39:-772a</wuid>
-      <x>312</x>
+      <x>302</x>
       <y>78</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextInput" version="2.0.0">
@@ -1379,7 +1379,7 @@ $(pv_value)</tooltip>
       <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>32ef36a:16ce3920c39:-7729</wuid>
-      <x>312</x>
+      <x>302</x>
       <y>114</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
@@ -1476,7 +1476,7 @@ $(pv_value)</tooltip>
       <widget_type>Text Input</widget_type>
       <width>100</width>
       <wuid>32ef36a:16ce3920c39:-757f</wuid>
-      <x>312</x>
+      <x>302</x>
       <y>150</y>
     </widget>
   </widget>
