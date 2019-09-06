@@ -66,6 +66,22 @@ record(ai, "$(Sys)$(Dev)MotionConfigRead") {
 	field(VAL,	"1")
 }
 
+record(aSub, "$(Sys)$(Dev)MotionConfigWriter") {
+	field(DESC,	"Write motion config for thingy node")
+	field(SCAN,	".2 second")
+	field(SNAM,	"write_motion_config")
+	field(INPA,	$(NodeID))
+	field(INPB, "$(Sys)$(Dev)MotionConfigWrite.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)MotionConfigWrite.VAL")
+	field(FTVA,	"SHORT")
+}
+
+record(ai, "$(Sys)$(Dev)MotionConfigWrite") {
+	field(VAL,	"0")
+}
+
 record(aSub, "$(Sys)$(Dev)ConnParamReader") {
 	field(DESC,	"Read conn params for thingy node")
 	field(SCAN,	".2 second")
@@ -744,8 +760,10 @@ record(aSub, "$(Sys)$(Dev)StepIntervalWriter") {
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"32")
+	field(INPC,	"$(Sys)$(Dev)StepInterval.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)StepInterval.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)StepInterval")
@@ -764,8 +782,10 @@ record(aSub, "$(Sys)$(Dev)TempCompIntervalWriter") {
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"33")
+	field(INPC,	"$(Sys)$(Dev)TempCompInterval.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)TempCompInterval.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)TempCompInterval")
@@ -784,8 +804,10 @@ record(aSub, "$(Sys)$(Dev)MagCompIntervalWriter") {
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"34")
+	field(INPC,	"$(Sys)$(Dev)MagCompInterval.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)MagCompInterval.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)MagCompInterval")
@@ -804,8 +826,10 @@ record(aSub, "$(Sys)$(Dev)MotionFreqWriter") {
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"35")
+	field(INPC,	"$(Sys)$(Dev)MotionFrequency.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)MotionFrequency.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)MotionFrequency")
@@ -824,8 +848,10 @@ record(aSub, "$(Sys)$(Dev)WakeMotionWriter") {
 	field(INAM,	"register_pv")
 	field(INPA,	$(NodeID))
 	field(INPB,	"36")
+	field(INPC,	"$(Sys)$(Dev)WakeOnMotion.VAL")
 	field(FTA,	"SHORT")
 	field(FTB,	"SHORT")
+	field(FTC,	"FLOAT")
 	field(OUTA,	"$(Sys)$(Dev)WakeOnMotion.VAL")
 	field(FTVA,	"FLOAT")
 	field(FLNK,	"$(Sys)$(Dev)WakeOnMotion")

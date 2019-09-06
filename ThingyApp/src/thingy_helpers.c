@@ -116,6 +116,34 @@ void write_env_config_helper(int nodeID) {
 	gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
 }
 
+// write motion config values to node
+void write_motion_config_helper(int nodeID) {
+	uint16_t steps = get_writer_pv_value(nodeID, STEP_INTERVAL_ID);
+	uint16_t tempComp = get_writer_pv_value(nodeID, TEMP_COMP_INTERVAL_ID);
+	uint16_t magComp = get_writer_pv_value(nodeID, MAG_COMP_INTERVAL_ID);
+	uint16_t freq = get_writer_pv_value(nodeID, MOTION_FREQ_ID);
+	uint8_t wake = get_writer_pv_value(nodeID, WAKE_ID);
+	//printf("write motion config: %d %d %d %d %d\n", steps, tempComp, magComp, freq, wake);
+	uint8_t command[11];
+	command[0] = COMMAND_MOTION_CONFIG_WRITE;
+	command[1] = nodeID;
+	command[2] = steps & 0xFF;
+	command[3] = steps >> 8;
+	command[4] = tempComp & 0xFF;
+	command[5] = tempComp >> 8;
+	command[6] = magComp & 0xFF;
+	command[7] = magComp >> 8;
+	command[8] = freq & 0xFF;
+	command[9] = freq >> 8;
+	command[10] = wake;
+	gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+	// wait for write to complete
+	usleep(500);
+	// read values again to confirm write
+	command[0] = COMMAND_MOTION_CONFIG_READ;
+	gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+}
+
 // write conn param values to node
 void write_conn_param_helper(int nodeID) {
 	uint16_t min = (uint16_t) (get_writer_pv_value(nodeID, CONN_MIN_INTERVAL_ID) / 1.25);
@@ -410,8 +438,8 @@ void parse_resp(uint8_t *resp, size_t len) {
 		parse_motion_config(resp, len);
 	else if (op == OPCODE_CONN_PARAM)
 		parse_conn_param(resp, len);
-	else
-		printf("unknown opcode: %d\n", op);
+	//else
+	//	printf("unknown opcode: %d\n", op);
 }
 
 // print response

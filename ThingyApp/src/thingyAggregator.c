@@ -351,6 +351,19 @@ long write_env_config(aSubRecord *pv) {
 	return 0;
 }
 
+// Motion sensor config write triggered by writing to MotionConfigWrite PV
+long write_motion_config(aSubRecord *pv) {
+	int val;
+	memcpy(&val, pv->b, sizeof(int));
+	if (val != 0) {
+		int nodeID;
+		memcpy(&nodeID, pv->a, sizeof(int));
+		write_motion_config_helper(nodeID);
+		set_pv(pv, 0);
+	}
+	return 0;
+}
+
 // Connection param write triggered by writing to ConnParamWrite PV
 long write_conn_param(aSubRecord *pv) {
 	int val;
@@ -404,5 +417,6 @@ epicsRegisterFunction(toggle_sensor);
 epicsRegisterFunction(read_env_config);
 epicsRegisterFunction(write_env_config);
 epicsRegisterFunction(read_motion_config);
+epicsRegisterFunction(write_motion_config);
 epicsRegisterFunction(read_conn_param);
 epicsRegisterFunction(write_conn_param);
