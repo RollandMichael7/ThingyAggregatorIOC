@@ -19,6 +19,13 @@ Currently supported sensors:
 R1-0
 =================
 
+R1-0-3 9/13
+---
+- Add screens for motion sensors
+- Add support for reading & writing motion sensor config
+- Add support for toggling quaternions, accelerometer, gyroscope, compass
+- Add documentation to README
+
 R1-0-2 8/28
 ----
 - Add support for motion sensors
