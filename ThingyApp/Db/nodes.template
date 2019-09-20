@@ -132,6 +132,23 @@ record(ai, "$(Sys)$(Dev)Connection") {
 	field(VAL,	1)
 }
 
+record(aSub, "$(Sys)$(Dev)LEDWriter") {
+	field(DESC,	"LED writer for thingy network")
+	field(SCAN,	".2 second")
+	field(SNAM,	"toggle_led")
+	field(VAL,	0)
+	field(INPA,	$(NodeID))
+	field(INPB,	"$(Sys)$(Dev)LED.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA, "$(Sys)$(Dev)LED.VAL")
+	field(FTVA,	"SHORT")
+}
+
+record(ai, "$(Sys)$(Dev)LED") {
+	field(VAL,	"0")
+}
+
 record(aSub, "$(Sys)$(Dev)StatusNotifier") {
 	field(DESC,	"Status listener for thingy node")
 	field(SCAN,	"Passive")

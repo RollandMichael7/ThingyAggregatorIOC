@@ -37,8 +37,10 @@ pthread_mutex_t connlock = PTHREAD_MUTEX_INITIALIZER;
 int stop;
 // flag for determining whether monitoring threads have started
 int monitoring = 0;
-// LED toggle
-int led_on;
+// LED toggle for all nodes
+int led_all;
+// bitmap for toggling individual LEDs
+int led_nodes[MAX_NODES];
 // bitmap for active nodes
 int active[MAX_NODES];
 // bitmap for nodes currently active and transmitting data
@@ -252,13 +254,24 @@ long toggle_led(aSubRecord *pv) {
 	int val;
 	memcpy(&val, pv->b, sizeof(int));
 	if (val != 0) {
+		int nodeID;
+		memcpy(&nodeID, pv->a, sizeof(int));
 		uint8_t command[5];
-		led_on ^= 1;
 		command[0] = COMMAND_LED_TOGGLE;
-		command[1] = led_on;
-		command[2] = 0xFF;
-		command[3] = 0xFF;
-		command[4] = 0xFF;
+		if (nodeID == AGGREGATOR_ID) {
+			led_all ^= 1;
+			command[1] = led_all;
+			command[2] = 0xFF;
+			command[3] = 0xFF;
+			command[4] = 0xFF;
+		}
+		else {
+			int offset = nodeID % 8;
+			int byte = 2 + (nodeID / 8);
+			led_nodes[nodeID] ^= 1;
+			command[1] = led_nodes[nodeID];
+			command[byte] = 1 << offset;
+		}
 		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
 		set_pv(pv, 0);
 	}
