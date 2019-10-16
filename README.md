@@ -21,7 +21,7 @@ Supported sensors:
 - A [NRF52DK](https://www.nordicsemi.com/?sc_itemid=%7BF2C2DBF4-4D5C-4EAD-9F3D-CFD0276B300B%7D) with multi-link aggregator firmware
 	- https://github.com/RollandMichael7/nrf52-ble-multi-link-multi-role/tree/master/ble_aggregator
 	- Firmware installation requires:
-		- [nRF5_SDK_v15.2.0](http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/nRF5_SDK_15.2.0_9412b96.zip)
+		- [nRF5_SDK_v15.3.0](https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/nRF5_SDK_15.3.0_59ac345.zip)
 		- [Segger Embedded Studio](https://www.segger.com/products/development-tools/embedded-studio/)
 		- A micro USB cable
 - Software requirements:
