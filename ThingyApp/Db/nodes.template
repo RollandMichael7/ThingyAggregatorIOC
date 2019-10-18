@@ -767,7 +767,7 @@ record(aSub, "$(Sys)$(Dev)HeadingNotifier") {
 record(ai, "$(Sys)$(Dev)Heading") {
 	field(DESC,	"Heading value for thingy node")
 	field(EGU,	"deg")
-	field(PREC,	"2")
+	field(PREC,	"0")
 	field(VAL,	"-1")
 }
 

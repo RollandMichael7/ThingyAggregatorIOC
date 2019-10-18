@@ -400,7 +400,7 @@ static void parse_heading(uint8_t *resp, size_t len) {
 	aSubRecord *headingPV = get_pv(nodeID, HEADING_ID);
 	if (headingPV != 0) {
 		int i = RESP_HEADING_VAL;
-		int32_t raw = (resp[i]) | (resp[i+2] << 8) | (resp[i+3] << 16) | (resp[i+4] << 24);
+		int32_t raw = (resp[i]) | (resp[i+1] << 8) | (resp[i+2] << 16) | (resp[i+3] << 24);
 		float x = ((float)(raw) / (float)(1 << 16)); // 16Q16 fixed point
 		set_pv(headingPV, x);
 	}
