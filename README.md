@@ -19,7 +19,7 @@ Supported sensors:
 - Bluetooth Low Energy connectivity
 - At least one [Thingy:52](https://www.nordicsemi.com/?sc_itemid=%7B3C201A33-5CA5-457B-87E4-A7B04C19EE71%7D) with default firmware
 - A [NRF52DK](https://www.nordicsemi.com/?sc_itemid=%7BF2C2DBF4-4D5C-4EAD-9F3D-CFD0276B300B%7D) with multi-link aggregator firmware
-	- https://github.com/RollandMichael7/nrf52-ble-multi-link-multi-role/tree/master/ble_aggregator
+	- https://github.com/RollandMichael7/nrf52-ble-multi-link-multi-role/
 	- Firmware installation requires:
 		- [nRF5_SDK_v15.3.0](https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/nRF5_SDK_15.3.0_59ac345.zip)
 		- [Segger Embedded Studio](https://www.segger.com/products/development-tools/embedded-studio/)
@@ -33,7 +33,7 @@ Supported sensors:
 ## Setup ##
 
 ### Firmware ###
-Download Segger Embedded Studio, the aggregator firmware and the NRF SDK v15.2. Create a folder in your SDK installation ```$(SDK)/examples/training```,
+Download Segger Embedded Studio, the aggregator firmware and the NRF SDK v15.3. Create a folder in your SDK installation ```$(SDK)/examples/training```,
 and copy the ```nrf52-ble-multi-link-multi-role``` folder in. Open Segger Embedded Studio, and use ```File > Open Soltion...``` to open 
 ```$(SDK)/examples/training/nrf52-ble-multi-link-multi-role/ble_aggregator/pca10040/ses/ble_aggregator_pca10040_s132.emProject```. Plug the DK into your
 computer with the micro USB cable, and in Segger Embedded Studio connect to the DK with ```Target > Connect J-Link```. Compile and flash the firmware 
