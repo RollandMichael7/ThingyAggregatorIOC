@@ -1,6 +1,8 @@
 #include <aSubRecord.h>
 #include "gattlib.h"
 
+#define MAX_NODES 19
+
 // ----------------------- METHOD SIGNATURES -----------------------
 
 void disconnect();
@@ -21,28 +23,30 @@ aSubRecord* get_pv(int, int);
 // ----------------------- SHARED GLOBALS -----------------------
 
 // Pointer for mac address given by thingyConfig()
-char mac_address[100];
+char g_mac_address[100];
 
 // Flag set when the IOC has started and PVs can be scanned
-int ioc_started;
+int g_ioc_started;
 
-// bluetooth UUIDs for communication with bridge
-uuid_t send_uuid;
-uuid_t recv_uuid;
+// bluetooth UUID objects for communication with aggregator
+uuid_t g_send_uuid;
+uuid_t g_recv_uuid;
 
 // connection object
-gatt_connection_t *connection;
+gatt_connection_t *gp_connection;
 // flag for broken connection
-int broken_conn;
+int g_broken_conn;
+
+// array for mapping hardware node ID to custom node ID
+int g_custom_node_id[MAX_NODES];
 
 
 // ----------------------- CONSTANTS -----------------------
 
 // Maximum amount of nodes that can be connected to aggregator
-#define MAX_NODES 19
 #define AGGREGATOR_ID MAX_NODES + 1
 
-// Bluetooth UUIDs for interacting with aggregator
+// Bluetooth UUIDs for aggregator characteristics
 #define RECV_UUID "3e520003-1368-b682-4440-d7dd234c45bc"
 #define SEND_UUID "3e520002-1368-b682-4440-d7dd234c45bc"
 
@@ -93,7 +97,6 @@ int broken_conn;
 #define EULER_TOGGLE_ID 43
 #define HEADING_TOGGLE_ID 44
 
-
 // Connection status
 #define CONNECTED 1
 #define DISCONNECTED 0
@@ -108,11 +111,8 @@ int broken_conn;
 #define COMMAND_CONN_PARAM_READ 11
 #define COMMAND_CONN_PARAM_WRITE 12
 
-// Indices for every response payload
-#define RESP_OPCODE 0
-#define RESP_ID 2
-
 // Opcodes for responses
+#define OPCODE_CONNECT 1
 #define OPCODE_BUTTON 3
 #define OPCODE_BATTERY 4
 #define OPCODE_RSSI 6
@@ -128,7 +128,14 @@ int broken_conn;
 #define OPCODE_MOTION_CONFIG 16
 #define OPCODE_CONN_PARAM 17
 
+// Indices for every response payload
+#define RESP_OPCODE 0
+#define RESP_ID 2
+
 // Indices for each response type
+#define RESP_CONNECT_NAME 11
+#define NAME_BUF_LENGTH 11
+
 #define RESP_BUTTON_STATE 4
 
 #define RESP_BATTERY_LEVEL 3

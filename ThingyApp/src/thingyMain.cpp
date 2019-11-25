@@ -13,7 +13,7 @@
 #include "registryFunction.h"
 #include "epicsExport.h"
 
-#include "thingyAggregator.h"
+#include "thingy_aggregator.h"
 
 int main(int argc,char *argv[])
 {
@@ -21,7 +21,7 @@ int main(int argc,char *argv[])
         iocsh(argv[1]);
         epicsThreadSleep(.2);
     }
-    ioc_started = 1;
+    g_ioc_started = 1;
     //scanPVs();
     iocsh(NULL);
     //disconnect();
@@ -30,7 +30,7 @@ int main(int argc,char *argv[])
 }
 
 void thingyConfig(char *mac) {
-	strncpy(mac_address, mac, strlen(mac));
+	strncpy(g_mac_address, mac, strlen(mac));
 }
 
 static const iocshArg thingyConfigArg0 = {"MAC address", iocshArgString};

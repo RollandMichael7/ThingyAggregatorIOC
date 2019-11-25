@@ -14,12 +14,12 @@ DBD += thingy.dbd
 thingy_DBD += base.dbd
 #thingy_DBD += asyn.dbd
 #thingy_DBD += drvAsynIPPort.dbd
-thingy_DBD += thingyAggregator.dbd
+thingy_DBD += thingy_aggregator.dbd
 
 # thingy_registerRecordDeviceDriver.cpp derives from thingy.dbd
 thingy_SRCS += thingy_registerRecordDeviceDriver.cpp
 
-thingy_SRCS += thingyAggregator.c
+thingy_SRCS += thingy_aggregator.c
 thingy_SRCS += thingy_helpers.c
 
 # Build the main IOC entry point on workstation OSs.

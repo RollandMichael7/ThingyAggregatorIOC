@@ -1,6 +1,6 @@
 // helper functions
 
-uuid_t aggregatorUUID(const char*);
+uuid_t aggregator_UUID(const char*);
 
 void parse_resp(uint8_t*, size_t);
 

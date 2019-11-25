@@ -24,29 +24,29 @@
 #include <glib.h>
 #include "gattlib.h"
 
-#include "thingyAggregator.h"
+#include "thingy_aggregator.h"
 #include "thingy_helpers.h"
 
 
 // lock for PV linked list
-pthread_mutex_t pv_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t g_pv_lock = PTHREAD_MUTEX_INITIALIZER;
 // lock for connection object
-pthread_mutex_t connlock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t g_connlock = PTHREAD_MUTEX_INITIALIZER;
 
 // flag to stop revive thread before cleanup
-int stop;
+static int g_stop;
 // flag for determining whether monitoring threads have started
-int monitoring = 0;
+static int g_monitoring = 0;
 // LED toggle for all nodes
-int led_all;
+static int g_led_all;
 // bitmap for toggling individual LEDs
-int led_nodes[MAX_NODES];
+static int led_nodes[MAX_NODES];
 // bitmap for active nodes
-int active[MAX_NODES];
+static int g_active[MAX_NODES];
 // bitmap for nodes currently active and transmitting data
-int alive[MAX_NODES];
+static int g_alive[MAX_NODES];
 // bitmap for nodes which are active but not transmitting data
-int dead[MAX_NODES];
+static int g_dead[MAX_NODES];
 
 // thread functions
 static void	notification_listener();
@@ -57,44 +57,44 @@ static void	reconnect();
 // linked list of structures to pair node/sensor IDs to PVs
 typedef struct {
 	aSubRecord *pv;
-	int nodeID;
-	int pvID;
+	int node_id;
+	int pv_id;
 	struct PVnode *next;
 } PVnode;
 
-PVnode* firstPV = 0;
+PVnode* g_first_pv = 0;
 
 static void disconnect_handler() {
 	printf("WARNING: Connection to aggregator lost.\n");
 	set_status(AGGREGATOR_ID, "DISCONNECTED");
-	broken_conn = 1;
+	g_broken_conn = 1;
 }
 
-// connect, initialize global UUIDs for communication, start threads for monitoring connection
+// connect, initialize global UUIDs for communication, start threads for g_monitoring connection
 static gatt_connection_t* get_connection() {
-	if (connection != 0) {
-		return connection;
+	if (gp_connection != 0) {
+		return gp_connection;
 	}
 
-	pthread_mutex_lock(&connlock);
+	pthread_mutex_lock(&g_connlock);
 	// connection was made while thread waited for lock
-	if (connection != 0)
-		return connection;
-	printf("Connecting to device %s...\n", mac_address);
-	connection = gattlib_connect(NULL, mac_address, GATTLIB_CONNECTION_OPTIONS_LEGACY_BDADDR_LE_PUBLIC | GATTLIB_CONNECTION_OPTIONS_LEGACY_BT_SEC_LOW);
-	if (connection != 0) {
+	if (gp_connection != 0)
+		return gp_connection;
+	printf("Connecting to device %s...\n", g_mac_address);
+	gp_connection = gattlib_connect(NULL, g_mac_address, GATTLIB_CONNECTION_OPTIONS_LEGACY_BDADDR_LE_PUBLIC | GATTLIB_CONNECTION_OPTIONS_LEGACY_BT_SEC_LOW);
+	if (gp_connection != 0) {
 		set_status(AGGREGATOR_ID, "CONNECTED");
 		printf("Connected.\n");
 	}
-	recv_uuid = aggregatorUUID(RECV_UUID);
-	send_uuid = aggregatorUUID(SEND_UUID);
+	g_recv_uuid = aggregator_UUID(RECV_UUID);
+	g_send_uuid = aggregator_UUID(SEND_UUID);
 	// register cleanup method
 	signal(SIGINT, disconnect);
 
-	// turn on monitoring threads if necessary
-	if (monitoring == 0) {
+	// turn on g_monitoring threads if necessary
+	if (g_monitoring == 0) {
 		// create disconnect handler
-		gattlib_register_on_disconnect(connection, disconnect_handler, NULL);
+		gattlib_register_on_disconnect(gp_connection, disconnect_handler, NULL);
 		// start notification listener thread
 		printf("Starting notification listener thread...\n");
 		pthread_t listener;
@@ -107,35 +107,35 @@ static gatt_connection_t* get_connection() {
 		printf("Starting reconnection thread...\n");
 		pthread_t necromancer;
 		pthread_create(&necromancer, NULL, &reconnect, NULL);
-		monitoring = 1;
+		g_monitoring = 1;
 	}
-	pthread_mutex_unlock(&connlock);
-	return connection;
+	pthread_mutex_unlock(&g_connlock);
+	return gp_connection;
 }
 
 
 // disconnect & cleanup
 void disconnect() {
-	// wait for reconnect thread to stop
-	stop = 1;
-	while (stop != 0)
+	// wait for reconnect thread to g_stop
+	g_stop = 1;
+	while (g_stop != 0)
 		sleep(1);
-	PVnode *node = firstPV; 
+	PVnode *node = g_first_pv; 
 	PVnode *next;
-	printf("Stopping notifications...\n");
-	gattlib_notification_stop(connection, &recv_uuid);
-	gattlib_disconnect(connection);
+	printf("g_Stopping notifications...\n");
+	gattlib_notification_stop(gp_connection, &g_recv_uuid);
+	gattlib_disconnect(gp_connection);
 	printf("Disconnected from device.\n");
 	exit(1);
 }
 
-// thread function to check that active nodes are still connected
+// thread function to check that g_active nodes are still connected
 static void watchdog() {
 	// wait for IOC to start
-	while (ioc_started == 0)
+	while (g_ioc_started == 0)
 		sleep(1);
 	// scan all PVs in case any were set before IOC started
-	PVnode *node = firstPV;
+	PVnode *node = g_first_pv;
 	while (node != 0) {
 		scanOnce(node->pv);
 		node = node->next;
@@ -144,17 +144,17 @@ static void watchdog() {
 	int i;
 	while(1) {
 		for (i=0; i<MAX_NODES; i++) {
-			if (active[i]) {
-				if (alive[i] == 0 && dead[i] == 0) {
+			if (g_active[i]) {
+				if (g_alive[i] == 0 && g_dead[i] == 0) {
 					printf("watchdog: Lost connection to node %d\n", i);
 					// mark PVs null
 					nullify_node(i);
 					set_status(i, "DISCONNECTED");
 					set_connection(i, DISCONNECTED);
-					dead[i] = 1;
+					g_dead[i] = 1;
 				}
 				else {
-					alive[i] = 0;
+					g_alive[i] = 0;
 				}
 			}
 		// sleep for HEARTBEAT_DELAY ms
@@ -165,20 +165,20 @@ static void watchdog() {
 
 // thread function to attempt to reconnect to aggregator
 static void reconnect() {
-	while(ioc_started == 0)
+	while(g_ioc_started == 0)
 		sleep(1);
 	int i;
 	while(1) {
-		if (broken_conn) {
+		if (g_broken_conn) {
 			printf("reconnect: Attempting reconnection to aggregator...\n");
-			connection = 0;
+			gp_connection = 0;
 			get_connection();
-			if (connection != 0)
-				broken_conn = 0;
+			if (gp_connection != 0)
+				g_broken_conn = 0;
 		}
-		if (stop) {
-			printf("Reconnect thread stopped\n");
-			stop = 0;
+		if (g_stop) {
+			printf("Reconnect thread g_stopped\n");
+			g_stop = 0;
 			return;
 		}
 		sleep(RECONNECT_DELAY);
@@ -187,8 +187,8 @@ static void reconnect() {
 
 // thread function to begin listening for UUID notifications from aggregator
 static void notification_listener() {
-	gattlib_register_notification(connection, notif_callback, NULL);
-	gattlib_notification_start(connection, &recv_uuid);
+	gattlib_register_notification(gp_connection, notif_callback, NULL);
+	gattlib_notification_start(gp_connection, &g_recv_uuid);
 	// run forever waiting for notifications
 	GMainLoop *loop = g_main_loop_new(NULL, 0);
 	g_main_loop_run(loop);
@@ -196,13 +196,13 @@ static void notification_listener() {
 
 // parse notification and save to PV(s)
 static void notif_callback(const uuid_t *uuidObject, const uint8_t *resp, size_t len, void *user_data) {
-	uint8_t nodeID = resp[RESP_ID];
-	alive[nodeID] = 1;
-	if (dead[nodeID] == 1) {
-		printf("Node %d successfully reconnected.\n", nodeID);
-		set_status(nodeID, "CONNECTED");
-		set_connection(nodeID, CONNECTED);
-		dead[nodeID] = 0;
+	uint8_t node_id = resp[RESP_ID];
+	g_alive[node_id] = 1;
+	if (g_dead[node_id] == 1) {
+		printf("Node %d successfully reconnected.\n", node_id);
+		set_status(node_id, "CONNECTED");
+		set_connection(node_id, CONNECTED);
+		g_dead[node_id] = 0;
 	}
 
 	parse_resp(resp, len);
@@ -213,39 +213,39 @@ static void notif_callback(const uuid_t *uuidObject, const uint8_t *resp, size_t
 long register_pv(aSubRecord *pv) {
 	// initialize globals
 	get_connection();
-	int nodeID, pvID;
-	memcpy(&nodeID, pv->a, sizeof(int));
-	if (nodeID > (MAX_NODES-1) && nodeID != AGGREGATOR_ID) {
-		printf("MAX_NODES exceeded. Ignoring node %d\n", nodeID);
+	int node_id, pv_id;
+	memcpy(&node_id, pv->a, sizeof(int));
+	if (node_id > (MAX_NODES-1) && node_id != AGGREGATOR_ID) {
+		printf("MAX_NODES exceeded. Ignoring node %d\n", node_id);
 		return;
 	}
-	memcpy(&pvID, pv->b, sizeof(int));
+	memcpy(&pv_id, pv->b, sizeof(int));
 
 	// add PV to list
-	pthread_mutex_lock(&pv_lock);
+	pthread_mutex_lock(&g_pv_lock);
 	PVnode *pvnode = malloc(sizeof(PVnode));
-	pvnode->nodeID = nodeID;
-	pvnode->pvID = pvID;
+	pvnode->node_id = node_id;
+	pvnode->pv_id = pv_id;
 	pvnode->pv = pv;
 	pvnode->next = 0;
-	if (firstPV == 0) {
-		firstPV = pvnode;
+	if (g_first_pv == 0) {
+		g_first_pv = pvnode;
 	}
 	else {
-		PVnode *curr = firstPV;
+		PVnode *curr = g_first_pv;
 		while (curr->next != 0) {
 			curr = curr->next;
 		}
 		curr->next = pvnode;
 	}
-	pthread_mutex_unlock(&pv_lock);
+	pthread_mutex_unlock(&g_pv_lock);
 
 	printf("Registered %s\n", pv->name);
-	if (pvID == STATUS_ID)
-		set_status(nodeID, "CONNECTED");
-	else if (pvID == CONNECTION_ID) 
-		set_connection(nodeID, CONNECTED);
-	active[nodeID] = 1;
+	if (pv_id == STATUS_ID)
+		set_status(node_id, "CONNECTED");
+	else if (pv_id == CONNECTION_ID) 
+		set_connection(node_id, CONNECTED);
+	g_active[node_id] = 1;
 	return 0;
 }
 
@@ -254,25 +254,25 @@ long toggle_led(aSubRecord *pv) {
 	int val;
 	memcpy(&val, pv->b, sizeof(int));
 	if (val != 0) {
-		int nodeID;
-		memcpy(&nodeID, pv->a, sizeof(int));
+		int node_id;
+		memcpy(&node_id, pv->a, sizeof(int));
 		uint8_t command[5];
 		command[0] = COMMAND_LED_TOGGLE;
-		if (nodeID == AGGREGATOR_ID) {
-			led_all ^= 1;
-			command[1] = led_all;
+		if (node_id == AGGREGATOR_ID) {
+			g_led_all ^= 1;
+			command[1] = g_led_all;
 			command[2] = 0xFF;
 			command[3] = 0xFF;
 			command[4] = 0xFF;
 		}
 		else {
-			int offset = nodeID % 8;
-			int byte = 2 + (nodeID / 8);
-			led_nodes[nodeID] ^= 1;
-			command[1] = led_nodes[nodeID];
+			int offset = node_id % 8;
+			int byte = 2 + (node_id / 8);
+			led_nodes[node_id] ^= 1;
+			command[1] = led_nodes[node_id];
 			command[byte] = 1 << offset;
 		}
-		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		gattlib_write_char_by_uuid(gp_connection, &g_send_uuid, command, sizeof(command));
 		set_pv(pv, 0);
 	}
 	return 0;
@@ -280,12 +280,12 @@ long toggle_led(aSubRecord *pv) {
 
 // Sensor toggle triggered by writing to SensorWrite PV
 static long toggle_sensor(aSubRecord *pv) {
-	int val, nodeID, sensorID;
+	int val, node_id, sensorID;
 	memcpy(&val, pv->b, sizeof(int));
 	if (val != 0) {
-		memcpy(&nodeID, pv->a, sizeof(int));
+		memcpy(&node_id, pv->a, sizeof(int));
 		memcpy(&sensorID, pv->b, sizeof(int));
-		aSubRecord *sensorPV = get_pv(nodeID, sensorID);
+		aSubRecord *sensorPV = get_pv(node_id, sensorID);
 		if (sensorPV == 0)
 			return 0;
 		float x;
@@ -293,42 +293,42 @@ static long toggle_sensor(aSubRecord *pv) {
 
 		uint8_t command[4];
 		command[0] = COMMAND_SET_SENSOR;
-		command[1] = nodeID;
+		command[1] = node_id;
 		command[2] = sensorID;
 		command[3] = x ? 0 : 1;
-		gattlib_write_char_by_uuid(connection, &send_uuid, command, sizeof(command));
+		gattlib_write_char_by_uuid(gp_connection, &g_send_uuid, command, sizeof(command));
 		if (sensorID == QUATERNION_TOGGLE_ID || sensorID == RAW_MOTION_TOGGLE_ID || sensorID == EULER_TOGGLE_ID || sensorID == HEADING_TOGGLE_ID)
 			set_pv(sensorPV, 1);
 		if (x != 0) {
 			set_pv(sensorPV, 0);
 			if (sensorID == GAS_ID) {
-				set_pv(get_pv(nodeID, CO2_ID), 0);
-				set_pv(get_pv(nodeID, TVOC_ID), 0);
+				set_pv(get_pv(node_id, CO2_ID), 0);
+				set_pv(get_pv(node_id, TVOC_ID), 0);
 			}
 			else if (sensorID == QUATERNION_TOGGLE_ID) {
-				set_pv(get_pv(nodeID, QUATERNION_W_ID), 0);
-				set_pv(get_pv(nodeID, QUATERNION_X_ID), 0);
-				set_pv(get_pv(nodeID, QUATERNION_Y_ID), 0);
-				set_pv(get_pv(nodeID, QUATERNION_Z_ID), 0);
+				set_pv(get_pv(node_id, QUATERNION_W_ID), 0);
+				set_pv(get_pv(node_id, QUATERNION_X_ID), 0);
+				set_pv(get_pv(node_id, QUATERNION_Y_ID), 0);
+				set_pv(get_pv(node_id, QUATERNION_Z_ID), 0);
 			}
 			else if (sensorID == RAW_MOTION_TOGGLE_ID) {
-				set_pv(get_pv(nodeID, ACCEL_X_ID), 0);
-				set_pv(get_pv(nodeID, ACCEL_Y_ID), 0);
-				set_pv(get_pv(nodeID, ACCEL_Z_ID), 0);
-				set_pv(get_pv(nodeID, GYRO_X_ID), 0);
-				set_pv(get_pv(nodeID, GYRO_Y_ID), 0);
-				set_pv(get_pv(nodeID, GYRO_Z_ID), 0);
-				set_pv(get_pv(nodeID, COMPASS_X_ID), 0);
-				set_pv(get_pv(nodeID, COMPASS_Y_ID), 0);
-				set_pv(get_pv(nodeID, COMPASS_Z_ID), 0);
+				set_pv(get_pv(node_id, ACCEL_X_ID), 0);
+				set_pv(get_pv(node_id, ACCEL_Y_ID), 0);
+				set_pv(get_pv(node_id, ACCEL_Z_ID), 0);
+				set_pv(get_pv(node_id, GYRO_X_ID), 0);
+				set_pv(get_pv(node_id, GYRO_Y_ID), 0);
+				set_pv(get_pv(node_id, GYRO_Z_ID), 0);
+				set_pv(get_pv(node_id, COMPASS_X_ID), 0);
+				set_pv(get_pv(node_id, COMPASS_Y_ID), 0);
+				set_pv(get_pv(node_id, COMPASS_Z_ID), 0);
 			}
 			else if (sensorID == EULER_TOGGLE_ID) {
-				set_pv(get_pv(nodeID, ROLL_ID), 0);
-				set_pv(get_pv(nodeID, PITCH_ID), 0);
-				set_pv(get_pv(nodeID, YAW_ID), 0);
+				set_pv(get_pv(node_id, ROLL_ID), 0);
+				set_pv(get_pv(node_id, PITCH_ID), 0);
+				set_pv(get_pv(node_id, YAW_ID), 0);
 			}
 			else if (sensorID == HEADING_TOGGLE_ID) {
-				set_pv(get_pv(nodeID, HEADING_ID), 0);
+				set_pv(get_pv(node_id, HEADING_ID), 0);
 			}
 		}
 		set_pv(pv, 0);
@@ -356,9 +356,9 @@ long write_env_config(aSubRecord *pv) {
 	int val;
 	memcpy(&val, pv->b, sizeof(int));
 	if (val != 0) {
-		int nodeID;
-		memcpy(&nodeID, pv->a, sizeof(int));
-		write_env_config_helper(nodeID);
+		int node_id;
+		memcpy(&node_id, pv->a, sizeof(int));
+		write_env_config_helper(node_id);
 		set_pv(pv, 0);
 	}
 	return 0;
@@ -369,9 +369,9 @@ long write_motion_config(aSubRecord *pv) {
 	int val;
 	memcpy(&val, pv->b, sizeof(int));
 	if (val != 0) {
-		int nodeID;
-		memcpy(&nodeID, pv->a, sizeof(int));
-		write_motion_config_helper(nodeID);
+		int node_id;
+		memcpy(&node_id, pv->a, sizeof(int));
+		write_motion_config_helper(node_id);
 		set_pv(pv, 0);
 	}
 	return 0;
@@ -382,9 +382,9 @@ long write_conn_param(aSubRecord *pv) {
 	int val;
 	memcpy(&val, pv->b, sizeof(int));
 	if (val != 0) {
-		int nodeID;
-		memcpy(&nodeID, pv->a, sizeof(int));
-		write_conn_param_helper(nodeID);
+		int node_id;
+		memcpy(&node_id, pv->a, sizeof(int));
+		write_conn_param_helper(node_id);
 		set_pv(pv, 0);
 	}
 	return 0;
@@ -393,28 +393,28 @@ long write_conn_param(aSubRecord *pv) {
 // ---------------------------- Helper functions ----------------------------
 
 // fetch PV from linked list given node/PV IDs
-aSubRecord* get_pv(int nodeID, int pvID) {
-	PVnode *node = firstPV;
+aSubRecord* get_pv(int node_id, int pv_id) {
+	PVnode *node = g_first_pv;
 	while (node != 0) {
-		if (node->nodeID == nodeID && node->pvID == pvID) {
+		if (node->node_id == node_id && node->pv_id == pv_id) {
 			return node->pv;
 		}
 		node = node->next;
 	}
-	printf("WARNING: No PV for node %d sensor %d\n", nodeID, pvID);
+	printf("WARNING: No PV for node %d sensor %d\n", node_id, pv_id);
 	return 0;
 }
 
-// mark dead nodes through PV values
+// mark g_dead nodes through PV values
 void nullify_node(int id) {
 	float null = 0;
-	int pvID;
-	PVnode *node = firstPV;
+	int pv_id;
+	PVnode *node = g_first_pv;
 	aSubRecord *pv;
 	while (node != 0) {
-		pvID = node->pvID;
-		if (node->nodeID == id && pvID != CONNECTION_ID && pvID != STATUS_ID) {
-			if (pvID == BUTTON_ID)
+		pv_id = node->pv_id;
+		if (node->node_id == id && pv_id != CONNECTION_ID && pv_id != STATUS_ID) {
+			if (pv_id == BUTTON_ID)
 				set_pv(node->pv, 0);
 			else
 				set_pv(node->pv, null);
