@@ -40,7 +40,7 @@ static int g_monitoring = 0;
 // LED toggle for all nodes
 static int g_led_all;
 // bitmap for toggling individual LEDs
-static int led_nodes[MAX_NODES];
+static int g_led_nodes[MAX_NODES];
 // bitmap for active nodes
 static int g_active[MAX_NODES];
 // bitmap for nodes currently active and transmitting data
@@ -70,7 +70,7 @@ static void disconnect_handler() {
 	g_broken_conn = 1;
 }
 
-// connect, initialize global UUIDs for communication, start threads for g_monitoring connection
+// connect, initialize global UUIDs for communication, start threads for monitoring connection
 static gatt_connection_t* get_connection() {
 	if (gp_connection != 0) {
 		return gp_connection;
@@ -91,7 +91,7 @@ static gatt_connection_t* get_connection() {
 	// register cleanup method
 	signal(SIGINT, disconnect);
 
-	// turn on g_monitoring threads if necessary
+	// turn on monitoring threads if necessary
 	if (g_monitoring == 0) {
 		// create disconnect handler
 		gattlib_register_on_disconnect(gp_connection, disconnect_handler, NULL);
@@ -116,20 +116,20 @@ static gatt_connection_t* get_connection() {
 
 // disconnect & cleanup
 void disconnect() {
-	// wait for reconnect thread to g_stop
+	// wait for reconnect thread to stop
 	g_stop = 1;
 	while (g_stop != 0)
 		sleep(1);
 	PVnode *node = g_first_pv; 
 	PVnode *next;
-	printf("g_Stopping notifications...\n");
+	printf("Stopping notifications...\n");
 	gattlib_notification_stop(gp_connection, &g_recv_uuid);
 	gattlib_disconnect(gp_connection);
 	printf("Disconnected from device.\n");
 	exit(1);
 }
 
-// thread function to check that g_active nodes are still connected
+// thread function to check that active nodes are still connected
 static void watchdog() {
 	// wait for IOC to start
 	while (g_ioc_started == 0)
@@ -177,7 +177,7 @@ static void reconnect() {
 				g_broken_conn = 0;
 		}
 		if (g_stop) {
-			printf("Reconnect thread g_stopped\n");
+			printf("Reconnect thread stopped\n");
 			g_stop = 0;
 			return;
 		}
@@ -268,8 +268,8 @@ long toggle_led(aSubRecord *pv) {
 		else {
 			int offset = node_id % 8;
 			int byte = 2 + (node_id / 8);
-			led_nodes[node_id] ^= 1;
-			command[1] = led_nodes[node_id];
+			g_led_nodes[node_id] ^= 1;
+			command[1] = g_led_nodes[node_id];
 			command[byte] = 1 << offset;
 		}
 		gattlib_write_char_by_uuid(gp_connection, &g_send_uuid, command, sizeof(command));
@@ -405,7 +405,7 @@ aSubRecord* get_pv(int node_id, int pv_id) {
 	return 0;
 }
 
-// mark g_dead nodes through PV values
+// mark dead nodes through PV values
 void nullify_node(int id) {
 	float null = 0;
 	int pv_id;
