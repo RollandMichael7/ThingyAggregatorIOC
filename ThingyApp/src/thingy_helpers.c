@@ -25,6 +25,7 @@
 
 #include "thingy_aggregator.h"
 #include "thingy_helpers.h"
+#include "thingy_shared.h"
 
 static void print_resp(uint8_t*, size_t);
 
@@ -94,7 +95,7 @@ void write_env_config_helper(int node_id) {
 	//printf("write env config: %d %d %d %d\n", tempInterval, pressureInterval, humidInterval, gasMode);
 	uint8_t command[14];
 	command[0] = COMMAND_ENV_CONFIG_WRITE;
-	command[1] = node_id;
+	command[1] = get_actual_node_id(node_id);
 	command[2] = tempInterval & 0xFF;
 	command[3] = tempInterval >> 8;
 	command[4] = pressureInterval & 0xFF;
@@ -126,7 +127,7 @@ void write_motion_config_helper(int node_id) {
 	//printf("write motion config: %d %d %d %d %d\n", steps, tempComp, magComp, freq, wake);
 	uint8_t command[11];
 	command[0] = COMMAND_MOTION_CONFIG_WRITE;
-	command[1] = node_id;
+	command[1] = get_actual_node_id(node_id);
 	command[2] = steps & 0xFF;
 	command[3] = steps >> 8;
 	command[4] = tempComp & 0xFF;
@@ -152,7 +153,7 @@ void write_conn_param_helper(int node_id) {
 	uint16_t timeout = (uint16_t) (get_writer_pv_value(node_id, CONN_TIMEOUT_ID) / 10);
 	uint8_t command[10];
 	command[0] = COMMAND_CONN_PARAM_WRITE;
-	command[1] = node_id;
+	command[1] = get_actual_node_id(node_id);
 	command[2] = min & 0xFF;
 	command[3] = min >> 8;
 	command[4] = max & 0xFF;
@@ -172,14 +173,46 @@ void write_conn_param_helper(int node_id) {
  */
 
 static void parse_connect(uint8_t *resp, size_t len) {
-	char buf[NAME_BUF_LENGTH];
-	memset(buf, 0, NAME_BUF_LENGTH);
-	int i;
-	for (i; i< NAME_BUF_LENGTH; i++)
-		if (resp[RESP_CONNECT_NAME + i] == 32)
+	int curr_id = resp[RESP_ID];
+
+	// get Bluetooth name of node
+	char name[MAX_NAME_LENGTH];
+	memset(name, 0, MAX_NAME_LENGTH);
+	int name_length = 0;
+	for (name_length; name_length < MAX_NAME_LENGTH; name_length++)
+		if (resp[RESP_CONNECT_NAME + name_length] == 32)
 			break;
-	memcpy(buf, &(resp[RESP_CONNECT_NAME]), i);
-	//printf("%s\n", buf);
+	memcpy(name, &(resp[RESP_CONNECT_NAME]), name_length);
+
+	// check if name matches custom node name
+	if (strncmp(name, CUSTOM_NODE_NAME, strlen(CUSTOM_NODE_NAME)) == 0) {
+		char custom_id_buf[5];
+		memset(custom_id_buf, 0, sizeof(custom_id_buf));
+		memcpy(custom_id_buf, &(name[strlen(CUSTOM_NODE_NAME)]), name_length - strlen(CUSTOM_NODE_NAME));
+		int custom_id = strtol(custom_id_buf, NULL, 10);
+		if (g_custom_node_ids[curr_id] == -1) {
+			printf("Assigned custom node ID %d to device %s\n", custom_id, name);
+			g_custom_node_ids[curr_id] = custom_id;
+		}
+		else
+			printf("WARNING: Can not assign node ID %d to device %s: Already in use\n", custom_id, name);
+	}
+	else {
+		if (g_custom_node_ids[curr_id] == -1) {
+			printf("Assigned node ID %d to device %s\n", curr_id, name);
+			g_custom_node_ids[curr_id] = curr_id;
+		}
+		else
+			printf("WARNING: Can not assign node ID %d to device %s: Already in use\n", curr_id, name);
+	}
+	set_connection(curr_id, CONNECTED);
+}
+
+static void parse_disconnect(uint8_t *resp, size_t len) {
+	int node_id = resp[RESP_ID];
+	printf("disconnecting node %d\n", node_id);
+	disconnect_node(node_id);
+	g_custom_node_ids[node_id] = -1;
 }
 
 static void parse_button(uint8_t *resp, size_t len) {
@@ -423,6 +456,8 @@ void parse_resp(uint8_t *resp, size_t len) {
 	uint8_t op = resp[RESP_OPCODE];
 	if (op == OPCODE_CONNECT)
 		parse_connect(resp, len);
+	else if (op == OPCODE_DISCONNECT)
+		parse_disconnect(resp, len);
 	else if (op == OPCODE_BUTTON)
 		parse_button(resp, len);
 	else if (op == OPCODE_BATTERY)
@@ -465,17 +500,6 @@ static void print_resp(uint8_t* resp, size_t len) {
 	printf("\n");
 }
 
-// set PV value and scan it
-int set_pv(aSubRecord *pv, float val) {
-	if (pv == 0)
-		return 1;
-	memcpy(pv->vala, &val, sizeof(float));
-	if (g_ioc_started) {
-		scanOnce(pv);
-	}
-	return 0;
-}
-
 // set status PV 
 int set_status(int node_id, char* status) {
 	//printf("status = %s for node %d\n", status, node_id);
@@ -490,11 +514,11 @@ int set_status(int node_id, char* status) {
 }
 
 // set gp_connection PV
-int set_connection(int node_id, float status) {
+int set_connection(int node_id, int status) {
 	aSubRecord *pv = get_pv(node_id, CONNECTION_ID);
 	if (pv == 0)
 		return 1;
-	//printf("set gp_connection %d for node %d\n", status, node_id);
+	//printf("set connection %d for node %d\n", status, node_id);
 	set_pv(pv, status);
 	return 0;
 }
@@ -506,6 +530,8 @@ long poll_command_pv(aSubRecord *pv, int opcode) {
 	if (val != 0) {
 		int node_id;
 		memcpy(&node_id, pv->a, sizeof(int));
+		node_id = get_actual_node_id(node_id);
+
 		uint8_t command[2];
 		command[0] = opcode;
 		command[1] = node_id;
@@ -517,8 +543,74 @@ long poll_command_pv(aSubRecord *pv, int opcode) {
 
 // send a read command (which has only 1 argument) to aggregator
 void send_read_command(int opcode, int node_id) {
+	node_id = get_actual_node_id(node_id);
+
 	uint8_t command[2];
 	command[0] = opcode;
 	command[1] = node_id;
 	gattlib_write_char_by_uuid(gp_connection, &g_send_uuid, command, sizeof(command));
+}
+
+// fetch PV from linked list given node/PV IDs
+aSubRecord* get_pv(int node_id, int pv_id) {
+	if (g_ioc_started)
+		node_id = g_custom_node_ids[node_id];
+
+	PVnode *node = g_first_pv;
+	while (node != 0) {
+		if (node->node_id == node_id && node->pv_id == pv_id) {
+			return node->pv;
+		}
+		node = node->next;
+	}
+	printf("WARNING: No PV for node %d sensor %d\n", node_id, pv_id);
+	return 0;
+}
+
+// set PV value and scan it
+int set_pv(aSubRecord *pv, float val) {
+	if (pv == 0)
+		return 1;
+	memcpy(pv->vala, &val, sizeof(float));
+	if (g_ioc_started) {
+		scanOnce(pv);
+	}
+	return 0;
+}
+
+// mark dead nodes through PV values
+static void nullify_node_pvs(int node_id) {
+	if (g_custom_node_ids[node_id] != -1)
+		node_id = g_custom_node_ids[node_id];
+
+	float null = 0;
+	int pv_id;
+	PVnode *node = g_first_pv;
+	aSubRecord *pv;
+	while (node != 0) {
+		pv_id = node->pv_id;
+		if (node->node_id == node_id && pv_id != CONNECTION_ID && pv_id != STATUS_ID) {
+			if (pv_id == BUTTON_ID)
+				set_pv(node->pv, 0);
+			else
+				set_pv(node->pv, null);
+		}
+		node = node->next;
+	}
+}
+
+void disconnect_node(int node_id) {
+	// mark PVs null
+	nullify_node_pvs(node_id);
+	set_status(node_id, "DISCONNECTED");
+	set_connection(node_id, DISCONNECTED);
+}
+
+int get_actual_node_id(int node_id) {
+	for (int i=0; i<MAX_NODES; i++)
+		if (g_custom_node_ids[i] == node_id) {
+			//printf("custom id %d -> actual id %d\n", node_id, i);
+			return i;
+		}
+	return -1;
 }

@@ -1,3 +1,6 @@
+#ifndef THINGY_H
+#define THINGY_H
+
 #include <aSubRecord.h>
 #include "gattlib.h"
 
@@ -7,6 +10,8 @@
 
 void disconnect();
 aSubRecord* get_pv(int, int);
+int set_pv(aSubRecord*, float);
+void disconnect_node(int);
 
 // ----------------------- PERFORMANCE VARIABLES -----------------------
 
@@ -20,13 +25,7 @@ aSubRecord* get_pv(int, int);
 #define HEARTBEAT_DELAY 90000
 
 
-// ----------------------- SHARED GLOBALS -----------------------
-
-// Pointer for mac address given by thingyConfig()
-char g_mac_address[100];
-
-// Flag set when the IOC has started and PVs can be scanned
-int g_ioc_started;
+// ----------------------- GLOBALS -----------------------
 
 // bluetooth UUID objects for communication with aggregator
 uuid_t g_send_uuid;
@@ -38,10 +37,22 @@ gatt_connection_t *gp_connection;
 int g_broken_conn;
 
 // array for mapping hardware node ID to custom node ID
-int g_custom_node_id[MAX_NODES];
+int g_custom_node_ids[MAX_NODES];
 
+// linked list of structures to pair node/sensor IDs to PVs
+typedef struct {
+	aSubRecord *pv;
+	int node_id;
+	int pv_id;
+	struct PVnode *next;
+} PVnode;
+
+PVnode* g_first_pv;
 
 // ----------------------- CONSTANTS -----------------------
+
+// Maximum length for a Thingy's Bluetooth name
+#define MAX_NAME_LENGTH 15
 
 // Maximum amount of nodes that can be connected to aggregator
 #define AGGREGATOR_ID MAX_NODES + 1
@@ -113,6 +124,7 @@ int g_custom_node_id[MAX_NODES];
 
 // Opcodes for responses
 #define OPCODE_CONNECT 1
+#define OPCODE_DISCONNECT 2
 #define OPCODE_BUTTON 3
 #define OPCODE_BATTERY 4
 #define OPCODE_RSSI 6
@@ -134,7 +146,6 @@ int g_custom_node_id[MAX_NODES];
 
 // Indices for each response type
 #define RESP_CONNECT_NAME 11
-#define NAME_BUF_LENGTH 11
 
 #define RESP_BUTTON_STATE 4
 
@@ -173,3 +184,5 @@ int g_custom_node_id[MAX_NODES];
 #define RESP_EULER_YAW 11
 
 #define RESP_HEADING_VAL 3 // 4 byte int 16Q16 fixed point
+
+#endif
