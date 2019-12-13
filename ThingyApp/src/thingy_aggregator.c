@@ -58,6 +58,9 @@ static void	reconnect();
 static void disconnect_handler() {
 	printf("WARNING: Connection to aggregator lost.\n");
 	set_status(AGGREGATOR_ID, "DISCONNECTED");
+	for (int i=0; i<MAX_NODES; i++) {
+		g_custom_node_ids[i] = -1;
+	}
 	g_broken_conn = 1;
 }
 
