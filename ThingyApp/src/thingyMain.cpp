@@ -13,7 +13,7 @@
 #include "registryFunction.h"
 #include "epicsExport.h"
 
-#include "thingy_aggregator.h"
+#include "thingy_shared.h"
 
 int main(int argc,char *argv[])
 {
