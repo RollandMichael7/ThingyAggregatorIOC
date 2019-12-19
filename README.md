@@ -17,7 +17,7 @@ Supported sensors:
 
 ## Requirements ##
 - Bluetooth Low Energy connectivity
-	- Developed with a [Nordic nRF52840 USB dongle](https://www.mouser.com/ProductDetail/Nordic-Semiconductor/nRF52840-Dongle?qs=gTYE2QTfZfTbdrOaMHWEZg%3D%3D&gclid=EAIaIQobChMIlsWN8orC5gIVQ8DICh28-g3LEAQYASABEgJoWfD_BwE) with [Zephyr firmware](https://devzone.nordicsemi.com/f/nordic-q-a/37237/flashing-nrf52840-dongle-to-support-bluez)
+	- Developed with a [Nordic nRF52840 USB dongle](https://www.mouser.com/ProductDetail/Nordic-Semiconductor/nRF52840-Dongle?qs=gTYE2QTfZfTbdrOaMHWEZg%3D%3D&gclid=EAIaIQobChMIlsWN8orC5gIVQ8DICh28-g3LEAQYASABEgJoWfD_BwE) with [Zephyr firmware](https://devzone.nordicsemi.com/f/nordic-q-a/43087/hciconfig-is-not-showing-my-nrf52840-dongle-on-my-linux-terminal)
 	- See [here](https://github.com/zephyrproject-rtos/zephyr/issues/11016#issuecomment-447129450) for help setting up the dongle with BlueZ
 - At least one [Thingy:52](https://www.nordicsemi.com/?sc_itemid=%7B3C201A33-5CA5-457B-87E4-A7B04C19EE71%7D) with default firmware
 - A [NRF52DK](https://www.nordicsemi.com/?sc_itemid=%7BF2C2DBF4-4D5C-4EAD-9F3D-CFD0276B300B%7D) with multi-link aggregator firmware
