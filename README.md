@@ -17,6 +17,8 @@ Supported sensors:
 
 ## Requirements ##
 - Bluetooth Low Energy connectivity
+	- Developed with a [Nordic nRF52840 USB dongle](https://www.mouser.com/ProductDetail/Nordic-Semiconductor/nRF52840-Dongle?qs=gTYE2QTfZfTbdrOaMHWEZg%3D%3D&gclid=EAIaIQobChMIlsWN8orC5gIVQ8DICh28-g3LEAQYASABEgJoWfD_BwE) with [Zephyr firmware](https://devzone.nordicsemi.com/f/nordic-q-a/43087/hciconfig-is-not-showing-my-nrf52840-dongle-on-my-linux-terminal)
+	- See [here](https://github.com/zephyrproject-rtos/zephyr/issues/11016#issuecomment-447129450) for help setting up the dongle with BlueZ
 - At least one [Thingy:52](https://www.nordicsemi.com/?sc_itemid=%7B3C201A33-5CA5-457B-87E4-A7B04C19EE71%7D) with default firmware
 - A [NRF52DK](https://www.nordicsemi.com/?sc_itemid=%7BF2C2DBF4-4D5C-4EAD-9F3D-CFD0276B300B%7D) with multi-link aggregator firmware
 	- https://github.com/RollandMichael7/nrf52-ble-multi-link-multi-role/
@@ -34,7 +36,7 @@ Supported sensors:
 
 ### Firmware ###
 Download Segger Embedded Studio, the aggregator firmware and the custom NRF SDK v15.3. Create a folder in your SDK installation ```$(SDK)/examples/training```,
-and copy the ```nrf52-ble-multi-link-multi-role``` folder in. Open Segger Embedded Studio, and use ```File > Open Soltion...``` to open 
+and copy the ```nrf52-ble-multi-link-multi-role``` folder in. Open Segger Embedded Studio, and use ```File > Open Solution...``` to open 
 ```$(SDK)/examples/training/nrf52-ble-multi-link-multi-role/ble_aggregator/pca10040/ses/ble_aggregator_pca10040_s132.emProject```. Plug the DK into your
 computer with the micro USB cable, and in Segger Embedded Studio connect to the DK with ```Target > Connect J-Link```. Compile and flash the firmware 
 to your DK with ```Target > Download ble_aggregator_pca10040_s132```. If installation is successful, your DK should automatically begin provisioning
