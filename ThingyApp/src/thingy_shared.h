@@ -12,8 +12,8 @@ int g_ioc_started;
 // A device with a custom node ID N would have the name (CUSTOM_NODE_NAME + N)
 // eg. if CUSTOM_NODE_NAME = "Node" and N = 3, the device would have name "Node3"
 #define CUSTOM_NODE_NAME "Node"
-// comment out this line to not use custom node IDs
-#define USE_CUSTOM_IDS
+// comment out this line to disable custom node IDs
+//#define USE_CUSTOM_IDS
 
 
 #ifdef USE_CUSTOM_IDS
