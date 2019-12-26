@@ -19,6 +19,19 @@ Currently supported sensors:
 R1-0
 =================
 
+
+R1-0-4 12/26
+---
+- Handle connect & disconnect events
+- Support custom node IDs
+	- Enable/disable by defining USE_CUSTOM_IDS in ThingyApp/src/thingy_shared.h
+	- Node IDs can be set via the Thingy's Bluetooth name
+	- Base name set in ThingyApp/src/thingy_shared.h as CUSTOM_NODE_NAME
+- Add tools for Bluetooth scanning & setting Bluetooth name
+- Add support for reading & writing external digital pins (MOS1 - MOS4)
+	- Example for using pins to light an LED: https://devzone.nordicsemi.com/nordic/nordic-blog/b/blog/posts/thingy-52-mosfet-usage
+
+
 R1-0-3 9/13
 ---
 - Add screens for motion sensors
