@@ -24,7 +24,7 @@ int main(int argc,char *argv[])
     g_ioc_started = 1;
     //scanPVs();
     iocsh(NULL);
-    //disconnect();
+    disconnect();
     epicsExit(0);
     return(0);
 }

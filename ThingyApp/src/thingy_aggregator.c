@@ -24,10 +24,9 @@
 #include <glib.h>
 #include "gattlib.h"
 
+#include "thingy_shared.h"
 #include "thingy_aggregator.h"
 #include "thingy_helpers.h"
-#include "thingy_shared.h"
-
 
 // lock for PV linked list
 static pthread_mutex_t g_pv_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -58,9 +57,11 @@ static void	reconnect();
 static void disconnect_handler() {
 	printf("WARNING: Connection to aggregator lost.\n");
 	set_status(AGGREGATOR_ID, "DISCONNECTED");
-	for (int i=0; i<MAX_NODES; i++) {
-		g_custom_node_ids[i] = -1;
-	}
+	#ifdef USE_CUSTOM_IDS
+		for (int i=0; i<MAX_NODES; i++) {
+			g_custom_node_ids[i] = -1;
+		}
+	#endif
 	g_broken_conn = 1;
 }
 
@@ -101,9 +102,11 @@ static gatt_connection_t* get_connection() {
 		printf("Starting reconnection thread...\n");
 		pthread_t necromancer;
 		pthread_create(&necromancer, NULL, &reconnect, NULL);
-		// initialize custom ID list as empty
-		for (int i=0; i<MAX_NODES; i++)
-			g_custom_node_ids[i] = -1;
+		#ifdef USE_CUSTOM_IDS
+			// initialize custom ID list as empty
+			for (int i=0; i<MAX_NODES; i++)
+				g_custom_node_ids[i] = -1;
+		#endif
 		g_setup = 1;
 	}
 	pthread_mutex_unlock(&g_connlock);
@@ -143,17 +146,27 @@ static void watchdog() {
 	while(1) {
 		for (node_id=0; node_id<MAX_NODES; node_id++) {
 			// only check nodes that have PVs and are assigned a node ID
-			if (g_active[node_id] && g_custom_node_ids[node_id] != -1) {
+			if (g_active[node_id]) {
+				#ifdef USE_CUSTOM_IDS
+					if (g_custom_node_ids[node_id] != -1) {
+				#endif
 				if (g_alive[node_id] == 0 && g_dead[node_id] == 0) {
-					custom_id = g_custom_node_ids[node_id];
-					printf("watchdog: Lost connection to node %d\n", custom_id);
+					#ifdef USE_CUSTOM_IDS
+						custom_id = g_custom_node_ids[node_id];
+						printf("watchdog: Lost connection to node %d\n", custom_id);
+					#else
+						printf("watchdog: Lost connection to node %d\n", node_id);
+					#endif
 					disconnect_node(node_id);
 					g_dead[node_id] = 1;
-					printf("g_dead[%d] = 1\n", node_id);
+					//printf("g_dead[%d] = 1\n", node_id);
 				}
 				else {
 					g_alive[node_id] = 0;
 				}
+				#ifdef USE_CUSTOM_IDS
+				}
+				#endif
 			}
 		// sleep for HEARTBEAT_DELAY ms
 		usleep(HEARTBEAT_DELAY * 1000);
@@ -195,11 +208,17 @@ static void notification_listener() {
 // parse notification and save to PV(s)
 static void notif_callback(const uuid_t *uuidObject, const uint8_t *resp, size_t len, void *user_data) {
 	uint8_t node_id = resp[RESP_ID];
-	uint8_t custom_id = g_custom_node_ids[node_id];
+	#ifdef USE_CUSTOM_IDS
+		uint8_t custom_id = g_custom_node_ids[node_id];
+	#endif
 
 	g_alive[node_id] = 1;
 	if (g_dead[node_id] == 1) {
-		printf("Node %d successfully reconnected.\n", custom_id);
+		#ifdef USE_CUSTOM_IDS
+			printf("Node %d successfully reconnected.\n", custom_id);
+		#else
+			printf("Node %d successfully reconnected.\n", node_id);
+		#endif
 		set_status(node_id, "CONNECTED");
 		set_connection(node_id, CONNECTED);
 		g_dead[node_id] = 0;
@@ -240,11 +259,11 @@ static long register_pv(aSubRecord *pv) {
 	}
 	pthread_mutex_unlock(&g_pv_lock);
 
-	printf("Registered %s\n", pv->name);
+	//printf("Registered %s\n", pv->name);
 	if (pv_id == STATUS_ID)
-		set_status(node_id, "DISCONNECTED");
+		set_status(node_id, "CONNECTED");
 	else if (pv_id == CONNECTION_ID) 
-		set_connection(node_id, DISCONNECTED);
+		set_connection(node_id, CONNECTED);
 	g_active[node_id] = 1;
 	return 0;
 }
@@ -266,7 +285,9 @@ static long toggle_led(aSubRecord *pv) {
 			command[4] = 0xFF;
 		}
 		else {
-			node_id = get_actual_node_id(node_id);
+			#ifdef USE_CUSTOM_IDS
+				node_id = get_actual_node_id(node_id);
+			#endif
 			int offset = node_id % 8;
 			int byte = 2 + (node_id / 8);
 			g_led_nodes[node_id] ^= 1;
@@ -281,39 +302,41 @@ static long toggle_led(aSubRecord *pv) {
 
 // Sensor toggle triggered by writing to SensorWrite PV
 static long toggle_sensor(aSubRecord *pv) {
-	int val, node_id, sensorID;
+	int val, node_id, sensor_id;
 	memcpy(&val, pv->b, sizeof(int));
 	if (val != 0) {
 		memcpy(&node_id, pv->a, sizeof(int));
-		memcpy(&sensorID, pv->b, sizeof(int));
-		node_id = get_actual_node_id(node_id);
-		aSubRecord *sensorPV = get_pv(node_id, sensorID);
+		memcpy(&sensor_id, pv->b, sizeof(int));
+		#ifdef USE_CUSTOM_IDS
+			node_id = get_actual_node_id(node_id);
+		#endif
+		aSubRecord *sensorPV = get_pv(node_id, sensor_id);
 		if (sensorPV == 0)
 			return 0;
-		float x;
-		memcpy(&x, sensorPV->vala, sizeof(float));
+		float curVal;
+		memcpy(&curVal, sensorPV->vala, sizeof(float));
 
 		uint8_t command[4];
 		command[0] = COMMAND_SET_SENSOR;
 		command[1] = node_id;
-		command[2] = sensorID;
-		command[3] = x ? 0 : 1;
+		command[2] = sensor_id;
+		command[3] = curVal ? 0 : 1;
 		gattlib_write_char_by_uuid(gp_connection, &g_send_uuid, command, sizeof(command));
-		if (sensorID == QUATERNION_TOGGLE_ID || sensorID == RAW_MOTION_TOGGLE_ID || sensorID == EULER_TOGGLE_ID || sensorID == HEADING_TOGGLE_ID)
+		if (sensor_id == QUATERNION_TOGGLE_ID || sensor_id == RAW_MOTION_TOGGLE_ID || sensor_id == EULER_TOGGLE_ID || sensor_id == HEADING_TOGGLE_ID)
 			set_pv(sensorPV, 1);
-		if (x != 0) {
+		if (curVal != 0) {
 			set_pv(sensorPV, 0);
-			if (sensorID == GAS_ID) {
+			if (sensor_id == GAS_ID) {
 				set_pv(get_pv(node_id, CO2_ID), 0);
 				set_pv(get_pv(node_id, TVOC_ID), 0);
 			}
-			else if (sensorID == QUATERNION_TOGGLE_ID) {
+			else if (sensor_id == QUATERNION_TOGGLE_ID) {
 				set_pv(get_pv(node_id, QUATERNION_W_ID), 0);
 				set_pv(get_pv(node_id, QUATERNION_X_ID), 0);
 				set_pv(get_pv(node_id, QUATERNION_Y_ID), 0);
 				set_pv(get_pv(node_id, QUATERNION_Z_ID), 0);
 			}
-			else if (sensorID == RAW_MOTION_TOGGLE_ID) {
+			else if (sensor_id == RAW_MOTION_TOGGLE_ID) {
 				set_pv(get_pv(node_id, ACCEL_X_ID), 0);
 				set_pv(get_pv(node_id, ACCEL_Y_ID), 0);
 				set_pv(get_pv(node_id, ACCEL_Z_ID), 0);
@@ -324,12 +347,12 @@ static long toggle_sensor(aSubRecord *pv) {
 				set_pv(get_pv(node_id, COMPASS_Y_ID), 0);
 				set_pv(get_pv(node_id, COMPASS_Z_ID), 0);
 			}
-			else if (sensorID == EULER_TOGGLE_ID) {
+			else if (sensor_id == EULER_TOGGLE_ID) {
 				set_pv(get_pv(node_id, ROLL_ID), 0);
 				set_pv(get_pv(node_id, PITCH_ID), 0);
 				set_pv(get_pv(node_id, YAW_ID), 0);
 			}
-			else if (sensorID == HEADING_TOGGLE_ID) {
+			else if (sensor_id == HEADING_TOGGLE_ID) {
 				set_pv(get_pv(node_id, HEADING_ID), 0);
 			}
 		}

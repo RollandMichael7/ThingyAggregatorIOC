@@ -4,11 +4,8 @@
 #include <aSubRecord.h>
 #include "gattlib.h"
 
-#define MAX_NODES 19
-
 // ----------------------- METHOD SIGNATURES -----------------------
 
-void disconnect();
 aSubRecord* get_pv(int, int);
 int set_pv(aSubRecord*, float);
 void disconnect_node(int);
@@ -35,9 +32,6 @@ uuid_t g_recv_uuid;
 gatt_connection_t *gp_connection;
 // flag for broken connection
 int g_broken_conn;
-
-// array for mapping hardware node ID to custom node ID
-int g_custom_node_ids[MAX_NODES];
 
 // linked list of structures to pair node/sensor IDs to PVs
 typedef struct {
@@ -67,16 +61,19 @@ PVnode* g_first_pv;
 #define RSSI_ID 2
 #define BATTERY_ID 3
 #define BUTTON_ID 4
+// environment sensors
 #define TEMPERATURE_ID 5
 #define HUMIDITY_ID 6
 #define PRESSURE_ID 7
 #define GAS_ID 8
 #define CO2_ID 9
 #define TVOC_ID 10
+// environment config
 #define TEMP_INTERVAL_ID 11
 #define PRESSURE_INTERVAL_ID 12
 #define HUMID_INTERVAL_ID 13
 #define GAS_MODE_ID 14
+// motion sensors
 #define QUATERNION_W_ID 15
 #define QUATERNION_X_ID 16
 #define QUATERNION_Y_ID 17
@@ -93,20 +90,28 @@ PVnode* g_first_pv;
 #define ROLL_ID 28
 #define PITCH_ID 29
 #define YAW_ID 30
+// motion config
 #define HEADING_ID 31
 #define STEP_INTERVAL_ID 32
 #define TEMP_COMP_INTERVAL_ID 33
 #define MAG_COMP_INTERVAL_ID 34
 #define MOTION_FREQ_ID 35
 #define WAKE_ID 36
+// connection config
 #define CONN_MIN_INTERVAL_ID 37
 #define CONN_MAX_INTERVAL_ID 38
 #define CONN_LATENCY_ID 39
 #define CONN_TIMEOUT_ID 40
+// motion toggles
 #define QUATERNION_TOGGLE_ID 41
 #define RAW_MOTION_TOGGLE_ID 42
 #define EULER_TOGGLE_ID 43
 #define HEADING_TOGGLE_ID 44
+// external pins
+#define EXT0_ID 45
+#define EXT1_ID 46
+#define EXT2_ID 47
+#define EXT3_ID 48
 
 // Connection status
 #define CONNECTED 1

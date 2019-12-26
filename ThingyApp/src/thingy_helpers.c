@@ -23,9 +23,9 @@
 #include <glib.h>
 #include "gattlib.h"
 
+#include "thingy_shared.h"
 #include "thingy_aggregator.h"
 #include "thingy_helpers.h"
-#include "thingy_shared.h"
 
 static void print_resp(uint8_t*, size_t);
 
@@ -87,6 +87,9 @@ static float get_writer_pv_value(int node_id, int pvID) {
 
 // write environment config values to node
 void write_env_config_helper(int node_id) {
+	#ifdef USE_CUSTOM_IDS
+		node_id = get_actual_node_id(node_id);
+	#endif
 	uint16_t tempInterval = get_writer_pv_value(node_id, TEMP_INTERVAL_ID);
 	uint16_t pressureInterval = get_writer_pv_value(node_id, PRESSURE_INTERVAL_ID);
 	uint16_t humidInterval = get_writer_pv_value(node_id, HUMID_INTERVAL_ID);
@@ -95,7 +98,7 @@ void write_env_config_helper(int node_id) {
 	//printf("write env config: %d %d %d %d\n", tempInterval, pressureInterval, humidInterval, gasMode);
 	uint8_t command[14];
 	command[0] = COMMAND_ENV_CONFIG_WRITE;
-	command[1] = get_actual_node_id(node_id);
+	command[1] = node_id;
 	command[2] = tempInterval & 0xFF;
 	command[3] = tempInterval >> 8;
 	command[4] = pressureInterval & 0xFF;
@@ -119,6 +122,9 @@ void write_env_config_helper(int node_id) {
 
 // write motion config values to node
 void write_motion_config_helper(int node_id) {
+	#ifdef USE_CUSTOM_IDS
+		node_id = get_actual_node_id(node_id);
+	#endif
 	uint16_t steps = get_writer_pv_value(node_id, STEP_INTERVAL_ID);
 	uint16_t tempComp = get_writer_pv_value(node_id, TEMP_COMP_INTERVAL_ID);
 	uint16_t magComp = get_writer_pv_value(node_id, MAG_COMP_INTERVAL_ID);
@@ -127,7 +133,7 @@ void write_motion_config_helper(int node_id) {
 	//printf("write motion config: %d %d %d %d %d\n", steps, tempComp, magComp, freq, wake);
 	uint8_t command[11];
 	command[0] = COMMAND_MOTION_CONFIG_WRITE;
-	command[1] = get_actual_node_id(node_id);
+	command[1] = node_id;
 	command[2] = steps & 0xFF;
 	command[3] = steps >> 8;
 	command[4] = tempComp & 0xFF;
@@ -147,13 +153,16 @@ void write_motion_config_helper(int node_id) {
 
 // write conn param values to node
 void write_conn_param_helper(int node_id) {
+	#ifdef USE_CUSTOM_IDS
+		node_id = get_actual_node_id(node_id);
+	#endif
 	uint16_t min = (uint16_t) (get_writer_pv_value(node_id, CONN_MIN_INTERVAL_ID) / 1.25);
 	uint16_t max = (uint16_t) (get_writer_pv_value(node_id, CONN_MAX_INTERVAL_ID) / 1.25);
 	uint16_t latency = get_writer_pv_value(node_id, CONN_LATENCY_ID);
 	uint16_t timeout = (uint16_t) (get_writer_pv_value(node_id, CONN_TIMEOUT_ID) / 10);
 	uint8_t command[10];
 	command[0] = COMMAND_CONN_PARAM_WRITE;
-	command[1] = get_actual_node_id(node_id);
+	command[1] = node_id;
 	command[2] = min & 0xFF;
 	command[3] = min >> 8;
 	command[4] = max & 0xFF;
@@ -184,35 +193,40 @@ static void parse_connect(uint8_t *resp, size_t len) {
 			break;
 	memcpy(name, &(resp[RESP_CONNECT_NAME]), name_length);
 
-	// check if name matches custom node name
-	if (strncmp(name, CUSTOM_NODE_NAME, strlen(CUSTOM_NODE_NAME)) == 0) {
-		char custom_id_buf[5];
-		memset(custom_id_buf, 0, sizeof(custom_id_buf));
-		memcpy(custom_id_buf, &(name[strlen(CUSTOM_NODE_NAME)]), name_length - strlen(CUSTOM_NODE_NAME));
-		int custom_id = strtol(custom_id_buf, NULL, 10);
-		if (g_custom_node_ids[curr_id] == -1) {
-			printf("Assigned custom node ID %d to device %s\n", custom_id, name);
-			g_custom_node_ids[curr_id] = custom_id;
+	#ifdef USE_CUSTOM_IDS
+		// check if name matches custom node name
+		if (strncmp(name, CUSTOM_NODE_NAME, strlen(CUSTOM_NODE_NAME)) == 0) {
+			char custom_id_buf[5];
+			memset(custom_id_buf, 0, sizeof(custom_id_buf));
+			memcpy(custom_id_buf, &(name[strlen(CUSTOM_NODE_NAME)]), name_length - strlen(CUSTOM_NODE_NAME));
+			int custom_id = strtol(custom_id_buf, NULL, 10);
+			if (g_custom_node_ids[curr_id] == -1) {
+				printf("Assigned custom node ID %d to device %s (actual ID %d)\n", custom_id, name, curr_id);
+				g_custom_node_ids[curr_id] = custom_id;
+				set_connection(curr_id, CONNECTED);
+			}
+			else
+				printf("WARNING: Can not assign node ID %d to device %s: Already in use\n", custom_id, name);
 		}
-		else
-			printf("WARNING: Can not assign node ID %d to device %s: Already in use\n", custom_id, name);
-	}
-	else {
-		if (g_custom_node_ids[curr_id] == -1) {
-			printf("Assigned node ID %d to device %s\n", curr_id, name);
-			g_custom_node_ids[curr_id] = curr_id;
+		else {
+			if (g_custom_node_ids[curr_id] == -1) {
+				printf("Assigned node ID %d to device %s\n", curr_id, name);
+				g_custom_node_ids[curr_id] = curr_id;
+				set_connection(curr_id, CONNECTED);
+			}
+			else
+				printf("WARNING: Can not assign node ID %d to device %s: Already in use\n", curr_id, name);
 		}
-		else
-			printf("WARNING: Can not assign node ID %d to device %s: Already in use\n", curr_id, name);
-	}
-	set_connection(curr_id, CONNECTED);
+	#endif
 }
 
 static void parse_disconnect(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
-	printf("disconnecting node %d\n", node_id);
+	printf("Node %d disconnected\n", node_id);
 	disconnect_node(node_id);
-	g_custom_node_ids[node_id] = -1;
+	#ifdef USE_CUSTOM_IDS
+		g_custom_node_ids[node_id] = -1;
+	#endif
 }
 
 static void parse_button(uint8_t *resp, size_t len) {
@@ -530,7 +544,9 @@ long poll_command_pv(aSubRecord *pv, int opcode) {
 	if (val != 0) {
 		int node_id;
 		memcpy(&node_id, pv->a, sizeof(int));
-		node_id = get_actual_node_id(node_id);
+		#ifdef USE_CUSTOM_IDS
+			node_id = get_actual_node_id(node_id);
+		#endif
 
 		uint8_t command[2];
 		command[0] = opcode;
@@ -543,7 +559,9 @@ long poll_command_pv(aSubRecord *pv, int opcode) {
 
 // send a read command (which has only 1 argument) to aggregator
 void send_read_command(int opcode, int node_id) {
-	node_id = get_actual_node_id(node_id);
+	#ifdef USE_CUSTOM_IDS
+		node_id = get_actual_node_id(node_id);
+	#endif
 
 	uint8_t command[2];
 	command[0] = opcode;
@@ -553,8 +571,10 @@ void send_read_command(int opcode, int node_id) {
 
 // fetch PV from linked list given node/PV IDs
 aSubRecord* get_pv(int node_id, int pv_id) {
-	if (g_ioc_started)
-		node_id = g_custom_node_ids[node_id];
+	#ifdef USE_CUSTOM_IDS
+		if (g_ioc_started)
+			node_id = g_custom_node_ids[node_id];
+	#endif
 
 	PVnode *node = g_first_pv;
 	while (node != 0) {
@@ -580,8 +600,10 @@ int set_pv(aSubRecord *pv, float val) {
 
 // mark dead nodes through PV values
 static void nullify_node_pvs(int node_id) {
-	if (g_custom_node_ids[node_id] != -1)
-		node_id = g_custom_node_ids[node_id];
+	#ifdef USE_CUSTOM_IDS
+		if (g_custom_node_ids[node_id] != -1)
+			node_id = g_custom_node_ids[node_id];
+	#endif
 
 	float null = 0;
 	int pv_id;
@@ -606,11 +628,13 @@ void disconnect_node(int node_id) {
 	set_connection(node_id, DISCONNECTED);
 }
 
-int get_actual_node_id(int node_id) {
-	for (int i=0; i<MAX_NODES; i++)
-		if (g_custom_node_ids[i] == node_id) {
-			//printf("custom id %d -> actual id %d\n", node_id, i);
-			return i;
-		}
-	return -1;
-}
+#ifdef USE_CUSTOM_IDS
+	int get_actual_node_id(int node_id) {
+		for (int i=0; i<MAX_NODES; i++)
+			if (g_custom_node_ids[i] == node_id) {
+				//printf("custom id %d -> actual id %d\n", node_id, i);
+				return i;
+			}
+		return -1;
+	}
+#endif
