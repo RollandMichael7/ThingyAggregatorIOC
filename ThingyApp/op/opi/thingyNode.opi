@@ -898,6 +898,14 @@ $(pv_value)</tooltip>
           <mode>1</mode>
           <description>Toggle sensors</description>
         </action>
+        <action type="OPEN_DISPLAY">
+          <path>thingyExtIO.opi</path>
+          <macros>
+            <include_parent_macros>true</include_parent_macros>
+          </macros>
+          <mode>1</mode>
+          <description>External IO</description>
+        </action>
       </actions>
       <actions_from_pv>false</actions_from_pv>
       <alarm_pulsing>false</alarm_pulsing>

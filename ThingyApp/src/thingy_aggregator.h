@@ -126,6 +126,8 @@ PVnode* g_first_pv;
 #define COMMAND_SET_SENSOR 10
 #define COMMAND_CONN_PARAM_READ 11
 #define COMMAND_CONN_PARAM_WRITE 12
+#define COMMAND_IO_READ 13
+#define COMMAND_IO_WRITE 14
 
 // Opcodes for responses
 #define OPCODE_CONNECT 1
@@ -144,6 +146,7 @@ PVnode* g_first_pv;
 #define OPCODE_HEADING 15
 #define OPCODE_MOTION_CONFIG 16
 #define OPCODE_CONN_PARAM 17
+#define OPCODE_EXTIO 18
 
 // Indices for every response payload
 #define RESP_OPCODE 0

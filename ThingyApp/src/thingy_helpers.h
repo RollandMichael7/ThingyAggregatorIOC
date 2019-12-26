@@ -12,6 +12,8 @@ int set_connection(int, int);
 long poll_command_pv(aSubRecord*, int);
 void send_read_command(int, int);
 
+void toggle_io_helper(int, int);
+
 void write_env_config_helper(int);
 void write_conn_param_helper(int);
 

@@ -18,8 +18,41 @@ record(ai, "$(Sys)$(Dev)SensorToggle") {
 	field(VAL,	"0")
 }
 
+
+record(aSub, "$(Sys)$(Dev)IOReader") {
+	field(DESC,	"Reads digital IO pins for thingy node")
+	field(SCAN,	".2 second")
+	field(SNAM,	"read_io")
+	field(INPA,	$(NodeID))
+	field(INPB, "$(Sys)$(Dev)IORead.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)IORead.VAL")
+	field(FTVA,	"SHORT")
+}
+
+record(ai, "$(Sys)$(Dev)IORead") {
+	field(VAL,	"1")
+}
+
+record(aSub, "$(Sys)$(Dev)IOWriter") {
+	field(DESC,	"Writes digital IO pins for thingy node")
+	field(SCAN,	".2 second")
+	field(SNAM,	"toggle_io")
+	field(INPA,	$(NodeID))
+	field(INPB, "$(Sys)$(Dev)IOToggle.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(OUTA,	"$(Sys)$(Dev)IOToggle.VAL")
+	field(FTVA,	"SHORT")
+}
+
+record(ai, "$(Sys)$(Dev)IOToggle") {
+	field(VAL,	"0")
+}
+
 record(aSub, "$(Sys)$(Dev)EnvConfigReader") {
-	field(DESC,	"Read env config for thingy node")
+	field(DESC,	"Reads env config for thingy node")
 	field(SCAN,	".2 second")
 	field(SNAM,	"read_env_config")
 	field(INPA,	$(NodeID))
@@ -35,7 +68,7 @@ record(ai, "$(Sys)$(Dev)EnvConfigRead") {
 }
 
 record(aSub, "$(Sys)$(Dev)EnvConfigWriter") {
-	field(DESC,	"Write env config for thingy node")
+	field(DESC,	"Writes env config for thingy node")
 	field(SCAN,	".2 second")
 	field(SNAM,	"write_env_config")
 	field(INPA,	$(NodeID))
@@ -51,7 +84,7 @@ record(ai, "$(Sys)$(Dev)EnvConfigWrite") {
 }
 
 record(aSub, "$(Sys)$(Dev)MotionConfigReader") {
-	field(DESC,	"Read env config for thingy node")
+	field(DESC,	"Reads env config for thingy node")
 	field(SCAN,	".2 second")
 	field(SNAM,	"read_motion_config")
 	field(INPA,	$(NodeID))
@@ -67,7 +100,7 @@ record(ai, "$(Sys)$(Dev)MotionConfigRead") {
 }
 
 record(aSub, "$(Sys)$(Dev)MotionConfigWriter") {
-	field(DESC,	"Write motion config for thingy node")
+	field(DESC,	"Writes motion config for thingy node")
 	field(SCAN,	".2 second")
 	field(SNAM,	"write_motion_config")
 	field(INPA,	$(NodeID))
@@ -83,7 +116,7 @@ record(ai, "$(Sys)$(Dev)MotionConfigWrite") {
 }
 
 record(aSub, "$(Sys)$(Dev)ConnParamReader") {
-	field(DESC,	"Read conn params for thingy node")
+	field(DESC,	"Reads conn params for thingy node")
 	field(SCAN,	".2 second")
 	field(SNAM,	"read_conn_param")
 	field(INPA,	$(NodeID))
@@ -99,7 +132,7 @@ record(ai, "$(Sys)$(Dev)ConnParamRead") {
 }
 
 record(aSub, "$(Sys)$(Dev)ConnParamWriter") {
-	field(DESC,	"Write conn params for thingy node")
+	field(DESC,	"Writes conn params for thingy node")
 	field(SCAN,	".2 second")
 	field(SNAM,	"write_conn_param")
 	field(INPA,	$(NodeID))
@@ -1039,4 +1072,88 @@ record(aSub, "$(Sys)$(Dev)HeadingWriter") {
 record(ai, "$(Sys)$(Dev)HeadingToggle") {
 	field(DESC,	"Heading toggle for thingy node")
 	field(VAL,	0)
+}
+
+record(aSub, "$(Sys)$(Dev)EXT0Writer") {
+	field(DESC,	"EXT0 pin writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"45")
+	field(INPC,	"$(Sys)$(Dev)EXT0.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(FTC,	"FLOAT")
+	field(OUTA,	"$(Sys)$(Dev)EXT0.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)EXT0")
+}
+
+record(ai, "$(Sys)$(Dev)EXT0") {
+	field(DESC,	"EXT0 pin for thingy node")
+	field(PREC,	"0")
+	field(VAL,	"0")
+}
+
+record(aSub, "$(Sys)$(Dev)EXT1Writer") {
+	field(DESC,	"EXT1 pin writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"46")
+	field(INPC,	"$(Sys)$(Dev)EXT1.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(FTC,	"FLOAT")
+	field(OUTA,	"$(Sys)$(Dev)EXT1.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)EXT1")
+}
+
+record(ai, "$(Sys)$(Dev)EXT1") {
+	field(DESC,	"EXT1 pin for thingy node")
+	field(PREC,	"0")
+	field(VAL,	"0")
+}
+
+record(aSub, "$(Sys)$(Dev)EXT2Writer") {
+	field(DESC,	"EXT2 pin writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"47")
+	field(INPC,	"$(Sys)$(Dev)EXT2.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(FTC,	"FLOAT")
+	field(OUTA,	"$(Sys)$(Dev)EXT2.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)EXT2")
+}
+
+record(ai, "$(Sys)$(Dev)EXT2") {
+	field(DESC,	"EXT2 pin for thingy node")
+	field(PREC,	"0")
+	field(VAL,	"0")
+}
+
+record(aSub, "$(Sys)$(Dev)EXT3Writer") {
+	field(DESC,	"EXT3 pin writer for thingy node")
+	field(SCAN,	"Passive")
+	field(INAM,	"register_pv")
+	field(INPA,	$(NodeID))
+	field(INPB,	"48")
+	field(INPC,	"$(Sys)$(Dev)EXT3.VAL")
+	field(FTA,	"SHORT")
+	field(FTB,	"SHORT")
+	field(FTC,	"FLOAT")
+	field(OUTA,	"$(Sys)$(Dev)EXT3.VAL")
+	field(FTVA,	"FLOAT")
+	field(FLNK,	"$(Sys)$(Dev)EXT3")
+}
+
+record(ai, "$(Sys)$(Dev)EXT3") {
+	field(DESC,	"EXT3 pin for thingy node")
+	field(PREC,	"0")
+	field(VAL,	"0")
 }

@@ -361,6 +361,20 @@ static long toggle_sensor(aSubRecord *pv) {
 	return 0;
 }
 
+
+// Digital IO pin toggle triggered by writing to IOToggle PV
+static long toggle_io(aSubRecord *pv) {
+	int pin;
+	memcpy(&pin, pv->b, sizeof(int));
+	if (pin >= 1 && pin <= 4) {
+		int node_id;
+		memcpy(&node_id, pv->a, sizeof(int));
+		toggle_io_helper(node_id, pin-1);
+		set_pv(pv, 0);
+	}
+	return 0;
+}
+
 // Environment sensor config read triggered by writing to EnvConfigRead PV
 static long read_env_config(aSubRecord *pv) {
 	return poll_command_pv(pv, COMMAND_ENV_CONFIG_READ);
@@ -374,6 +388,11 @@ static long read_motion_config(aSubRecord *pv) {
 // Connection param read triggered by writing to ConnParamRead PV
 static long read_conn_param(aSubRecord *pv) {
 	return poll_command_pv(pv, COMMAND_CONN_PARAM_READ);
+}
+
+// Digital IO read triggered by writing to IORead PV
+static long read_io(aSubRecord *pv) {
+	return poll_command_pv(pv, COMMAND_IO_READ);
 }
 
 // Environment sensor config write triggered by writing to EnvConfigWrite PV
@@ -415,6 +434,7 @@ static long write_conn_param(aSubRecord *pv) {
 	return 0;
 }
 
+
 /* Register these symbols for use by IOC code: */
 epicsRegisterFunction(register_pv);
 epicsRegisterFunction(toggle_led);
@@ -425,3 +445,5 @@ epicsRegisterFunction(read_motion_config);
 epicsRegisterFunction(write_motion_config);
 epicsRegisterFunction(read_conn_param);
 epicsRegisterFunction(write_conn_param);
+epicsRegisterFunction(read_io);
+epicsRegisterFunction(toggle_io);

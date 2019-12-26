@@ -70,8 +70,8 @@ uuid_t aggregator_UUID(const char *str) {
 
 // get value from read/write PVs 
 // these PVs store value in INPC field
-static float get_writer_pv_value(int node_id, int pvID) {
-	aSubRecord *pv = get_pv(node_id, pvID);
+static float get_writer_pv_value(int node_id, int pv_id) {
+	aSubRecord *pv = get_pv(node_id, pv_id);
 	if (pv != 0) {
 		scanOnce(pv);
 		// wait for scan to complete
@@ -82,7 +82,38 @@ static float get_writer_pv_value(int node_id, int pvID) {
 		return c;
 	}
 	else
-		return 0;
+		return -1;
+}
+
+// toggle digital pin for node
+void toggle_io_helper(int node_id, int pin) {
+	#ifdef USE_CUSTOM_IDS
+		node_id = get_actual_node_id(node_id);
+	#endif
+	printf("write pin %d of node %d\n", pin, node_id);
+
+	uint8_t command[6];
+	command[0] = COMMAND_IO_WRITE;
+	command[1] = node_id;
+
+	aSubRecord *pv;
+	int val;
+	for (int i=0; i < 4; i++) {
+		val = get_writer_pv_value(node_id, EXT0_ID + i);
+		if (val == -1)
+			return;
+		//printf("%d\n", val);
+		if (i == pin)
+			command[2 + i] = (val == 0) ? 255 : 0;
+		else
+			command[2 + i] = (val == 0) ? 0 : 255;
+	}
+	gattlib_write_char_by_uuid(gp_connection, &g_send_uuid, command, sizeof(command));
+	// wait for write to complete
+	usleep(500);
+	// read pins to confirm write
+	command[0] = COMMAND_IO_READ;
+	gattlib_write_char_by_uuid(gp_connection, &g_send_uuid, command, sizeof(command));
 }
 
 // write environment config values to node
@@ -464,6 +495,28 @@ static void parse_conn_param(uint8_t *resp, size_t len) {
 	}
 }
 
+static void parse_io(uint8_t *resp, size_t len) {
+	//print_resp(resp, len);
+	int node_id = resp[RESP_ID];
+	aSubRecord *ext0 = get_pv(node_id, EXT0_ID);
+	aSubRecord *ext1 = get_pv(node_id, EXT1_ID);
+	aSubRecord *ext2 = get_pv(node_id, EXT2_ID);
+	aSubRecord *ext3 = get_pv(node_id, EXT3_ID);
+	float x;
+	if (ext0 != 0) {
+		set_pv(ext0, resp[3]);
+	}
+	if (ext1 != 0) {
+		set_pv(ext1, resp[4]);
+	}
+	if (ext2 != 0) {
+		set_pv(ext2, resp[5]);
+	}
+	if (ext3 != 0) {
+		set_pv(ext3, resp[6]);
+	}
+}
+
 // Parse response
 void parse_resp(uint8_t *resp, size_t len) {
 	//print_resp(resp, len);
@@ -500,6 +553,8 @@ void parse_resp(uint8_t *resp, size_t len) {
 		parse_motion_config(resp, len);
 	else if (op == OPCODE_CONN_PARAM)
 		parse_conn_param(resp, len);
+	else if (op == OPCODE_EXTIO)
+		parse_io(resp, len);
 	else {
 		printf("unknown opcode: %d\n", op);
 		print_resp(resp, len);
