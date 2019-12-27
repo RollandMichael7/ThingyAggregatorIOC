@@ -43,10 +43,6 @@ static int g_led_all;
 static int g_led_nodes[MAX_NODES];
 // bitmap for active nodes
 static int g_active[MAX_NODES];
-// bitmap for nodes currently active and transmitting data
-static int g_alive[MAX_NODES];
-// bitmap for nodes which are active but not transmitting data
-static int g_dead[MAX_NODES];
 
 // thread functions
 static void	notification_listener();
@@ -116,7 +112,7 @@ static gatt_connection_t* get_connection() {
 
 // disconnect & cleanup
 void disconnect() {
-	// wait for reconnect thread to stop
+	printf("Stopping reconnect thread...\n");
 	g_stop = 1;
 	while (g_stop != 0)
 		sleep(1);
@@ -124,8 +120,10 @@ void disconnect() {
 	PVnode *next;
 	printf("Stopping notifications...\n");
 	gattlib_notification_stop(gp_connection, &g_recv_uuid);
+	printf("Done.\n");
+	printf("Disconnecting from device...\n");
 	gattlib_disconnect(gp_connection);
-	printf("Disconnected from device.\n");
+	printf("Done.\n");
 	exit(1);
 }
 
@@ -188,7 +186,7 @@ static void reconnect() {
 				g_broken_conn = 0;
 		}
 		if (g_stop) {
-			printf("Reconnect thread stopped\n");
+			printf("reconnect: Reconnect thread stopped.\n");
 			g_stop = 0;
 			return;
 		}
@@ -213,7 +211,7 @@ static void notif_callback(const uuid_t *uuidObject, const uint8_t *resp, size_t
 	#endif
 
 	g_alive[node_id] = 1;
-	if (g_dead[node_id] == 1) {
+	if (g_dead[node_id] == 1 && resp[RESP_OPCODE] != OPCODE_CONNECT) {
 		#ifdef USE_CUSTOM_IDS
 			printf("Node %d successfully reconnected.\n", custom_id);
 		#else
@@ -261,9 +259,9 @@ static long register_pv(aSubRecord *pv) {
 
 	//printf("Registered %s\n", pv->name);
 	if (pv_id == STATUS_ID)
-		set_status(node_id, "CONNECTED");
+		set_status(node_id, "DISCONNECTED");
 	else if (pv_id == CONNECTION_ID) 
-		set_connection(node_id, CONNECTED);
+		set_connection(node_id, DISCONNECTED);
 	g_active[node_id] = 1;
 	return 0;
 }

@@ -33,6 +33,12 @@ gatt_connection_t *gp_connection;
 // flag for broken connection
 int g_broken_conn;
 
+// bitmap for nodes currently active and transmitting data
+int g_alive[MAX_NODES];
+// bitmap for nodes which are active but not transmitting data
+int g_dead[MAX_NODES];
+
+
 // linked list of structures to pair node/sensor IDs to PVs
 typedef struct {
 	aSubRecord *pv;

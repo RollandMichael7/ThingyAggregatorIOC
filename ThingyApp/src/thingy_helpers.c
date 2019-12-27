@@ -90,7 +90,7 @@ void toggle_io_helper(int node_id, int pin) {
 	#ifdef USE_CUSTOM_IDS
 		node_id = get_actual_node_id(node_id);
 	#endif
-	printf("write pin %d of node %d\n", pin, node_id);
+	//printf("write pin %d of node %d\n", pin, node_id);
 
 	uint8_t command[6];
 	command[0] = COMMAND_IO_WRITE;
@@ -214,17 +214,18 @@ void write_conn_param_helper(int node_id) {
 
 static void parse_connect(uint8_t *resp, size_t len) {
 	int curr_id = resp[RESP_ID];
-
-	// get Bluetooth name of node
-	char name[MAX_NAME_LENGTH];
-	memset(name, 0, MAX_NAME_LENGTH);
-	int name_length = 0;
-	for (name_length; name_length < MAX_NAME_LENGTH; name_length++)
-		if (resp[RESP_CONNECT_NAME + name_length] == 32)
-			break;
-	memcpy(name, &(resp[RESP_CONNECT_NAME]), name_length);
+	int valid = 1;
 
 	#ifdef USE_CUSTOM_IDS
+		// get Bluetooth name of node
+		char name[MAX_NAME_LENGTH];
+		memset(name, 0, MAX_NAME_LENGTH);
+		int name_length = 0;
+		for (name_length; name_length < MAX_NAME_LENGTH; name_length++)
+			if (resp[RESP_CONNECT_NAME + name_length] == 32)
+				break;
+		memcpy(name, &(resp[RESP_CONNECT_NAME]), name_length);
+
 		// check if name matches custom node name
 		if (strncmp(name, CUSTOM_NODE_NAME, strlen(CUSTOM_NODE_NAME)) == 0) {
 			char custom_id_buf[5];
@@ -234,21 +235,29 @@ static void parse_connect(uint8_t *resp, size_t len) {
 			if (g_custom_node_ids[curr_id] == -1) {
 				printf("Assigned custom node ID %d to device %s (actual ID %d)\n", custom_id, name, curr_id);
 				g_custom_node_ids[curr_id] = custom_id;
-				set_connection(curr_id, CONNECTED);
 			}
-			else
+			else {
 				printf("WARNING: Can not assign node ID %d to device %s: Already in use\n", custom_id, name);
+				valid = 0;
+			}
 		}
 		else {
 			if (g_custom_node_ids[curr_id] == -1) {
 				printf("Assigned node ID %d to device %s\n", curr_id, name);
 				g_custom_node_ids[curr_id] = curr_id;
-				set_connection(curr_id, CONNECTED);
 			}
-			else
+			else {
 				printf("WARNING: Can not assign node ID %d to device %s: Already in use\n", curr_id, name);
+				valid = 0;
+			}
 		}
 	#endif
+	if (valid) {
+		set_connection(curr_id, CONNECTED);
+		#ifndef USE_CUSTOM_IDS
+			printf("Connected node %d\n", curr_id);
+		#endif
+	}
 }
 
 static void parse_disconnect(uint8_t *resp, size_t len) {
@@ -677,10 +686,10 @@ static void nullify_node_pvs(int node_id) {
 }
 
 void disconnect_node(int node_id) {
-	// mark PVs null
 	nullify_node_pvs(node_id);
 	set_status(node_id, "DISCONNECTED");
 	set_connection(node_id, DISCONNECTED);
+	g_dead[node_id] = 1;
 }
 
 #ifdef USE_CUSTOM_IDS
