@@ -15,6 +15,8 @@ Supported sensors:
 - Roll, pitch, yaw
 - Heading
 
+The IOC also supports control of the Thingy's 4 external digital pins. See [here](https://devzone.nordicsemi.com/nordic/nordic-blog/b/blog/posts/thingy-52-mosfet-usage) for a simple tutorial on using these pins to light an external LED.
+
 ## Requirements ##
 - Bluetooth Low Energy connectivity
 	- Developed with a [Nordic nRF52840 USB dongle](https://www.mouser.com/ProductDetail/Nordic-Semiconductor/nRF52840-Dongle?qs=gTYE2QTfZfTbdrOaMHWEZg%3D%3D&gclid=EAIaIQobChMIlsWN8orC5gIVQ8DICh28-g3LEAQYASABEgJoWfD_BwE) with [Zephyr firmware](https://devzone.nordicsemi.com/f/nordic-q-a/43087/hciconfig-is-not-showing-my-nrf52840-dongle-on-my-linux-terminal)
@@ -34,7 +36,7 @@ Supported sensors:
 
 ## Setup ##
 
-### Firmware ###
+### Aggregator Firmware ###
 Download Segger Embedded Studio, the aggregator firmware and the custom NRF SDK v15.3. Create a folder in your SDK installation ```$(SDK)/examples/training```,
 and copy the ```nrf52-ble-multi-link-multi-role``` folder in. Open Segger Embedded Studio, and use ```File > Open Solution...``` to open 
 ```$(SDK)/examples/training/nrf52-ble-multi-link-multi-role/ble_aggregator/pca10040/ses/ble_aggregator_pca10040_s132.emProject```. Plug the DK into your
@@ -45,18 +47,28 @@ connected Thingys and button 2 to toggle provisioning of nearby Thingys. LED 2 o
 add to the network. 
 
 ### Connection ###
-To connect to your thingy network, the Bluetooth address of the aggregator must be known. There are several Bluetooth command-line tools to do this. Try:
+To connect to your Thingy network, the Bluetooth address of the aggregator must be known. There are several Bluetooth command-line tools to do this, as well
+as a provided C program. Run ```build.sh``` to compile the program, and it will be installed in the base folder as ```thingy_scan```.
 
-```
-$ bluetoothctl
-[bluetooth]# scan on
-```
+If your Bluetooth is set up correctly, the program should give a list of nearby Bluetooth devices with their address and name. The aggregator's name should 
+show up as 'Aggregator'. Once you've found your aggregator's address, enter it into ```iocBoot/iocThingy/st.cmd``` as the argument to ```thingyConfig()```. 
 
-```$ hcitool lescan```
+**Note:** If the Bluetooth receiver you'd like to use for scanning/connecting isn't your default receiver, you must edit the source files. In 
+```ThingyApp/src/thingy_aggregator.c``` find the call to ```gattlib_connect``` in ```get_connection()``` and edit the first argument to match
+the HCI index of your desired receiver, eg. ```gattlib_connect('hci1', g_mac_address, GATTLIB_CONNECTION_OPTIONS_LEGACY_BDADDR_LE_PUBLIC | GATTLIB_CONNECTION_OPTIONS_LEGACY_BT_SEC_LOW);```. 
+Do the same for ```ThingyApp/src/thingy_name_assign.c``` and ```ThingyApp/src/thingy_scan.c``` if you want to use those tools.
+If you don't know the HCI index for your receivers, use the command-line tool ```hciconfig``` to view your devices.
 
-If your Bluetooth is set up correctly, either of these commands should give a list of nearby Bluetooth devices with their
-address and name. The aggregator's name should show up as 'Aggregator'. Once you've found your aggregator's address, enter it 
-into ```iocBoot/iocThingy/st.cmd``` as the argument to ```thingyConfig()```. 
+#### Using custom node IDs ####
+By default, the node ID of each Thingy is assigned sequentially as they connect to the aggregator. This means that if two Thingy devices
+disconnect from the aggregator, their IDs will switch if they reconnect in reverse order. It may be desirable for each Thingy
+to be assigned a persistent node ID regardless of the order they connect. This IOC supports this functionality, however it is disabled by default. To enable
+it, uncomment the line ```#define USE_CUSTOM_IDS``` in ```ThingyApp/src/thingy_shared.h```. In that file is also the definition of ```CUSTOM_NODE_NAME```.
+When ```USE_CUSTOM_IDS``` is defined, the IOC will parse the Bluetooth name of connecting Thingys to see if they match ```CUSTOM_NODE_NAME``` followed by a number
+which will be its node ID. For example, if ```CUSTOM_NODE_NAME``` is ```Node``` then a device with name ```Node2``` will be assigned ID 2. A program is provided
+for setting a device's Bluetooth name; build the program with ```build.sh``` and it will be installed in the base folder as ```thingy_name_assign```. The tool
+takes 2 arguments: the device's Bluetooth address (which can be found with ```thingy_scan```) and the desired name. After defining ```USE_CUSTOM_DS``` and 
+```CUSTOM_NODE_NAME``` and setting device names, run the IOC as usual and it will use custom node IDs.
 
 ### IOC ###
 For each Thingy node in your network, add a line to the ```nodes.substitutions``` file in ```ThingyApp/Db```. Each line in this file will automatically
@@ -70,4 +82,5 @@ the gattlib C library. See the [gattlib repo](https://github.com/labapart/gattli
 ## Running the IOC ##
 
 Compile the IOC with ```make``` and run it with the ```st.cmd``` file. View your process variables with the included Control Systems Studio OPI files in
-```ThingyApp/op/opi``` after editing the ```Sys``` and ```Dev``` macros to match the ones entered in the substitutions file.
+```ThingyApp/op/opi``` after editing the ```Sys``` and ```Dev``` macros to match the ones entered in the substitutions file. ```ThingyApp/op/opi/thingyNetwork.opi```
+serves as a "main" page for navigating all of the functionality of the IOC.
