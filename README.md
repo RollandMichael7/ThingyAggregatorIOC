@@ -73,10 +73,10 @@ takes 2 arguments: the device's Bluetooth address (which can be found with ```th
 ### IOC ###
 For each Thingy node in your network, add a line to the ```nodes.substitutions``` file in ```ThingyApp/Db```. Each line in this file will automatically
 generate all the PVs for each node, of the form ```{Sys}{Dev}X``` where X is the attribute, and ```Sys``` and ```Dev``` are fields of the substitutions
-file. The ```nodeID``` field identifies the Thingy in the network; these IDs are assigned sequentially as the nodes connect to the aggregator. Additionally,
+file. The ```nodeID``` field identifies the Thingy in the network; by default these IDs are assigned sequentially as the nodes connect to the aggregator. Additionally,
 set ```Sys``` and ```Dev``` for your aggregator PVs in ```ThingyApp/Db/aggregator.substitutions```.
 
-Edit ```configure/RELEASE``` to point to your installation of EPICS base. Running the IOC also requires downloading, compiling, packaging and installing
+Edit ```configure/RELEASE``` to point to your installation of EPICS base. Compiling the IOC also requires downloading, compiling, packaging and installing
 the gattlib C library. See the [gattlib repo](https://github.com/labapart/gattlib) for instructions.
 
 ## Running the IOC ##
