@@ -31,14 +31,14 @@ The IOC also supports control of the Thingy's 4 external digital pins. See [here
 - Software requirements:
   - Bluetooth GATT C library
     - https://github.com/labapart/gattlib
+    - Developed with tag ```dev-42-g3dd0ab4```
   - GLib C library
   - EPICS Base
 
 ## Setup ##
 
 ### Aggregator Firmware ###
-Download Segger Embedded Studio, the aggregator firmware and the custom NRF SDK v15.3. Create a folder in your SDK installation ```$(SDK)/examples/training```,
-and copy the ```nrf52-ble-multi-link-multi-role``` folder in. Open Segger Embedded Studio, and use ```File > Open Solution...``` to open 
+To download & setup the SDK + firmware, use the ```build_fw.sh``` script. Next, open Segger Embedded Studio and use ```File > Open Solution...``` to open 
 ```$(SDK)/examples/training/nrf52-ble-multi-link-multi-role/ble_aggregator/pca10040/ses/ble_aggregator_pca10040_s132.emProject```. Plug the DK into your
 computer with the micro USB cable, and in Segger Embedded Studio connect to the DK with ```Target > Connect J-Link```. Compile and flash the firmware 
 to your DK with ```Target > Download ble_aggregator_pca10040_s132```. If installation is successful, your DK should automatically begin provisioning
@@ -49,6 +49,7 @@ add to the network.
 ### Connection ###
 To connect to your Thingy network, the Bluetooth address of the aggregator must be known. There are several Bluetooth command-line tools to do this, as well
 as a provided C program. Run ```build.sh``` to compile the program, and it will be installed in the base folder as ```thingy_scan```.
+**Note**: At this point ```build.sh``` will probably fail to compile the IOC because it is not setup yet.
 
 If your Bluetooth is set up correctly, the program should give a list of nearby Bluetooth devices with their address and name. The aggregator's name should 
 show up as 'Aggregator'. Once you've found your aggregator's address, enter it into ```iocBoot/iocThingy/st.cmd``` as the argument to ```thingyConfig()```. 
@@ -76,8 +77,12 @@ generate all the PVs for each node, of the form ```{Sys}{Dev}X``` where X is the
 file. The ```nodeID``` field identifies the Thingy in the network; by default these IDs are assigned sequentially as the nodes connect to the aggregator. Additionally,
 set ```Sys``` and ```Dev``` for your aggregator PVs in ```ThingyApp/Db/aggregator.substitutions```.
 
-Edit ```configure/RELEASE``` to point to your installation of EPICS base. Compiling the IOC also requires downloading, compiling, packaging and installing
-the gattlib C library. See the [gattlib repo](https://github.com/labapart/gattlib) for instructions.
+Edit ```configure/RELEASE``` to point to your installation of EPICS base. Compiling the IOC also requires installing the gattlib C library. 
+Use the ```build_gattlib.sh``` script to clone, compile and package gattlib locally, then navigate to ```gattlib/build``` and install the 
+appropriate package for your operating system. Alternatively, see the [gattlib repo](https://github.com/labapart/gattlib) for links to prebuilt packages.
+
+**Note:** Future updates to gattlib may break compatibility with the IOC, so to ensure the IOC works correctly use git tag ```dev-42-g3dd0ab4``` or
+commit ```5c7ee43bd70ee09a7170ddd55b9fdbdef69e9080```, ```fixed 'apt-install' to 'apt install'```.
 
 ## Running the IOC ##
 
