@@ -99,7 +99,7 @@ void toggle_io_helper(int node_id, int pin) {
 	aSubRecord *pv;
 	int val;
 	for (int i=0; i < 4; i++) {
-		val = get_writer_pv_value(node_id, EXT0_ID + i);
+		val = get_writer_pv_value(node_id, ID_EXT0 + i);
 		if (val == -1)
 			return;
 		//printf("%d\n", val);
@@ -121,11 +121,11 @@ void write_env_config_helper(int node_id) {
 	#ifdef USE_CUSTOM_IDS
 		node_id = get_actual_node_id(node_id);
 	#endif
-	uint16_t tempInterval = get_writer_pv_value(node_id, TEMP_INTERVAL_ID);
-	uint16_t pressureInterval = get_writer_pv_value(node_id, PRESSURE_INTERVAL_ID);
-	uint16_t humidInterval = get_writer_pv_value(node_id, HUMID_INTERVAL_ID);
+	uint16_t tempInterval = get_writer_pv_value(node_id, ID_TEMP_INTERVAL);
+	uint16_t pressureInterval = get_writer_pv_value(node_id, ID_PRESSURE_INTERVAL);
+	uint16_t humidInterval = get_writer_pv_value(node_id, ID_HUMID_INTERVAL);
 	uint16_t colorInterval = 60000;
-	uint8_t gasMode = get_writer_pv_value(node_id, GAS_MODE_ID);
+	uint8_t gasMode = get_writer_pv_value(node_id, ID_GAS_MODE);
 	//printf("write env config: %d %d %d %d\n", tempInterval, pressureInterval, humidInterval, gasMode);
 	uint8_t command[14];
 	command[0] = COMMAND_ENV_CONFIG_WRITE;
@@ -156,11 +156,11 @@ void write_motion_config_helper(int node_id) {
 	#ifdef USE_CUSTOM_IDS
 		node_id = get_actual_node_id(node_id);
 	#endif
-	uint16_t steps = get_writer_pv_value(node_id, STEP_INTERVAL_ID);
-	uint16_t tempComp = get_writer_pv_value(node_id, TEMP_COMP_INTERVAL_ID);
-	uint16_t magComp = get_writer_pv_value(node_id, MAG_COMP_INTERVAL_ID);
-	uint16_t freq = get_writer_pv_value(node_id, MOTION_FREQ_ID);
-	uint8_t wake = get_writer_pv_value(node_id, WAKE_ID);
+	uint16_t steps = get_writer_pv_value(node_id, ID_STEP_INTERVAL);
+	uint16_t tempComp = get_writer_pv_value(node_id, ID_TEMP_COMP_INTERVAL);
+	uint16_t magComp = get_writer_pv_value(node_id, ID_MAG_COMP_INTERVAL);
+	uint16_t freq = get_writer_pv_value(node_id, ID_MOTION_FREQ);
+	uint8_t wake = get_writer_pv_value(node_id, ID_WAKE);
 	//printf("write motion config: %d %d %d %d %d\n", steps, tempComp, magComp, freq, wake);
 	uint8_t command[11];
 	command[0] = COMMAND_MOTION_CONFIG_WRITE;
@@ -187,10 +187,10 @@ void write_conn_param_helper(int node_id) {
 	#ifdef USE_CUSTOM_IDS
 		node_id = get_actual_node_id(node_id);
 	#endif
-	uint16_t min = (uint16_t) (get_writer_pv_value(node_id, CONN_MIN_INTERVAL_ID) / 1.25);
-	uint16_t max = (uint16_t) (get_writer_pv_value(node_id, CONN_MAX_INTERVAL_ID) / 1.25);
-	uint16_t latency = get_writer_pv_value(node_id, CONN_LATENCY_ID);
-	uint16_t timeout = (uint16_t) (get_writer_pv_value(node_id, CONN_TIMEOUT_ID) / 10);
+	uint16_t min = (uint16_t) (get_writer_pv_value(node_id, ID_CONN_MIN_INTERVAL) / 1.25);
+	uint16_t max = (uint16_t) (get_writer_pv_value(node_id, ID_CONN_MAX_INTERVAL) / 1.25);
+	uint16_t latency = get_writer_pv_value(node_id, ID_CONN_LATENCY);
+	uint16_t timeout = (uint16_t) (get_writer_pv_value(node_id, ID_CONN_TIMEOUT) / 10);
 	uint8_t command[10];
 	command[0] = COMMAND_CONN_PARAM_WRITE;
 	command[1] = node_id;
@@ -271,7 +271,7 @@ static void parse_disconnect(uint8_t *resp, size_t len) {
 
 static void parse_button(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
-	aSubRecord *button_pv = get_pv(node_id, BUTTON_ID);
+	aSubRecord *button_pv = get_pv(node_id, ID_BUTTON);
 
 	if (button_pv != 0)
 		set_pv(button_pv, resp[RESP_BUTTON_STATE]);
@@ -279,7 +279,7 @@ static void parse_button(uint8_t *resp, size_t len) {
 
 static void parse_battery(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
-	aSubRecord *battery_pv = get_pv(node_id, BATTERY_ID);
+	aSubRecord *battery_pv = get_pv(node_id, ID_BATTERY);
 
 	if (battery_pv != 0)
 		set_pv(battery_pv, resp[RESP_BATTERY_LEVEL]);
@@ -287,7 +287,7 @@ static void parse_battery(uint8_t *resp, size_t len) {
 
 static void parse_rssi(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
-	aSubRecord *rssi_pv = get_pv(node_id, RSSI_ID);
+	aSubRecord *rssi_pv = get_pv(node_id, ID_RSSI);
 	int8_t rssi = resp[RESP_RSSI_VAL];
 
 	if (rssi_pv != 0)
@@ -296,7 +296,7 @@ static void parse_rssi(uint8_t *resp, size_t len) {
 
 static void parse_temperature(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
-	aSubRecord *temp_pv = get_pv(node_id, TEMPERATURE_ID);
+	aSubRecord *temp_pv = get_pv(node_id, ID_TEMPERATURE);
 
 	if (temp_pv != 0) {
 		int8_t integer = resp[RESP_TEMPERATURE_INT];
@@ -308,7 +308,7 @@ static void parse_temperature(uint8_t *resp, size_t len) {
 
 static void parse_pressure(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
-	aSubRecord *pressure_pv = get_pv(node_id, PRESSURE_ID);
+	aSubRecord *pressure_pv = get_pv(node_id, ID_PRESSURE);
 
 	if (pressure_pv != 0) {
 		int i = RESP_PRESSURE_INT;
@@ -321,7 +321,7 @@ static void parse_pressure(uint8_t *resp, size_t len) {
 
 static void parse_humidity(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
-	aSubRecord *humid_pv = get_pv(node_id, HUMIDITY_ID);
+	aSubRecord *humid_pv = get_pv(node_id, ID_HUMIDITY);
 
 	if (humid_pv != 0)
 		set_pv(humid_pv, resp[RESP_HUMIDITY_VAL]);
@@ -329,9 +329,9 @@ static void parse_humidity(uint8_t *resp, size_t len) {
 
 static void parse_gas(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
-	aSubRecord *gas_pv = get_pv(node_id, GAS_ID);
-	aSubRecord *co_pv = get_pv(node_id, CO2_ID);
-	aSubRecord *tvoc_pv = get_pv(node_id, TVOC_ID);
+	aSubRecord *gas_pv = get_pv(node_id, ID_GAS);
+	aSubRecord *co_pv = get_pv(node_id, ID_CO2);
+	aSubRecord *tvoc_pv = get_pv(node_id, ID_TVOC);
 
 	if (gas_pv != 0 && g_ioc_started) {
 		int i = RESP_GAS_CO2;
@@ -353,10 +353,10 @@ static void parse_gas(uint8_t *resp, size_t len) {
 static void parse_env_config(uint8_t *resp, size_t len) {
 	//print_resp(resp, len);
 	int node_id = resp[RESP_ID];
-	aSubRecord *temp_interval_pv = get_pv(node_id, TEMP_INTERVAL_ID);
-	aSubRecord *pressure_interval_pv = get_pv(node_id, PRESSURE_INTERVAL_ID);
-	aSubRecord *humid_interval_pv = get_pv(node_id, HUMID_INTERVAL_ID);
-	aSubRecord *gas_mode_pv = get_pv(node_id, GAS_MODE_ID);
+	aSubRecord *temp_interval_pv = get_pv(node_id, ID_TEMP_INTERVAL);
+	aSubRecord *pressure_interval_pv = get_pv(node_id, ID_PRESSURE_INTERVAL);
+	aSubRecord *humid_interval_pv = get_pv(node_id, ID_HUMID_INTERVAL);
+	aSubRecord *gas_mode_pv = get_pv(node_id, ID_GAS_MODE);
 	uint16_t interval;
 	if (temp_interval_pv != 0) {
 		interval = (resp[3]) | (resp[4] << 8);
@@ -382,10 +382,10 @@ static void parse_env_config(uint8_t *resp, size_t len) {
 static void parse_quaternions(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
 	aSubRecord *pvs[4];
-	pvs[0] = get_pv(node_id, QUATERNION_W_ID);
-	pvs[1] = get_pv(node_id, QUATERNION_X_ID);
-	pvs[2] = get_pv(node_id, QUATERNION_Y_ID);
-	pvs[3] = get_pv(node_id, QUATERNION_Z_ID);
+	pvs[0] = get_pv(node_id, ID_QUATERNION_W);
+	pvs[1] = get_pv(node_id, ID_QUATERNION_X);
+	pvs[2] = get_pv(node_id, ID_QUATERNION_Y);
+	pvs[3] = get_pv(node_id, ID_QUATERNION_Z);
 
 	for (int i=0; i<4; i++) {
 		if (pvs[i] != 0) {
@@ -400,9 +400,9 @@ static void parse_quaternions(uint8_t *resp, size_t len) {
 static void parse_raw_motion(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
 	aSubRecord *pvs[9];
-	pvs[0] = get_pv(node_id, ACCEL_X_ID); pvs[1] = get_pv(node_id, ACCEL_Y_ID); pvs[2] = get_pv(node_id, ACCEL_Z_ID);
-	pvs[3] = get_pv(node_id, GYRO_X_ID); pvs[4] = get_pv(node_id, GYRO_Y_ID); pvs[5] = get_pv(node_id, GYRO_Z_ID);
-	pvs[6] = get_pv(node_id, COMPASS_X_ID); pvs[7] = get_pv(node_id, COMPASS_Y_ID); pvs[8] = get_pv(node_id, COMPASS_Z_ID);
+	pvs[0] = get_pv(node_id, ID_ACCEL_X); pvs[1] = get_pv(node_id, ID_ACCEL_Y); pvs[2] = get_pv(node_id, ID_ACCEL_Z);
+	pvs[3] = get_pv(node_id, ID_GYRO_X); pvs[4] = get_pv(node_id, ID_GYRO_Y); pvs[5] = get_pv(node_id, ID_GYRO_Z);
+	pvs[6] = get_pv(node_id, ID_COMPASS_X); pvs[7] = get_pv(node_id, ID_COMPASS_Y); pvs[8] = get_pv(node_id, ID_COMPASS_Z);
 	for (int i=0; i<9; i++) {
 		if (pvs[i] != 0) {
 			int j = RESP_RAW_ACCEL_X + (i * 2);
@@ -422,9 +422,9 @@ static void parse_raw_motion(uint8_t *resp, size_t len) {
 static void parse_euler(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
 	aSubRecord *pvs[3];
-	pvs[0] = get_pv(node_id, ROLL_ID);
-	pvs[1] = get_pv(node_id, PITCH_ID);
-	pvs[2] = get_pv(node_id, YAW_ID);
+	pvs[0] = get_pv(node_id, ID_ROLL);
+	pvs[1] = get_pv(node_id, ID_PITCH);
+	pvs[2] = get_pv(node_id, ID_YAW);
 	for (int i=0; i<3; i++) {
 		if (pvs[i] != 0) {
 			int j = RESP_EULER_ROLL + (i * 4);
@@ -437,7 +437,7 @@ static void parse_euler(uint8_t *resp, size_t len) {
 
 static void parse_heading(uint8_t *resp, size_t len) {
 	int node_id = resp[RESP_ID];
-	aSubRecord *heading_pv = get_pv(node_id, HEADING_ID);
+	aSubRecord *heading_pv = get_pv(node_id, ID_HEADING);
 	if (heading_pv != 0) {
 		int i = RESP_HEADING_VAL;
 		int32_t raw = (resp[i]) | (resp[i+1] << 8) | (resp[i+2] << 16) | (resp[i+3] << 24);
@@ -449,11 +449,11 @@ static void parse_heading(uint8_t *resp, size_t len) {
 static void parse_motion_config(uint8_t *resp, size_t len) {
 	//print_resp(resp, len);
 	int node_id = resp[RESP_ID];
-	aSubRecord *step_interval_pv = get_pv(node_id, STEP_INTERVAL_ID);
-	aSubRecord *temp_comp_pv = get_pv(node_id, TEMP_COMP_INTERVAL_ID);
-	aSubRecord *mag_comp_pv = get_pv(node_id, MAG_COMP_INTERVAL_ID);
-	aSubRecord *frequency_pv = get_pv(node_id, MOTION_FREQ_ID);
-	aSubRecord *wake_pv = get_pv(node_id, WAKE_ID);
+	aSubRecord *step_interval_pv = get_pv(node_id, ID_STEP_INTERVAL);
+	aSubRecord *temp_comp_pv = get_pv(node_id, ID_TEMP_COMP_INTERVAL);
+	aSubRecord *mag_comp_pv = get_pv(node_id, ID_MAG_COMP_INTERVAL);
+	aSubRecord *frequency_pv = get_pv(node_id, ID_MOTION_FREQ);
+	aSubRecord *wake_pv = get_pv(node_id, ID_WAKE);
 	uint16_t val;
 	if (step_interval_pv != 0) {
 		val = (resp[3]) | (resp[4] << 8);
@@ -478,10 +478,10 @@ static void parse_motion_config(uint8_t *resp, size_t len) {
 static void parse_conn_param(uint8_t *resp, size_t len) {
 	//print_resp(resp, len);
 	int node_id = resp[RESP_ID];
-	aSubRecord *min_interval_pv = get_pv(node_id, CONN_MIN_INTERVAL_ID);
-	aSubRecord *max_interval_pv = get_pv(node_id, CONN_MAX_INTERVAL_ID);
-	aSubRecord *latency_pv = get_pv(node_id, CONN_LATENCY_ID);
-	aSubRecord *timeout_pv = get_pv(node_id, CONN_TIMEOUT_ID);
+	aSubRecord *min_interval_pv = get_pv(node_id, ID_CONN_MIN_INTERVAL);
+	aSubRecord *max_interval_pv = get_pv(node_id, ID_CONN_MAX_INTERVAL);
+	aSubRecord *latency_pv = get_pv(node_id, ID_CONN_LATENCY);
+	aSubRecord *timeout_pv = get_pv(node_id, ID_CONN_TIMEOUT);
 	float x;
 	if (min_interval_pv != 0) {
 		x = (resp[3]) | (resp[4] << 8);
@@ -507,10 +507,10 @@ static void parse_conn_param(uint8_t *resp, size_t len) {
 static void parse_io(uint8_t *resp, size_t len) {
 	//print_resp(resp, len);
 	int node_id = resp[RESP_ID];
-	aSubRecord *ext0 = get_pv(node_id, EXT0_ID);
-	aSubRecord *ext1 = get_pv(node_id, EXT1_ID);
-	aSubRecord *ext2 = get_pv(node_id, EXT2_ID);
-	aSubRecord *ext3 = get_pv(node_id, EXT3_ID);
+	aSubRecord *ext0 = get_pv(node_id, ID_EXT0);
+	aSubRecord *ext1 = get_pv(node_id, ID_EXT1);
+	aSubRecord *ext2 = get_pv(node_id, ID_EXT2);
+	aSubRecord *ext3 = get_pv(node_id, ID_EXT3);
 	float x;
 	if (ext0 != 0) {
 		set_pv(ext0, resp[3]);
@@ -581,7 +581,7 @@ static void print_resp(uint8_t* resp, size_t len) {
 // set status PV 
 int set_status(int node_id, char* status) {
 	//printf("status = %s for node %d\n", status, node_id);
-	aSubRecord *pv = get_pv(node_id, STATUS_ID);
+	aSubRecord *pv = get_pv(node_id, ID_STATUS);
 	if (pv == 0)
 		return 1;
 	strncpy(pv->vala, status, 40);
@@ -593,7 +593,7 @@ int set_status(int node_id, char* status) {
 
 // set gp_connection PV
 int set_connection(int node_id, int status) {
-	aSubRecord *pv = get_pv(node_id, CONNECTION_ID);
+	aSubRecord *pv = get_pv(node_id, ID_CONNECTION);
 	if (pv == 0)
 		return 1;
 	//printf("set connection %d for node %d\n", status, node_id);
@@ -675,8 +675,8 @@ static void nullify_node_pvs(int node_id) {
 	aSubRecord *pv;
 	while (node != 0) {
 		pv_id = node->pv_id;
-		if (node->node_id == node_id && pv_id != CONNECTION_ID && pv_id != STATUS_ID) {
-			if (pv_id == BUTTON_ID)
+		if (node->node_id == node_id && pv_id != ID_CONNECTION && pv_id != ID_STATUS) {
+			if (pv_id == ID_BUTTON)
 				set_pv(node->pv, 0);
 			else
 				set_pv(node->pv, null);

@@ -258,9 +258,9 @@ static long register_pv(aSubRecord *pv) {
 	pthread_mutex_unlock(&g_pv_lock);
 
 	//printf("Registered %s\n", pv->name);
-	if (pv_id == STATUS_ID)
+	if (pv_id == ID_STATUS)
 		set_status(node_id, "DISCONNECTED");
-	else if (pv_id == CONNECTION_ID) 
+	else if (pv_id == ID_CONNECTION) 
 		set_connection(node_id, DISCONNECTED);
 	g_active[node_id] = 1;
 	return 0;
@@ -320,38 +320,38 @@ static long toggle_sensor(aSubRecord *pv) {
 		command[2] = sensor_id;
 		command[3] = curVal ? 0 : 1;
 		gattlib_write_char_by_uuid(gp_connection, &g_send_uuid, command, sizeof(command));
-		if (sensor_id == QUATERNION_TOGGLE_ID || sensor_id == RAW_MOTION_TOGGLE_ID || sensor_id == EULER_TOGGLE_ID || sensor_id == HEADING_TOGGLE_ID)
+		if (sensor_id == ID_QUATERNION_TOGGLE || sensor_id == ID_RAW_MOTION_TOGGLE || sensor_id == ID_EULER_TOGGLE || sensor_id == ID_HEADING_TOGGLE)
 			set_pv(sensorPV, 1);
 		if (curVal != 0) {
 			set_pv(sensorPV, 0);
-			if (sensor_id == GAS_ID) {
-				set_pv(get_pv(node_id, CO2_ID), 0);
-				set_pv(get_pv(node_id, TVOC_ID), 0);
+			if (sensor_id == ID_GAS) {
+				set_pv(get_pv(node_id, ID_CO2), 0);
+				set_pv(get_pv(node_id, ID_TVOC), 0);
 			}
-			else if (sensor_id == QUATERNION_TOGGLE_ID) {
-				set_pv(get_pv(node_id, QUATERNION_W_ID), 0);
-				set_pv(get_pv(node_id, QUATERNION_X_ID), 0);
-				set_pv(get_pv(node_id, QUATERNION_Y_ID), 0);
-				set_pv(get_pv(node_id, QUATERNION_Z_ID), 0);
+			else if (sensor_id == ID_QUATERNION_TOGGLE) {
+				set_pv(get_pv(node_id, ID_QUATERNION_W), 0);
+				set_pv(get_pv(node_id, ID_QUATERNION_X), 0);
+				set_pv(get_pv(node_id, ID_QUATERNION_Y), 0);
+				set_pv(get_pv(node_id, ID_QUATERNION_Z), 0);
 			}
-			else if (sensor_id == RAW_MOTION_TOGGLE_ID) {
-				set_pv(get_pv(node_id, ACCEL_X_ID), 0);
-				set_pv(get_pv(node_id, ACCEL_Y_ID), 0);
-				set_pv(get_pv(node_id, ACCEL_Z_ID), 0);
-				set_pv(get_pv(node_id, GYRO_X_ID), 0);
-				set_pv(get_pv(node_id, GYRO_Y_ID), 0);
-				set_pv(get_pv(node_id, GYRO_Z_ID), 0);
-				set_pv(get_pv(node_id, COMPASS_X_ID), 0);
-				set_pv(get_pv(node_id, COMPASS_Y_ID), 0);
-				set_pv(get_pv(node_id, COMPASS_Z_ID), 0);
+			else if (sensor_id == ID_RAW_MOTION_TOGGLE) {
+				set_pv(get_pv(node_id, ID_ACCEL_X), 0);
+				set_pv(get_pv(node_id, ID_ACCEL_Y), 0);
+				set_pv(get_pv(node_id, ID_ACCEL_Z), 0);
+				set_pv(get_pv(node_id, ID_GYRO_X), 0);
+				set_pv(get_pv(node_id, ID_GYRO_Y), 0);
+				set_pv(get_pv(node_id, ID_GYRO_Z), 0);
+				set_pv(get_pv(node_id, ID_COMPASS_X), 0);
+				set_pv(get_pv(node_id, ID_COMPASS_Y), 0);
+				set_pv(get_pv(node_id, ID_COMPASS_Z), 0);
 			}
-			else if (sensor_id == EULER_TOGGLE_ID) {
-				set_pv(get_pv(node_id, ROLL_ID), 0);
-				set_pv(get_pv(node_id, PITCH_ID), 0);
-				set_pv(get_pv(node_id, YAW_ID), 0);
+			else if (sensor_id == ID_EULER_TOGGLE) {
+				set_pv(get_pv(node_id, ID_ROLL), 0);
+				set_pv(get_pv(node_id, ID_PITCH), 0);
+				set_pv(get_pv(node_id, ID_YAW), 0);
 			}
-			else if (sensor_id == HEADING_TOGGLE_ID) {
-				set_pv(get_pv(node_id, HEADING_ID), 0);
+			else if (sensor_id == ID_HEADING_TOGGLE) {
+				set_pv(get_pv(node_id, ID_HEADING), 0);
 			}
 		}
 		set_pv(pv, 0);
