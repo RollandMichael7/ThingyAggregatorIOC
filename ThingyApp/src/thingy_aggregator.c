@@ -362,12 +362,13 @@ static long toggle_sensor(aSubRecord *pv) {
 
 // Digital IO pin toggle triggered by writing to IOToggle PV
 static long toggle_io(aSubRecord *pv) {
-	int pin;
-	memcpy(&pin, pv->b, sizeof(int));
-	if (pin >= 1 && pin <= 4) {
+	int toggled_pins;
+	memcpy(&toggled_pins, pv->b, sizeof(int));
+	// toggled_pins = logical OR of pins to toggle
+	if (toggled_pins != 0) {
 		int node_id;
 		memcpy(&node_id, pv->a, sizeof(int));
-		toggle_io_helper(node_id, pin-1);
+		toggle_io_helper(node_id, toggled_pins);
 		set_pv(pv, 0);
 	}
 	return 0;

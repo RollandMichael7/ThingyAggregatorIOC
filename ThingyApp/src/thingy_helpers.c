@@ -86,24 +86,25 @@ static float get_writer_pv_value(int node_id, int pv_id) {
 }
 
 // toggle digital pin for node
-void toggle_io_helper(int node_id, int pin) {
+// toggled_pins = logical OR of pins to toggle
+void toggle_io_helper(int node_id, int toggled_pins) {
 	#ifdef USE_CUSTOM_IDS
 		node_id = get_actual_node_id(node_id);
 	#endif
-	//printf("write pin %d of node %d\n", pin, node_id);
-
 	uint8_t command[6];
 	command[0] = COMMAND_IO_WRITE;
 	command[1] = node_id;
 
 	aSubRecord *pv;
 	int val;
+	int bit;
 	for (int i=0; i < 4; i++) {
 		val = get_writer_pv_value(node_id, ID_EXT0 + i);
 		if (val == -1)
 			return;
+		bit = 1 << i;
 		//printf("%d\n", val);
-		if (i == pin)
+		if (bit & toggled_pins)
 			command[2 + i] = (val == 0) ? 255 : 0;
 		else
 			command[2 + i] = (val == 0) ? 0 : 255;
