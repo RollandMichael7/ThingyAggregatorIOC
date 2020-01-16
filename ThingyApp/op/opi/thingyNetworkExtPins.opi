@@ -15,13 +15,11 @@
     <color red="192" green="192" blue="192" />
   </foreground_color>
   <grid_space>6</grid_space>
-  <height>875</height>
+  <height>600</height>
   <macros>
     <include_parent_macros>true</include_parent_macros>
-    <Sys>XF:10IDB</Sys>
-    <Dev>{THINGY:AGGREGATOR}</Dev>
   </macros>
-  <name>Thingy Network</name>
+  <name></name>
   <rules />
   <scripts />
   <show_close_button>true</show_close_button>
@@ -30,8 +28,8 @@
   <show_ruler>true</show_ruler>
   <snap_to_geometry>true</snap_to_geometry>
   <widget_type>Display</widget_type>
-  <width>1675</width>
-  <wuid>-7a90358c:169917bf4bc:-7e2f</wuid>
+  <width>800</width>
+  <wuid>-669055ec:16e702d7244:-663d</wuid>
   <x>-1</x>
   <y>-1</y>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
@@ -52,15 +50,15 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>400</height>
+    <height>271</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>0</N>
       <Sys>XF:10IDB</Sys>
       <Dev>{THINGY:001}</Dev>
     </macros>
-    <name>Linking Container_1</name>
-    <opi_file>thingyNode.opi</opi_file>
+    <name>Linking Container</name>
+    <opi_file>thingyNodeExtPins.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -72,10 +70,10 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>550</width>
-    <wuid>7fd9ae27:16b0ef1f976:-7b31</wuid>
+    <width>223</width>
+    <wuid>-669055ec:16e702d7244:-65e9</wuid>
     <x>0</x>
-    <y>72</y>
+    <y>0</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -95,7 +93,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>400</height>
+    <height>271</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>1</N>
@@ -103,7 +101,7 @@
       <Dev>{THINGY:002}</Dev>
     </macros>
     <name>Linking Container_1</name>
-    <opi_file>thingyNode.opi</opi_file>
+    <opi_file>thingyNodeExtPins.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -115,10 +113,10 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>550</width>
-    <wuid>7fd9ae27:16b0ef1f976:-7885</wuid>
-    <x>558</x>
-    <y>72</y>
+    <width>223</width>
+    <wuid>-669055ec:16e702d7244:-5fd0</wuid>
+    <x>234</x>
+    <y>0</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -138,7 +136,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>400</height>
+    <height>271</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>2</N>
@@ -146,7 +144,7 @@
       <Dev>{THINGY:003}</Dev>
     </macros>
     <name>Linking Container_2</name>
-    <opi_file>thingyNode.opi</opi_file>
+    <opi_file>thingyNodeExtPins.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -158,10 +156,10 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>550</width>
-    <wuid>7fd9ae27:16b0ef1f976:-7867</wuid>
-    <x>1122</x>
-    <y>71</y>
+    <width>223</width>
+    <wuid>-669055ec:16e702d7244:-5fb5</wuid>
+    <x>468</x>
+    <y>0</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -181,7 +179,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>400</height>
+    <height>271</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>3</N>
@@ -189,7 +187,7 @@
       <Dev>{THINGY:004}</Dev>
     </macros>
     <name>Linking Container_3</name>
-    <opi_file>thingyNode.opi</opi_file>
+    <opi_file>thingyNodeExtPins.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -201,10 +199,10 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>550</width>
-    <wuid>7fd9ae27:16b0ef1f976:-7849</wuid>
+    <width>223</width>
+    <wuid>-669055ec:16e702d7244:-5f9a</wuid>
     <x>0</x>
-    <y>481</y>
+    <y>282</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -224,7 +222,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>400</height>
+    <height>271</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>4</N>
@@ -232,7 +230,7 @@
       <Dev>{THINGY:005}</Dev>
     </macros>
     <name>Linking Container_4</name>
-    <opi_file>thingyNode.opi</opi_file>
+    <opi_file>thingyNodeExtPins.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -244,10 +242,10 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>550</width>
-    <wuid>-a0023f0:16c2a5539c6:-7cc8</wuid>
-    <x>557</x>
-    <y>480</y>
+    <width>223</width>
+    <wuid>-669055ec:16e702d7244:-5f7f</wuid>
+    <x>234</x>
+    <y>282</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.linkingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
@@ -267,7 +265,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <group_name></group_name>
-    <height>400</height>
+    <height>271</height>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <N>5</N>
@@ -275,7 +273,7 @@
       <Dev>{THINGY:006}</Dev>
     </macros>
     <name>Linking Container_5</name>
-    <opi_file>thingyNode.opi</opi_file>
+    <opi_file>thingyNodeExtPins.opi</opi_file>
     <resize_behaviour>0</resize_behaviour>
     <rules />
     <scale_options>
@@ -287,149 +285,9 @@
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Linking Container</widget_type>
-    <width>550</width>
-    <wuid>-a0023f0:16c2a5539c6:-7ca7</wuid>
-    <x>1122</x>
-    <y>480</y>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
-    <actions hook="false" hook_all="false">
-      <action type="WRITE_PV">
-        <pv_name>$(Sys)$(Dev)LED</pv_name>
-        <value>1</value>
-        <timeout>10</timeout>
-        <confirm_message></confirm_message>
-        <description></description>
-      </action>
-    </actions>
-    <alarm_pulsing>false</alarm_pulsing>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <border_style>0</border_style>
-    <border_width>1</border_width>
-    <enabled>true</enabled>
-    <font>
-      <fontdata fontName="Sans" height="15" style="1" pixels="false" />
-    </font>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <height>40</height>
-    <image></image>
-    <name>Action Button</name>
-    <push_action_index>0</push_action_index>
-    <pv_name></pv_name>
-    <pv_value />
-    <rules />
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <scripts />
-    <style>0</style>
-    <text>Toggle LEDs</text>
-    <toggle_button>false</toggle_button>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <visible>true</visible>
-    <widget_type>Action Button</widget_type>
-    <width>324</width>
-    <wuid>-a0023f0:16c2a5539c6:-72d3</wuid>
-    <x>491</x>
-    <y>18</y>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.MenuButton" version="1.0.0">
-    <actions hook="false" hook_all="false">
-      <action type="OPEN_DISPLAY">
-        <path>thingyNetworkConnParams.opi</path>
-        <macros>
-          <include_parent_macros>true</include_parent_macros>
-        </macros>
-        <mode>1</mode>
-        <description>Connection params</description>
-      </action>
-      <action type="OPEN_DISPLAY">
-        <path>thingyNetworkEnvConfig.opi</path>
-        <macros>
-          <include_parent_macros>true</include_parent_macros>
-        </macros>
-        <mode>1</mode>
-        <description>Environment sensors</description>
-      </action>
-      <action type="OPEN_DISPLAY">
-        <path>thingyNetworkMotionConfig.opi</path>
-        <macros>
-          <include_parent_macros>true</include_parent_macros>
-        </macros>
-        <mode>1</mode>
-        <description>Motion sensors</description>
-      </action>
-      <action type="OPEN_DISPLAY">
-        <path>thingyNetworkSensorToggle.opi</path>
-        <macros>
-          <include_parent_macros>true</include_parent_macros>
-        </macros>
-        <mode>1</mode>
-        <description>Toggle sensors</description>
-      </action>
-      <action type="OPEN_DISPLAY">
-        <path>thingyNetworkExtPins.opi</path>
-        <macros>
-          <include_parent_macros>true</include_parent_macros>
-        </macros>
-        <mode>1</mode>
-        <description>External pins</description>
-      </action>
-    </actions>
-    <actions_from_pv>false</actions_from_pv>
-    <alarm_pulsing>false</alarm_pulsing>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color red="240" green="240" blue="240" />
-    </background_color>
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <border_color>
-      <color red="0" green="128" blue="255" />
-    </border_color>
-    <border_style>6</border_style>
-    <border_width>1</border_width>
-    <enabled>true</enabled>
-    <font>
-      <fontdata fontName="Sans" height="15" style="1" pixels="false" />
-    </font>
-    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-    <foreground_color>
-      <color red="0" green="0" blue="0" />
-    </foreground_color>
-    <height>40</height>
-    <label>Configure</label>
-    <name>Action Button_1</name>
-    <pv_name></pv_name>
-    <pv_value />
-    <rules />
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <scripts />
-    <show_down_arrow>false</show_down_arrow>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <transparent>false</transparent>
-    <visible>true</visible>
-    <widget_type>Menu Button</widget_type>
-    <width>324</width>
-    <wuid>-a0023f0:16c2a5539c6:-6972</wuid>
-    <x>840</x>
-    <y>18</y>
+    <width>223</width>
+    <wuid>-669055ec:16e702d7244:-5f64</wuid>
+    <x>468</x>
+    <y>282</y>
   </widget>
 </display>
