@@ -77,8 +77,8 @@ static gatt_connection_t* get_connection() {
 		set_status(AGGREGATOR_ID, "CONNECTED");
 		printf("Connected.\n");
 	}
-	g_recv_uuid = aggregator_UUID(RECV_UUID);
-	g_send_uuid = aggregator_UUID(SEND_UUID);
+	g_recv_uuid = aggregator_UUID(UUID_RECV);
+	g_send_uuid = aggregator_UUID(UUID_SEND);
 	// register cleanup method
 	signal(SIGINT, disconnect);
 

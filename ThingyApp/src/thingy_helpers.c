@@ -253,6 +253,7 @@ static void parse_connect(uint8_t *resp, size_t len) {
 			}
 		}
 	#endif
+
 	if (valid) {
 		set_connection(curr_id, CONNECTED);
 		#ifndef USE_CUSTOM_IDS
@@ -691,6 +692,9 @@ void disconnect_node(int node_id) {
 	set_status(node_id, "DISCONNECTED");
 	set_connection(node_id, DISCONNECTED);
 	g_dead[node_id] = 1;
+	#ifdef USE_CUSTOM_IDS
+		g_custom_node_ids[node_id] = -1;
+	#endif
 }
 
 #ifdef USE_CUSTOM_IDS

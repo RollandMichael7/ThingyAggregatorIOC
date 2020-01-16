@@ -53,12 +53,16 @@ PVnode* g_first_pv;
 // Maximum length for a Thingy's Bluetooth name
 #define MAX_NAME_LENGTH 15
 
-// Maximum amount of nodes that can be connected to aggregator
+// Node ID of aggregator
 #define AGGREGATOR_ID MAX_NODES + 1
 
 // Bluetooth UUIDs for aggregator characteristics
-#define RECV_UUID "3e520003-1368-b682-4440-d7dd234c45bc"
-#define SEND_UUID "3e520002-1368-b682-4440-d7dd234c45bc"
+#define UUID_RECV "3e520003-1368-b682-4440-d7dd234c45bc"
+#define UUID_SEND "3e520002-1368-b682-4440-d7dd234c45bc"
+
+// Connection status
+#define CONNECTED 1
+#define DISCONNECTED 0
 
 // IDs for PVs
 #define ID_CONNECTION 0
@@ -117,10 +121,6 @@ PVnode* g_first_pv;
 #define ID_EXT1 46
 #define ID_EXT2 47
 #define ID_EXT3 48
-
-// Connection status
-#define CONNECTED 1
-#define DISCONNECTED 0
 
 // Opcodes for commands
 #define COMMAND_LED_TOGGLE 2
