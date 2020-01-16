@@ -40,11 +40,15 @@ The IOC also supports control of the Thingy's 4 external digital pins. See [here
 
 ### Aggregator Firmware ###
 To download & setup the SDK + firmware, use the ```build_fw.sh``` script. Next, open Segger Embedded Studio and use ```File > Open Solution...``` to open 
-```$(SDK)/examples/training/nrf52-ble-multi-link-multi-role/ble_aggregator/pca10040/ses/ble_aggregator_pca10040_s132.emProject```. Plug the DK into your
-computer with the micro USB cable, and in Segger Embedded Studio connect to the DK with ```Target > Connect J-Link```. Compile and flash the firmware to 
+```nrf-sdk-v15.3/examples/training/nrf52-ble-multi-link-multi-role/ble_aggregator/pca10040/s132/ses/ble_aggregator_pca10040_s132.emProject```. Plug the DK into your
+computer with the micro USB cable, turn it on, and in Segger Embedded Studio connect to it with ```Target > Connect J-Link```. Compile and flash the firmware to 
 your DK with ```Target > Download ble_aggregator_pca10040_s132```. If installation is successful, your DK should automatically begin provisioning your 
-Thingys and they will light up in a constant light blue as they are connected to the network. On the DK, use button 3 to toggle the LEDs of the connected 
-Thingys and button 2 to toggle provisioning of nearby Thingys. LED 2 on the DK will blink rapidly when the DK is searching for Thingys to add to the network. 
+Thingys and they will light up in a constant light blue as they are connected to the network. 
+
+On the DK, use button 3 to toggle the LEDs of the connected Thingys and button 2 to toggle provisioning of nearby Thingys. LED 2 on the DK will blink rapidly when the
+DK is searching for Thingys to add to the network. In Segger Embedded Studio, use ```Target > Attach Debugger``` to observe debug output from the DK in the console.
+
+After successfully loading the firmware onto the DK, you can continue to power it with the micro USB cable or detach it and have the DK run on its battery.
 
 ### Connection ###
 To connect to your Thingy network, the Bluetooth address of the aggregator must be known. There are several Bluetooth command-line tools to do this, as well
