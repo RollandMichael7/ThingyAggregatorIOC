@@ -1,5 +1,12 @@
 # ThingyAggregatorIOC
-An EPICS IOC for a Bluetooth star network of Nordic thingy:52s and a central NRF52DK aggregator.
+Author: Michael Rolland  
+Corresponding Author: Kazimierz Gofron  
+Created: July 24, 2019  
+Last Updated: January 17, 2020   
+Copyright (c): 2019-2020 Brookhaven National Laboratory  
+
+
+**An EPICS IOC for a Bluetooth star network of Nordic Thingy:52s and a central NRF52DK aggregator.**
 
 Supported sensors:
 - Battery
@@ -18,6 +25,8 @@ Supported sensors:
 The IOC also supports control of the Thingy's 4 external digital pins. See [here](https://devzone.nordicsemi.com/nordic/nordic-blog/b/blog/posts/thingy-52-mosfet-usage) for a simple tutorial on using these pins to light an external LED.
 
 ## Requirements ##
+**Note:** This IOC was developed exclusively on a linux-x86_64 Debian 9 system.
+
 - Bluetooth Low Energy connectivity
 	- Developed with a [Nordic nRF52840 USB dongle](https://www.mouser.com/ProductDetail/Nordic-Semiconductor/nRF52840-Dongle?qs=gTYE2QTfZfTbdrOaMHWEZg%3D%3D&gclid=EAIaIQobChMIlsWN8orC5gIVQ8DICh28-g3LEAQYASABEgJoWfD_BwE) with Zephyr firmware
 		- Download firmware [here](https://devzone.nordicsemi.com/f/nordic-q-a/43087/hciconfig-is-not-showing-my-nrf52840-dongle-on-my-linux-terminal) (under Attachments section in lower right) and install with [NRF Connect](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Connect-for-desktop)
